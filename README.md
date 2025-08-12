@@ -1,2 +1,2 @@
 # efx
-Rust XML Template Engine for Eframe framework
+Rust XML Template Engine for eframe framework
