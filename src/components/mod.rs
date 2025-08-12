@@ -1,3 +1,6 @@
+pub(crate) mod label;
+pub(crate) mod button;
+
 use proc_macro2::TokenStream;
 use quote::quote;
 use syn::Expr;
