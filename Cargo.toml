@@ -1,9 +1,19 @@
 [package]
 name = "efx"
-description = "Rust XML Template Engine for Eframe framework"
+description = "Rust XML templating engine for building egui/eframe UIs with procedural macros"
 authors = ["Max Zhuk <mail@zhukmax.com>"]
 version = "0.2.0"
 edition = "2024"
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/ZhukMax/efx"
+keywords = ["egui", "eframe", "gui", "proc-macro", "templating"]
+categories = [
+    "gui",
+    "template-engine",
+    "development-tools::procedural-macro-helpers",
+    "wasm",
+]
 
 [lib]
 proc-macro = true
@@ -13,4 +23,3 @@ syn = { version = "2.0", features = ["full"] }
 quote = "1.0"
 proc-macro2 = "1.0"
 regex = "1.11"
-eframe = "0.32"

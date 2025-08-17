@@ -1,6 +1,11 @@
 
-# EFX — Rust XML Template Engine for eframe/egui framework
+# EFX
 
+[![Crates.io](https://img.shields.io/crates/v/efx.svg)](https://crates.io/crates/efx)
+[![Docs.rs](https://docs.rs/efx/badge.svg)](https://docs.rs/efx)
+[![License](https://img.shields.io/crates/l/efx)](https://github.com/ZhukMax/efx/blob/main/LICENSE)
+
+**EFX** — Rust XML Template Engine for [eframe](https://github.com/emilk/egui/tree/master/crates/eframe) / [egui](https://github.com/emilk/egui) framework.
 `efx!` is a proc-macro for writing tiny XML-like UI snippets in `eframe/egui`. It converts short tags into `egui` calls.
 
 Current scope: **one root tag per macro call**, **no nesting**, **no attributes**. You can embed arbitrary Rust expressions inside braces (`{...}`).
@@ -8,6 +13,14 @@ Current scope: **one root tag per macro call**, **no nesting**, **no attributes*
 ---
 
 ## Install & import
+
+Add to `Cargo.toml`:
+
+```toml
+[dependencies]
+efx = "0.2"
+eframe = "0.32"
+```
 
 Inside this repo just import the macro:
 
