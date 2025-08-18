@@ -1,21 +1,20 @@
 
-# EFX
+# EFx
 
 [![Crates.io](https://img.shields.io/crates/v/efx.svg)](https://crates.io/crates/efx)
 [![Docs.rs](https://docs.rs/efx/badge.svg)](https://docs.rs/efx)
 [![License](https://img.shields.io/crates/l/efx)](https://github.com/ZhukMax/efx/blob/main/LICENSE)
 
-**EFX** — Rust XML Template Engine for [eframe](https://github.com/emilk/egui/tree/master/crates/eframe) / [egui](https://github.com/emilk/egui) framework.
+**EFx** — Rust XML Template Engine for [eframe](https://github.com/emilk/egui/tree/master/crates/eframe) / [egui](https://github.com/emilk/egui) framework.
 `efx!` is a proc-macro for writing tiny XML-like UI snippets in `eframe/egui`. It converts short tags into `egui` calls.
 
 Current scope: **one root tag per macro call**, **no nesting**, **no attributes**. You can embed arbitrary Rust expressions inside braces (`{...}`).
 
 ---
 
-## Install & import
+### Install & import
 
-Add to `Cargo.toml`:
-
+Requires `eframe/egui` (the project currently uses `eframe 0.32`). Add to `Cargo.toml`:
 ```toml
 [dependencies]
 efx = "0.2"
@@ -23,18 +22,15 @@ eframe = "0.32"
 ```
 
 Inside this repo just import the macro:
-
 ```rust
 use efx::efx; // the macro
 ```
 
-Requires `eframe/egui` (the project currently uses `eframe 0.32`).
-
 ---
 
-## Quick start
+### Quick start
 
-### `<Label>…</Label>`
+#### `<Label>…</Label>`
 
 Renders a text Label. Returns `()` (equivalent to `ui.Label(...)`).
 
@@ -46,7 +42,7 @@ let status = "ready";
 efx!(ui, r#"<Label>Status: {status}</Label>"#);
 ```
 
-### `<Button>…</Button>`
+#### `<Button>…</Button>`
 
 Renders a button. Returns `egui::Response` (so you can check clicks).
 
@@ -60,7 +56,7 @@ if efx!(ui, r#"<Button>Run</Button>"#).clicked() {
 
 ---
 
-## Expression interpolation `{...}`
+### Expression interpolation `{...}`
 
 Inside tag content you can insert any Rust expression that implements `Display`:
 
@@ -70,7 +66,7 @@ let b = 3;
 efx!(ui, r#"<Label>Sum: {a + b}</Label>"#);
 ```
 
-### Escaping braces
+#### Escaping braces
 
 To print `{` or `}`, use double braces (same as `format!`):
 
@@ -80,7 +76,7 @@ efx!(ui, r#"<Label>Literals: {{ and }}</Label>"#);
 
 ---
 
-## Errors & diagnostics
+### Errors & diagnostics
 
 At compile time the macro parses your snippet; at runtime it shows readable diagnostics via `ui.Label(...)` when input is invalid:
 
@@ -95,7 +91,7 @@ At compile time the macro parses your snippet; at runtime it shows readable diag
 
 ---
 
-## Current limitations
+### Current limitations
 
 * **Single root tag** per `efx!` call. No nested tags.
 * **No attributes** yet (e.g., `<Label color="...">` not supported).
@@ -133,35 +129,29 @@ efx!(ui, r#"<Label>Print {{ {text} }}</Label>"#);
 
 ---
 
-## FAQ
-
-**Can I render multiple elements at once?**
-Not yet. Call `efx!` multiple times.
-
-**Are styles/attributes supported?**
-Not yet. Use `egui` layout/spacing APIs around `efx!`.
-
-**Why `Label` is lowercase but `Button` is capitalized?**
-That’s how tags are currently mapped to components; names are case-sensitive.
-
----
-
-## Tag reference
+### Tag reference
 
 * `Label`
+
   **Syntax:** `<Label>Text with {expressions}</Label>`
+
   **Equivalent:** `ui.label(RichText::new(text))`
+
   **Returns:** `()`
 
+
 * `Button`
+
   **Syntax:** `<Button>Text with {expressions}</Button>`
+
   **Equivalent:** `ui.button(text)`
+
   **Returns:** `egui::Response`
 
 ---
 
-## Changelog
+### Changelog
 See in file [Changelog.md](Changelog.md)
 
-## Licence
+### Licence
 The MIT License. Please see [License File](LICENSE) for more information.

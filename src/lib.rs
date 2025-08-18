@@ -1,87 +1,58 @@
 use proc_macro::TokenStream;
-use quote::quote;
+use quote::{quote, ToTokens};
 use syn::{parse_macro_input, Expr, LitStr};
 
 mod components;
+// mod parser;
 
-fn parse_template_content(content: &str) -> (String, Vec<Expr>) {
-    let mut expressions = Vec::new();
-    let mut format_string = String::new();
-    let mut chars = content.chars().peekable();
-
-    while let Some(c) = chars.next() {
-        if c == '{' && chars.peek() != Some(&'{') {
-            let mut expr = String::new();
-            while let Some(next) = chars.next() {
-                if next == '}' {
-                    break;
-                }
-                expr.push(next);
-            }
-            let expr_tokens: proc_macro2::TokenStream = expr.parse().unwrap();
-            let expr: Expr = syn::parse2(expr_tokens).unwrap();
-            expressions.push(expr);
-            format_string.push_str("{}");
-        } else if c == '{' && chars.peek() == Some(&'{') {
-            chars.next();
-            format_string.push('{');
-        } else if c == '}' && chars.peek() == Some(&'}') {
-            chars.next();
-            format_string.push('}');
-        } else {
-            format_string.push(c);
-        }
-    }
-
-    (format_string, expressions)
-}
+#[cfg(feature = "expose-parser")]
+pub mod parser;
+#[cfg(feature = "expose-parser")]
+pub use crate::parser::{Parser, Node, Text, ParseError};
 
 #[proc_macro]
 pub fn efx(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as EfxInput);
-
     let ui = input.ui;
     let template = input.template.value();
 
-    let re = regex::Regex::new(r"^<(\w+)>(.*?)</(\w+)>$").unwrap();
-    let expanded = if let Some(captures) = re.captures(&template) {
-        let open_tag = captures.get(1).unwrap().as_str();
-        let content = captures.get(2).unwrap().as_str();
-        let close_tag = captures.get(3).unwrap().as_str();
-        let (format_string, expressions) = parse_template_content(content);
-
-        if open_tag == close_tag {
-            match open_tag {
-                "Label" => {
-                    let content_lit = LitStr::new(&format_string, proc_macro2::Span::call_site());
-                    components::label::render_label(&ui, &content_lit.value(), expressions.iter().collect())
-                }
-                "Button" => {
-                    let content_lit = LitStr::new(&format_string, proc_macro2::Span::call_site());
-                    components::button::render_button(&ui, &content_lit.value(), expressions.iter().collect())
-                }
-                _ => quote! {
-                    #ui.label(::eframe::egui::RichText::new(format!("Unknown tag: {}", #open_tag)));
-                },
-            }
-        } else {
-            quote! {
-                #ui.label(::eframe::egui::RichText::new(format!(
-                    "Mismatched tags: <{}> and </{}>",
-                    #open_tag, #close_tag
-                )));
-            }
-        }
-    } else {
-        quote! {
-            #ui.label(::eframe::egui::RichText::new(format!("Invalid template: {}", #template)));
+    let ast = match parser::parse_str(&template) {
+        Ok(nodes) => nodes,
+        Err(err) => {
+            let msg = format!("efx parse error: {}", err);
+            return quote! { compile_error!(#msg); }.into();
         }
     };
 
-    TokenStream::from(expanded)
+    let expanded = if ast.len() == 1 {
+        if let parser::Node::Element(el) = &ast[0] {
+            if el.name == "Button" {
+                let render_btn = render_button(&ui, el);
+                quote! { #render_btn }
+            } else {
+                // Any other unit root is like a block with statements (return ())
+                let body = render_nodes_as_stmts(&ui, &ast);
+                quote! {{
+                    #body
+                }}
+            }
+        } else {
+            // Text/interpolation on the root - just label
+            let body = render_nodes_as_stmts(&ui, &ast);
+            quote! {{
+                #body
+            }}
+        }
+    } else {
+        let body = render_nodes_as_stmts(&ui, &ast);
+        quote! {{
+            #body
+        }}
+    };
+
+    expanded.into()
 }
 
-/// Structure for parsing input arguments efx
 struct EfxInput {
     ui: Expr,
     template: LitStr,
@@ -94,4 +65,122 @@ impl syn::parse::Parse for EfxInput {
         let template = input.parse::<LitStr>()?;
         Ok(EfxInput { ui, template })
     }
+}
+
+fn render_nodes_as_stmts<UI: ToTokens>(ui: &UI, nodes: &[parser::Node]) -> proc_macro2::TokenStream {
+    let mut out = proc_macro2::TokenStream::new();
+    for n in nodes {
+        out.extend(render_node_stmt(ui, n));
+    }
+    out
+}
+
+fn render_node_stmt<UI: ToTokens>(ui: &UI, node: &parser::Node) -> proc_macro2::TokenStream {
+    use parser::Node::*;
+    match node {
+        Text(t) => {
+            let s = &t.value;
+            quote! { #ui.label(#s); }
+        }
+        Interp(i) => {
+            let expr: syn::Expr = match syn::parse_str(&i.expr_src) {
+                Ok(e) => e,
+                Err(_) => {
+                    let msg = format!("efx: invalid Rust expression in interpolation: {}", i.expr_src);
+                    return quote! { compile_error!(#msg); };
+                }
+            };
+            quote! { #ui.label(::std::format!("{}", (#expr))); }
+        }
+        Element(el) => render_element_stmt(ui, el),
+    }
+}
+
+fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &parser::Element) -> proc_macro2::TokenStream {
+    match el.name.as_str() {
+        "Label" => render_label_stmt(ui, el),
+        "Button" => {
+            let btn_expr = render_button(ui, el);
+            quote! { let _ = #btn_expr; }
+        }
+        "Row" => {
+            let inner_ui = quote!(ui);
+            let body = render_nodes_as_stmts(&inner_ui, &el.children);
+            quote! {
+                #ui.horizontal(|ui| {
+                    #body
+                });
+            }
+        }
+        "Column" => {
+            let inner_ui = quote!(ui);
+            let body = render_nodes_as_stmts(&inner_ui, &el.children);
+            quote! {
+                #ui.vertical(|ui| {
+                    #body
+                });
+            }
+        }
+        "Separator" => {
+            if el.children.is_empty() {
+                quote! { #ui.separator(); }
+            } else {
+                quote! { compile_error!("efx: <Separator/> must be self-closing without children"); }
+            }
+        }
+        other => {
+            let msg = format!("efx: unknown tag <{}>", other);
+            quote! { compile_error!(#msg); }
+        }
+    }
+}
+
+fn render_label_stmt<UI: ToTokens>(ui: &UI, el: &parser::Element) -> proc_macro2::TokenStream {
+    let (buf_init, buf_build) = build_buffer_from_children(&el.children);
+    quote! {
+        #buf_init
+        #buf_build
+        #ui.label(__efx_buf);
+    }
+}
+
+fn render_button<UI: ToTokens>(ui: &UI, el: &parser::Element) -> proc_macro2::TokenStream {
+    let (buf_init, buf_build) = build_buffer_from_children(&el.children);
+    quote! {{
+        #buf_init
+        #buf_build
+        #ui.button(__efx_buf)
+    }}
+}
+
+fn build_buffer_from_children(children: &[parser::Node]) -> (proc_macro2::TokenStream, proc_macro2::TokenStream) {
+    use parser::Node::*;
+    let init = quote! { let mut __efx_buf = ::std::string::String::new(); };
+    let mut build = proc_macro2::TokenStream::new();
+
+    for ch in children {
+        match ch {
+            Text(t) => {
+                let s = &t.value;
+                build.extend(quote! { __efx_buf.push_str(#s); });
+            }
+            Interp(i) => {
+                let expr: syn::Expr = match syn::parse_str(&i.expr_src) {
+                    Ok(e) => e,
+                    Err(_) => {
+                        let msg = format!("efx: invalid Rust expression in interpolation: {}", i.expr_src);
+                        build.extend(quote! { compile_error!(#msg); });
+                        continue;
+                    }
+                };
+                build.extend(quote! { ::std::fmt::Write::write_fmt(&mut __efx_buf, format_args!("{}", (#expr))).ok(); });
+            }
+            Element(_) => {
+                // For Label/Button we expect only text/interpolations
+                build.extend(quote! { compile_error!("efx: nested elements are not allowed inside <Label>/<Button> in this version"); });
+            }
+        }
+    }
+
+    (init, build)
 }

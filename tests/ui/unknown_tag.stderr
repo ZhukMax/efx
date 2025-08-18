@@ -1,0 +1,7 @@
+error: efx: unknown tag <WAT>
+  --> tests/ui/unknown_tag.rs:18:13
+   |
+18 |     let _ = efx!(ui, "<WAT>oops</WAT>");
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: this error originates in the macro `efx` (in Nightly builds, run with -Z macro-backtrace for more info)

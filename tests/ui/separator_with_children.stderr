@@ -1,0 +1,7 @@
+error: efx: <Separator/> must be self-closing without children
+  --> tests/ui/separator_with_children.rs:18:5
+   |
+18 |     efx!(ui, "<Separator>child</Separator>");
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: this error originates in the macro `efx` (in Nightly builds, run with -Z macro-backtrace for more info)
