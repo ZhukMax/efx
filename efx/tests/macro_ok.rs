@@ -1,4 +1,3 @@
-use std::fmt::Write;
 use efx::efx;
 
 #[derive(Default, Debug)]

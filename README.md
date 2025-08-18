@@ -5,7 +5,7 @@
 [![Docs.rs](https://docs.rs/efx/badge.svg)](https://docs.rs/efx)
 [![License](https://img.shields.io/crates/l/efx)](https://github.com/ZhukMax/efx/blob/main/LICENSE)
 
-**EFx** — Rust XML Template Engine for [eframe](https://github.com/emilk/egui/tree/master/crates/eframe) / [egui](https://github.com/emilk/egui) framework.
+**EFx** — Rust 🦀 XML Template Engine for [eframe](https://github.com/emilk/egui/tree/master/crates/eframe) / [egui](https://github.com/emilk/egui) framework.
 `efx!` is a proc-macro for writing tiny XML-like UI snippets in `eframe/egui`. It converts short tags into `egui` calls.
 
 Current scope: **one root tag per macro call**, **no nesting**, **no attributes**. You can embed arbitrary Rust expressions inside braces (`{...}`).

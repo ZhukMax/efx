@@ -2,13 +2,7 @@ use proc_macro::TokenStream;
 use quote::{quote, ToTokens};
 use syn::{parse_macro_input, Expr, LitStr};
 
-mod components;
-// mod parser;
-
-#[cfg(feature = "expose-parser")]
-pub mod parser;
-#[cfg(feature = "expose-parser")]
-pub use crate::parser::{Parser, Node, Text, ParseError};
+use efx_core::{parse_str, Node, Element};
 
 #[proc_macro]
 pub fn efx(input: TokenStream) -> TokenStream {
@@ -16,7 +10,7 @@ pub fn efx(input: TokenStream) -> TokenStream {
     let ui = input.ui;
     let template = input.template.value();
 
-    let ast = match parser::parse_str(&template) {
+    let ast = match parse_str(&template) {
         Ok(nodes) => nodes,
         Err(err) => {
             let msg = format!("efx parse error: {}", err);
@@ -25,7 +19,7 @@ pub fn efx(input: TokenStream) -> TokenStream {
     };
 
     let expanded = if ast.len() == 1 {
-        if let parser::Node::Element(el) = &ast[0] {
+        if let Node::Element(el) = &ast[0] {
             if el.name == "Button" {
                 let render_btn = render_button(&ui, el);
                 quote! { #render_btn }
@@ -67,7 +61,7 @@ impl syn::parse::Parse for EfxInput {
     }
 }
 
-fn render_nodes_as_stmts<UI: ToTokens>(ui: &UI, nodes: &[parser::Node]) -> proc_macro2::TokenStream {
+fn render_nodes_as_stmts<UI: ToTokens>(ui: &UI, nodes: &[Node]) -> proc_macro2::TokenStream {
     let mut out = proc_macro2::TokenStream::new();
     for n in nodes {
         out.extend(render_node_stmt(ui, n));
@@ -75,8 +69,8 @@ fn render_nodes_as_stmts<UI: ToTokens>(ui: &UI, nodes: &[parser::Node]) -> proc_
     out
 }
 
-fn render_node_stmt<UI: ToTokens>(ui: &UI, node: &parser::Node) -> proc_macro2::TokenStream {
-    use parser::Node::*;
+fn render_node_stmt<UI: ToTokens>(ui: &UI, node: &Node) -> proc_macro2::TokenStream {
+    use efx_core::Node::*;
     match node {
         Text(t) => {
             let s = &t.value;
@@ -96,7 +90,7 @@ fn render_node_stmt<UI: ToTokens>(ui: &UI, node: &parser::Node) -> proc_macro2::
     }
 }
 
-fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &parser::Element) -> proc_macro2::TokenStream {
+fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {
     match el.name.as_str() {
         "Label" => render_label_stmt(ui, el),
         "Button" => {
@@ -135,7 +129,7 @@ fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &parser::Element) -> proc_macr
     }
 }
 
-fn render_label_stmt<UI: ToTokens>(ui: &UI, el: &parser::Element) -> proc_macro2::TokenStream {
+fn render_label_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {
     let (buf_init, buf_build) = build_buffer_from_children(&el.children);
     quote! {
         #buf_init
@@ -144,7 +138,7 @@ fn render_label_stmt<UI: ToTokens>(ui: &UI, el: &parser::Element) -> proc_macro2
     }
 }
 
-fn render_button<UI: ToTokens>(ui: &UI, el: &parser::Element) -> proc_macro2::TokenStream {
+fn render_button<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {
     let (buf_init, buf_build) = build_buffer_from_children(&el.children);
     quote! {{
         #buf_init
@@ -153,8 +147,8 @@ fn render_button<UI: ToTokens>(ui: &UI, el: &parser::Element) -> proc_macro2::To
     }}
 }
 
-fn build_buffer_from_children(children: &[parser::Node]) -> (proc_macro2::TokenStream, proc_macro2::TokenStream) {
-    use parser::Node::*;
+fn build_buffer_from_children(children: &[Node]) -> (proc_macro2::TokenStream, proc_macro2::TokenStream) {
+    use efx_core::Node::*;
     let init = quote! { let mut __efx_buf = ::std::string::String::new(); };
     let mut build = proc_macro2::TokenStream::new();
 

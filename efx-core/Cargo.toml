@@ -1,0 +1,10 @@
+[package]
+name = "efx-core"
+version = "0.1.0"
+edition = "2024"
+authors = ["Max Zhuk <mail@zhukmax.com>"]
+license = "MIT OR Apache-2.0"
+description = "Core parser and AST for EFx proc-macro"
+repository = "https://github.com/ZhukMax/efx"
+
+[dependencies]
