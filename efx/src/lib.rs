@@ -2,7 +2,7 @@ use proc_macro::TokenStream;
 use quote::{quote, ToTokens};
 use syn::{parse_macro_input, Expr, LitStr};
 
-use efx_core::{parse_str, Node, Element};
+use efx_core::{parse_str, Element, Node};
 
 #[proc_macro]
 pub fn efx(input: TokenStream) -> TokenStream {
@@ -76,7 +76,7 @@ fn render_node_stmt<UI: ToTokens>(ui: &UI, node: &Node) -> proc_macro2::TokenStr
             let s = &t.value;
             quote! { #ui.label(#s); }
         }
-        Interp(i) => {
+        I11n(i) => {
             let expr: syn::Expr = match syn::parse_str(&i.expr_src) {
                 Ok(e) => e,
                 Err(_) => {
@@ -158,7 +158,7 @@ fn build_buffer_from_children(children: &[Node]) -> (proc_macro2::TokenStream, p
                 let s = &t.value;
                 build.extend(quote! { __efx_buf.push_str(#s); });
             }
-            Interp(i) => {
+            I11n(i) => {
                 let expr: syn::Expr = match syn::parse_str(&i.expr_src) {
                     Ok(e) => e,
                     Err(_) => {

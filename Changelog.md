@@ -1,5 +1,8 @@
 ## Changelog
 
+#### 0.4.0
+- Basic Nodes Parser (efx-core) refactoring
+
 #### 0.3.0
 - Divided the library into two crates
 - Created Basic Nodes Parser
