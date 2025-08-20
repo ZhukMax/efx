@@ -8,7 +8,7 @@
 **EFx** — Rust 🦀 XML Template Engine for [eframe](https://github.com/emilk/egui/tree/master/crates/eframe) / [egui](https://github.com/emilk/egui) framework.
 `efx!` is a proc-macro for writing tiny XML-like UI snippets in `eframe/egui`. It converts short tags into `egui` calls.
 
-Current scope: **no attributes**. You can embed arbitrary Rust expressions inside braces (`{...}`).
+You can embed arbitrary Rust expressions inside braces (`{...}`).
 
 ---
 
@@ -52,7 +52,7 @@ if efx!(ui, r#"<Button>Run</Button>"#).clicked() {
 }
 ```
 
-> Note: tag names are **case-sensitive**. `Label` is lowercase; `Button` starts with a capital B.
+> Note: tag names are **case-sensitive**.
 
 ---
 
