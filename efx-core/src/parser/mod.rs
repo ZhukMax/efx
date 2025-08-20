@@ -1,5 +1,5 @@
 pub use crate::parser::error::ParseError;
-pub use crate::parser::nodes::{Node, Element, Text, Interpolation};
+pub use crate::parser::nodes::{Node, Element, Text, Interpolation, Attr};
 pub use crate::parser::parser::Parser;
 
 pub mod error;

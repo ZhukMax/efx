@@ -1,6 +1,6 @@
 
 # EFx
-
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
 [![Crates.io](https://img.shields.io/crates/v/efx.svg)](https://crates.io/crates/efx)
 [![Docs.rs](https://docs.rs/efx/badge.svg)](https://docs.rs/efx)
 [![License](https://img.shields.io/crates/l/efx)](https://github.com/ZhukMax/efx/blob/main/LICENSE)
@@ -8,7 +8,7 @@
 **EFx** — Rust 🦀 XML Template Engine for [eframe](https://github.com/emilk/egui/tree/master/crates/eframe) / [egui](https://github.com/emilk/egui) framework.
 `efx!` is a proc-macro for writing tiny XML-like UI snippets in `eframe/egui`. It converts short tags into `egui` calls.
 
-Current scope: **one root tag per macro call**, **no nesting**, **no attributes**. You can embed arbitrary Rust expressions inside braces (`{...}`).
+Current scope: **no attributes**. You can embed arbitrary Rust expressions inside braces (`{...}`).
 
 ---
 
@@ -17,7 +17,7 @@ Current scope: **one root tag per macro call**, **no nesting**, **no attributes*
 Requires `eframe/egui` (the project currently uses `eframe 0.32`). Add to `Cargo.toml`:
 ```toml
 [dependencies]
-efx = "0.2"
+efx = "0.4"
 eframe = "0.32"
 ```
 
@@ -93,11 +93,22 @@ At compile time the macro parses your snippet; at runtime it shows readable diag
 
 ### Current limitations
 
-* **Single root tag** per `efx!` call. No nested tags.
-* **No attributes** yet (e.g., `<Label color="...">` not supported).
 * **Best with one-line snippets.** Line breaks inside content may not parse.
 * **Case-sensitive tag names.**
 * Interpolated expressions must implement `Display`.
+
+---
+
+### Todo ideas
+
+* Icons collections
+* Styles and style sheets
+* Layouts
+* Template syntax highlighting in code editors
+* Multi-line code snippets
+* Event Handling Attributes
+* Fonts and text style
+* Documentation on docs.rs
 
 ---
 

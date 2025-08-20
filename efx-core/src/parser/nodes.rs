@@ -3,7 +3,7 @@ use crate::parser::span_range::SpanRange;
 /// AST Mini-XML Nodes
 #[derive(Debug, Clone)]
 pub enum Node {
-    /// Element: <name>children...</name> or <name/>
+    /// Element: <name attr="...">children...</name> или <name .../>
     Element(Element),
     /// Text node (after normalizing escapes {{ → {, }} → })
     Text(Text),
@@ -14,7 +14,15 @@ pub enum Node {
 #[derive(Debug, Clone)]
 pub struct Element {
     pub name: String,
+    pub attrs: Vec<Attr>,
     pub children: Vec<Node>,
+    pub span: SpanRange,
+}
+
+#[derive(Debug, Clone)]
+pub struct Attr {
+    pub name: String,
+    pub value: String,
     pub span: SpanRange,
 }
 

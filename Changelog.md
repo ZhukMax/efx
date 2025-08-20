@@ -2,6 +2,7 @@
 
 #### 0.4.0
 - Basic Nodes Parser (efx-core) refactoring
+- Added tag attributes
 
 #### 0.3.0
 - Divided the library into two crates
