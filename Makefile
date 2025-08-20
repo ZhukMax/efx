@@ -1,14 +1,30 @@
-.PHONY: patch minor test dump help
+WORKSPACE_FLAGS = --workspace
+CLIPPY_TARGETS = --all-targets
 
-patch: ## Publish new patch version
-	@cargo release patch
+.PHONY: fmt lint patch minor test dump help
 
-minor: ## Publish new minor version
-	@cargo release minor
+fmt: ## Checking formatting
+	@cargo fmt --all -- --check
+
+lint:
+	@cargo clippy $(WORKSPACE_FLAGS) $(CLIPPY_TARGETS) -- -D warnings
 
 test: ## Testing efx
 	@cargo test -p efx-core
 	@cargo test -p efx
+
+test-all: ## Full workspace tests (integration + trybuild)
+	@cargo test $(WORKSPACE_FLAGS)
+
+check: fmt lint test-all ## Full set of pre-release checks
+
+patch: ## Publish new patch version
+	@make check
+	@cargo release patch
+
+minor: ## Publish new minor version
+	@make check
+	@cargo release minor
 
 dump: ## Make dump of project
 	@find ./ -type f \( -name "*.rs" -o -name "*.toml"  -o -name "*.md" \) \
