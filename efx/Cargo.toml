@@ -8,6 +8,7 @@ rust-version = "1.85"
 license = "MIT OR Apache-2.0"
 readme = "../README.md"
 repository = "https://github.com/ZhukMax/efx"
+documentation = "https://docs.rs/efx"
 keywords = ["egui", "eframe", "gui", "proc-macro", "templating"]
 categories = [
     "gui",
@@ -15,6 +16,9 @@ categories = [
     "development-tools::procedural-macro-helpers",
     "wasm",
 ]
+
+[badges]
+maintenance = { status = "actively-developed" }
 
 [lib]
 proc-macro = true

@@ -1,11 +1,16 @@
 [package]
 name = "efx-core"
-version = "0.4.0"
+description = "Core parser and AST for EFx proc-macro"
+authors = ["Max Zhuk <mail@zhukmax.com>"]
+version = "1.0.0"
 edition = "2024"
 rust-version = "1.85"
-authors = ["Max Zhuk <mail@zhukmax.com>"]
 license = "MIT OR Apache-2.0"
-description = "Core parser and AST for EFx proc-macro"
 repository = "https://github.com/ZhukMax/efx"
+keywords = ["parser", "ast", "templating", "egui", "gui"]
+categories = [
+    "gui",
+    "template-engine"
+]
 
 [dependencies]
