@@ -1,7 +1,7 @@
 
 # EFx
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
-[![MSRV](https://img.shields.io/badge/rustc-1.77%2B-blue.svg)](#)
+[![MSRV](https://img.shields.io/badge/rustc-1.85%2B-blue.svg)](#)
 [![Crates.io](https://img.shields.io/crates/v/efx.svg)](https://crates.io/crates/efx)
 [![Docs.rs](https://docs.rs/efx/badge.svg)](https://docs.rs/efx)
 [![License](https://img.shields.io/crates/l/efx)](https://github.com/ZhukMax/efx/blob/main/LICENSE)

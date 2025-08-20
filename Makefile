@@ -20,11 +20,13 @@ check: fmt lint test-all ## Full set of pre-release checks
 
 patch: ## Publish new patch version
 	@make check
-	@cargo release patch
+	@cargo release patch -p efx
+	@cargo publish -p efx
 
 minor: ## Publish new minor version
 	@make check
-	@cargo release minor
+	@cargo release minor -p efx
+	@cargo publish -p efx
 
 dump: ## Make dump of project
 	@find ./ -type f \( -name "*.rs" -o -name "*.toml"  -o -name "*.md" \) \
