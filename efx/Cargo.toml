@@ -2,7 +2,7 @@
 name = "efx"
 description = "Rust XML templating engine for building egui/eframe UIs with procedural macros"
 authors = ["Max Zhuk <mail@zhukmax.com>"]
-version = "0.4.1"
+version = "0.4.2"
 edition = "2024"
 rust-version = "1.85"
 license = "MIT OR Apache-2.0"
