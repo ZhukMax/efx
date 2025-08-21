@@ -1,8 +1,8 @@
-#![doc = include_str!("../../docs/intro.md")]
+#![doc = include_str!("../docs/intro.md")]
 #![doc = "\n\n---\n\n"]
-#![doc = include_str!("../../docs/tags.md")]
+#![doc = include_str!("../docs/tags.md")]
 #![doc = "\n\n---\n\n"]
-#![doc = include_str!("../../docs/guide.md")]
+#![doc = include_str!("../docs/guide.md")]
 
 use proc_macro::TokenStream;
 use quote::{quote, ToTokens};

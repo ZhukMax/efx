@@ -1,4 +1,4 @@
-![EFX — Rust templating for egui/eframe](docs/efx_cover.webp)
+![EFX — Rust templating for egui/eframe](efx/docs/efx_cover.webp)
 
 # EFx
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
@@ -57,6 +57,15 @@ if efx!(ui, r#"<Button>Run</Button>"#).clicked() {
 ```
 
 > Note: tag names are **case-sensitive**.
+
+---
+
+### Documentation
+You can see on web page https://docs.rs/efx/latest/efx/ or in files:
+
+- [Introduction](efx/docs/intro.md)
+- [Tags](efx/docs/tags.md)
+- [Guide](efx/docs/guide.md)
 
 ---
 
