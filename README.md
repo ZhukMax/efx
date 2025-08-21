@@ -1,8 +1,12 @@
+![EFX — Rust templating for egui/eframe](examples/efx_cover.webp)
 
 # EFx
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
-[![MSRV](https://img.shields.io/badge/rustc-1.85%2B-blue.svg)](#)
 [![Crates.io](https://img.shields.io/crates/v/efx.svg)](https://crates.io/crates/efx)
+![Crates.io Version](https://img.shields.io/crates/v/efx-core?label=efx-core)
+![Crates.io Total Downloads](https://img.shields.io/crates/d/efx)
+
+[![MSRV](https://img.shields.io/badge/rustc-1.85%2B-blue.svg)](#)
 [![Docs.rs](https://docs.rs/efx/badge.svg)](https://docs.rs/efx)
 [![License](https://img.shields.io/crates/l/efx)](https://github.com/ZhukMax/efx/blob/main/LICENSE)
 
@@ -164,7 +168,7 @@ efx!(ui, r#"<Label>Print {{ {text} }}</Label>"#);
 ---
 
 ### Changelog
-See in file [Changelog.md](Changelog.md)
+See in file [Changelog.md](efx/Changelog.md)
 
 ### Licence
-The MIT License. Please see [License File](LICENSE) for more information.
+The MIT License. Please see [License File](efx/LICENSE) for more information.
