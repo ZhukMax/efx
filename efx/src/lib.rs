@@ -1,3 +1,9 @@
+#![doc = include_str!("../../docs/intro.md")]
+#![doc = "\n\n---\n\n"]
+#![doc = include_str!("../../docs/tags.md")]
+#![doc = "\n\n---\n\n"]
+#![doc = include_str!("../../docs/guide.md")]
+
 use proc_macro::TokenStream;
 use quote::{quote, ToTokens};
 use syn::{parse_macro_input, Expr, LitStr};
@@ -5,6 +11,40 @@ use syn::{parse_macro_input, Expr, LitStr};
 use efx_core::{parse_str, Element, Node};
 
 #[proc_macro]
+/// Functional procedural macro `efx!` - parses compact XML-like markup
+/// and executes it against the passed UI context.
+///
+/// Takes two arguments:
+/// 1) **ui** — UI context expression/identifier;
+/// 2) **template** — a string literal with markup.
+/// # Example
+/// ```rust
+/// use efx::efx;
+/// # #[derive(Default)] struct Ui;
+/// # impl Ui {
+/// #   fn label<S: Into<String>>(&mut self, _s: S) {}
+/// #   fn button<S: Into<String>>(&mut self, _s: S) -> Resp { Resp::default() }
+/// #   fn separator(&mut self) {}
+/// #   fn horizontal<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut inner = Ui::default(); f(&mut inner); }
+/// #   fn vertical<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut inner = Ui::default(); f(&mut inner); }
+/// # }
+/// # #[derive(Clone, Copy, Default)] struct Resp; impl Resp { fn clicked(&self) -> bool { false } }
+/// # let mut ui = Ui::default();
+/// efx!(ui, r#"
+///   <Column>
+///      <Label>Hello</Label>
+///      <Separator/>
+///      <Row><Label>Row</Label></Row>
+///   </Column>
+/// "#);
+/// ```
+///
+/// # Errors
+/// - Unknown tag → `compile_error!`.
+/// - `Separator` with children → `compile_error!`.
+/// - Invalid interpolation `{ expr }` → `compile_error!`.
+///
+/// Tag attributes are **parsed** (since 0.4), but are currently **ignored** by the renderer.
 pub fn efx(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as EfxInput);
     let ui = input.ui;

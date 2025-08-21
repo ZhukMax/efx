@@ -1,14 +1,13 @@
-![EFX — Rust templating for egui/eframe](examples/efx_cover.webp)
+![EFX — Rust templating for egui/eframe](docs/efx_cover.webp)
 
 # EFx
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
 [![Crates.io](https://img.shields.io/crates/v/efx.svg)](https://crates.io/crates/efx)
 ![Crates.io Version](https://img.shields.io/crates/v/efx-core?label=efx-core)
-![Crates.io Total Downloads](https://img.shields.io/crates/d/efx)
-
 [![MSRV](https://img.shields.io/badge/rustc-1.85%2B-blue.svg)](#)
 [![Docs.rs](https://docs.rs/efx/badge.svg)](https://docs.rs/efx)
 [![License](https://img.shields.io/crates/l/efx)](https://github.com/ZhukMax/efx/blob/main/LICENSE)
+![Crates.io Total Downloads](https://img.shields.io/crates/d/efx)
 
 **EFx** — Rust 🦀 XML Template Engine for [eframe](https://github.com/emilk/egui/tree/master/crates/eframe) / [egui](https://github.com/emilk/egui) framework.
 `efx!` is a proc-macro for writing tiny XML-like UI snippets in `eframe/egui`. It converts short tags into `egui` calls.
@@ -115,55 +114,6 @@ At compile time the macro parses your snippet; at runtime it shows readable diag
 * Fonts and text style
 * Documentation on docs.rs
 * New tags: Heading, Hyperlink, Image, Table, Tabs
-
----
-
-## Recipes
-
-### Right-aligned dynamic status
-
-```rust
-ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-    let status = arbitrage_ui.arbitrage_status.to_string();
-    efx!(ui, r#"<Label>Status: {status}</Label>"#);
-});
-```
-
-### Button with click handling
-
-```rust
-if efx!(ui, r#"<Button>Refresh quotes</Button>"#).clicked() {
-    // trigger refresh
-}
-```
-
-### Braces + expression
-
-```rust
-let text = "test text";
-efx!(ui, r#"<Label>Print {{ {text} }}</Label>"#);
-```
-
----
-
-### Tag reference
-
-* `Label`
-
-  **Syntax:** `<Label>Text with {expressions}</Label>`
-
-  **Equivalent:** `ui.label(RichText::new(text))`
-
-  **Returns:** `()`
-
-
-* `Button`
-
-  **Syntax:** `<Button>Text with {expressions}</Button>`
-
-  **Equivalent:** `ui.button(text)`
-
-  **Returns:** `egui::Response`
 
 ---
 

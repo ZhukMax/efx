@@ -17,6 +17,11 @@ categories = [
     "wasm",
 ]
 
+[package.metadata.docs.rs]
+# collect all the documentation with enabled features and cfg(docsrs) notes
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [badges]
 maintenance = { status = "actively-developed" }
 
