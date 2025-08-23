@@ -1,6 +1,9 @@
 //! Minimal EFx + eframe example.
-//! Build native: `cargo run --example eframe_demo`
-//! Build wasm:   `cargo build --example eframe_demo --target wasm32-unknown-unknown`
+//! Native: cargo run -p efx --example eframe_demo
+//! Wasm (option 1): cargo install wasm-server-runner
+//!                  cargo run -p efx --example eframe_demo --target wasm32-unknown-unknown
+//! Wasm (option 2): trunk serve --example eframe_demo (если используешь Trunk)
+
 use eframe::egui;
 use efx::efx;
 
@@ -8,15 +11,6 @@ use efx::efx;
 struct State {
     name: String,
     clicks: usize,
-}
-
-pub fn main() -> eframe::Result<()> {
-    let native_options = eframe::NativeOptions::default();
-    eframe::run_native(
-        "EFx + eframe demo",
-        native_options,
-        Box::new(|_cc| Box::<App>::default()),
-    )
 }
 
 struct App {
@@ -29,24 +23,50 @@ impl eframe::App for App {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
             efx!(ui, r#"
-                <Column spacing=8>
-                    <Heading>EFx 0.5 (preview)</Heading>
-                    <Row spacing=6>
+                <Column>
+                    <Label>EFx demo</Label>
+                    <Row>
                         <Label>Welcome,</Label>
-                        <Hyperlink url="https://efxui.com">efxui.com</Hyperlink>
+                        <Label>efxui.com</Label>
                     </Row>
                     <Separator/>
-                "#);
-            // Simple text field (will require 0.5 TextField implementation; placeholder below)
+                </Column>
+            "#);
+
             ui.horizontal(|ui| {
                 ui.label("Your name:");
                 ui.text_edit_singleline(&mut self.state.name);
             });
+
             if efx!(ui, r#"<Button>Click me</Button>"#).clicked() {
                 self.state.clicks += 1;
             }
             ui.label(format!("Clicks: {}", self.state.clicks));
-            efx!(ui, r#"</Column>"#);
         });
     }
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+fn main() -> eframe::Result<()> {
+    let native_options = eframe::NativeOptions::default();
+    eframe::run_native(
+        "EFx + eframe demo",
+        native_options,
+        Box::new(|_cc| Ok(Box::<App>::default())),
+    )
+}
+
+// ---- Web (wasm32) entrypoint ----
+#[cfg(target_arch = "wasm32")]
+use eframe::wasm_bindgen::{self, prelude::*};
+
+#[cfg(target_arch = "wasm32")]
+#[wasm_bindgen(start)]
+pub async fn start() -> Result<(), wasm_bindgen::JsValue> {
+    // Optional: eframe::WebLogger::init(log::LevelFilter::Debug).ok();
+    let web_options = eframe::WebOptions::default();
+    eframe::WebRunner::new()
+        .start("the_canvas_id", web_options, Box::new(|_cc| Box::<App>::default()))
+        .await?;
+    Ok(())
 }
