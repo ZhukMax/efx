@@ -66,7 +66,7 @@ pub async fn start() -> Result<(), wasm_bindgen::JsValue> {
     // Optional: eframe::WebLogger::init(log::LevelFilter::Debug).ok();
     let web_options = eframe::WebOptions::default();
     eframe::WebRunner::new()
-        .start("the_canvas_id", web_options, Box::new(|_cc| Box::<App>::default()))
+        .start("the_canvas_id", web_options, Box::new(|_cc| Ok(Box::<App>::default())))
         .await?;
     Ok(())
 }

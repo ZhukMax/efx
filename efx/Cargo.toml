@@ -41,6 +41,12 @@ eframe = "0.32"
 # For the raw egui skeleton
 egui = "0.32"
 # For the bevy_egui example
-bevy = "0.16"
-bevy_egui = "0.36"
+bevy = { version = "0.16", default-features = false, features = [
+    "bevy_winit",
+    "bevy_render",
+    "bevy_ui",
+    "png",
+    "x11"
+] }
+bevy_egui = { version = "0.36", default-features = false }
 wasm-bindgen = "0.2"
