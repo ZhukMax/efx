@@ -176,7 +176,7 @@ Use the example in `examples/winit_wgpu_min.rs` as a starting point.
 
 ### Contributing
 
-* Start with the roadmap RFC: [EFX-0001](docs/rfcs/EFX-0001-roadmap-0.5-0.7.md).
+* Start with the roadmap RFC: [EFX-0001](efx/docs/rfcs/EFX-0001-roadmap-0.5-0.7.md).
 * Open issues are grouped by milestones **0.5 / 0.6 / 0.7**.
 * PRs that change behavior should reference the relevant RFC section.
 * Looking for help with: Bevy example(s), raw `winit+wgpu` example, attribute codegen & compile-fail tests, `TextField` docs.
