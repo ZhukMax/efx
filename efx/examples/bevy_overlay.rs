@@ -1,13 +1,13 @@
 //! Minimal EFx + bevy_egui overlay example.
-//! Run: `cargo run --example bevy_overlay`
+//! Run: `cargo run -p efx --example bevy_overlay`
 use bevy::prelude::*;
-use bevy_egui::{EguiPlugin, EguiContexts, EguiPrimaryContextPass};
+use bevy_egui::{egui, EguiContexts, EguiPlugin, EguiPrimaryContextPass};
 use efx::efx;
 
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugins(EguiPlugin)
+        .add_plugins(EguiPlugin::default())
         .insert_resource(UiState::default())
         .add_systems(EguiPrimaryContextPass, ui_system)
         .run();
@@ -19,12 +19,11 @@ struct UiState {
 }
 
 fn ui_system(mut contexts: EguiContexts, mut state: ResMut<UiState>) -> Result {
-    bevy_egui::egui::Window::new("EFx + Bevy").show(contexts.ctx_mut()?, |ui| {
-        if efx::efx!(ui, r#"<Button>Click</Button>"#).clicked() {
+    egui::Window::new("EFx + Bevy").show(contexts.ctx_mut()?, |ui| {
+        if efx!(ui, r#"<Button>Click</Button>"#).clicked() {
             state.clicks += 1;
         }
         ui.label(format!("Clicks: {}", state.clicks));
     });
-
     Ok(())
 }

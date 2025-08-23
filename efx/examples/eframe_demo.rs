@@ -2,7 +2,7 @@
 //! Native: cargo run -p efx --example eframe_demo
 //! Wasm (option 1): cargo install wasm-server-runner
 //!                  cargo run -p efx --example eframe_demo --target wasm32-unknown-unknown
-//! Wasm (option 2): trunk serve --example eframe_demo (если используешь Trunk)
+//! Wasm (option 2): trunk serve --example eframe_demo
 
 use eframe::egui;
 use efx::efx;
@@ -60,13 +60,27 @@ fn main() -> eframe::Result<()> {
 #[cfg(target_arch = "wasm32")]
 use eframe::wasm_bindgen::{self, prelude::*};
 
+
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen(start)]
-pub async fn start() -> Result<(), wasm_bindgen::JsValue> {
-    // Optional: eframe::WebLogger::init(log::LevelFilter::Debug).ok();
-    let web_options = eframe::WebOptions::default();
-    eframe::WebRunner::new()
-        .start("the_canvas_id", web_options, Box::new(|_cc| Ok(Box::<App>::default())))
-        .await?;
-    Ok(())
+pub fn start() {
+    use eframe::{WebOptions, WebRunner};
+    use wasm_bindgen_futures::spawn_local;
+    use eframe::wasm_bindgen::JsCast;
+    use web_sys::{window, HtmlCanvasElement};
+
+    spawn_local(async {
+        let doc = window().unwrap().document().unwrap();
+        let canvas: HtmlCanvasElement = doc
+            .get_element_by_id("the_canvas_id")
+            .expect("Missing <canvas id=\"the_canvas_id\"> in HTML")
+            .dyn_into()
+            .unwrap();
+
+        let options = WebOptions::default();
+        WebRunner::new()
+            .start(canvas, options, Box::new(|_cc| Ok(Box::<App>::default())))
+            .await
+            .expect("failed to start eframe WebRunner");
+    });
 }
