@@ -1,0 +1,49 @@
+name: examples-build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - example: eframe_demo
+            target: x86_64-unknown-linux-gnu
+          - example: eframe_demo
+            target: wasm32-unknown-unknown
+          - example: bevy_overlay
+            target: x86_64-unknown-linux-gnu
+          - example: winit_wgpu_min
+            target: x86_64-unknown-linux-gnu
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Add wasm target
+        if: ${{ matrix.target == 'wasm32-unknown-unknown' }}
+        run: rustup target add wasm32-unknown-unknown
+
+      - name: Install Linux deps for Bevy
+        if: ${{ matrix.example == 'bevy_overlay' && matrix.target == 'x86_64-unknown-linux-gnu' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            g++ pkg-config libx11-dev libasound2-dev libudev-dev \
+            libxkbcommon-x11-0 libwayland-dev libxkbcommon-dev \
+            libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev
+
+      - name: Build example
+        run: cargo build -p efx --example ${{ matrix.example }} --target ${{ matrix.target }}
+
+      - name: Upload wasm artifact
+        if: ${{ matrix.example == 'eframe_demo' && matrix.target == 'wasm32-unknown-unknown' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.example }}-${{ matrix.target }}
+          path: target/wasm32-unknown-unknown/debug/examples/*.wasm

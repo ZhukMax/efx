@@ -32,34 +32,6 @@ use efx::efx; // the macro
 
 ---
 
-### Quick start
-
-#### `<Label>…</Label>`
-
-Renders a text Label. Returns `()` (equivalent to `ui.Label(...)`).
-
-```rust
-efx!(ui, r#"<Label>Hello, world</Label>"#);
-
-// With interpolation:
-let status = "ready";
-efx!(ui, r#"<Label>Status: {status}</Label>"#);
-```
-
-#### `<Button>…</Button>`
-
-Renders a button. Returns `egui::Response` (so you can check clicks).
-
-```rust
-if efx!(ui, r#"<Button>Run</Button>"#).clicked() {
-    // handle click
-}
-```
-
-> Note: tag names are **case-sensitive**.
-
----
-
 ### Documentation
 You can see on web page https://docs.rs/efx/latest/efx/ or in files:
 
@@ -112,17 +84,102 @@ At compile time the macro parses your snippet; at runtime it shows readable diag
 
 ---
 
-### Todo ideas
+### Roadmap & RFCs
 
-* Icons collections
-* Styles and style sheets
-* Layouts
-* Template syntax highlighting in code editors
-* Multi-line code snippets
-* Event Handling Attributes
-* Fonts and text style
-* Documentation on docs.rs
-* New tags: Heading, Hyperlink, Image, Table, Tabs
+**TL;DR.** EFx is a minimalist XML DSL on top of `egui` that compiles to plain `ui.*` calls.
+The next three releases focus on expressiveness and first-class examples across popular `egui` runtimes:
+
+* **0.5 — Attributes & core tags:** type-checked attributes, `Heading`, `Hyperlink`, `Image`, `TextField`, `Grid`, plus `Window/CentralPanel/SidePanel`. Diagnostics & examples.
+* **0.6 — Components & events:** reusable components/slots, event sugar (`onClick`, etc.), classes/presets, Bevy examples.
+* **0.7 — Themes & layouts:** lightweight style sheets, extended containers (`Tabs/Table` behind `extras`), perf & polish.
+
+This plan is incremental and **non-breaking**; new features are opt-in. Priorities may change based on community feedback.
+
+👉 **Full RFC:** [EFX-0001 — Roadmap 0.5–0.7](docs/rfcs/EFX-0001-roadmap-0.5-0.7.md)
+👉 **RFC index:** [docs/rfcs/README.md](docs/rfcs/README.md)
+
+---
+
+### Supported `egui` runtimes
+
+EFx renders into any runtime that provides `&mut egui::Ui`. We officially build examples for the following targets:
+
+**Tier-1 (official in 0.5: examples + CI builds)**
+
+* `eframe` (native + wasm)
+* `bevy_egui` (native)
+* raw `winit+wgpu` (via `egui-winit` + `egui-wgpu`)
+
+**Tier-2 (compatible today; examples later / community support)**
+
+* `egui-miniquad` (for `macroquad/miniquad` overlays)
+* `egui_sdl2_*` backends
+* `egui_glow` / `tao` (lower-level backends)
+
+### Quickstart (pick one)
+
+**A) eframe**
+
+```toml
+# Cargo.toml
+[dependencies]
+efx    = "0.4"
+eframe = "0.32"
+```
+
+```rust
+use eframe::egui;
+use efx::efx;
+
+egui::CentralPanel::default().show(ctx, |ui| {
+    efx!(ui, r#"<Column><Label>Hello, EFx</Label><Separator/></Column>"#);
+});
+```
+
+**B) Bevy + bevy\_egui**
+
+```toml
+# Cargo.toml
+[dependencies]
+efx       = "0.4"
+bevy      = "0.16"
+bevy_egui = "0.36"  # re-exports `egui`
+```
+
+```rust
+use bevy_egui::{EguiPlugin, EguiContexts};
+use efx::efx;
+
+bevy_egui::egui::Window::new("EFx").show(egui_ctx.ctx_mut(), |ui| {
+    efx!(ui, r#"<Row><Label>It works</Label></Row>"#);
+});
+```
+
+> Tip: import `egui` via `use bevy_egui::egui as egui;` to avoid version mismatches.
+
+**C) Raw winit + wgpu**
+
+```toml
+# Cargo.toml
+[dependencies]
+efx        = "0.4"
+egui       = "0.32"
+egui-winit = "0.32"
+egui-wgpu  = "0.32"
+winit      = "0.30"
+wgpu       = "26.0"
+```
+
+Use the example in `examples/winit_wgpu_min.rs` as a starting point.
+
+---
+
+### Contributing
+
+* Start with the roadmap RFC: [EFX-0001](efx/docs/rfcs/EFX-0001-roadmap-0.5-0.7.md).
+* Open issues are grouped by milestones **0.5 / 0.6 / 0.7**.
+* PRs that change behavior should reference the relevant RFC section.
+* Looking for help with: Bevy example(s), raw `winit+wgpu` example, attribute codegen & compile-fail tests, `TextField` docs.
 
 ---
 
