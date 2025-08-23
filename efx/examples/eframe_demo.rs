@@ -56,30 +56,23 @@ fn main() -> eframe::Result<()> {
     )
 }
 
-// ---- Web (wasm32) entrypoint ----
-#[cfg(target_arch = "wasm32")]
-use eframe::wasm_bindgen::{self, prelude::*};
-
 
 #[cfg(target_arch = "wasm32")]
-#[wasm_bindgen(start)]
-pub fn start() {
-    use eframe::{WebOptions, WebRunner};
+fn main() {
+    use wasm_bindgen::JsCast;
     use wasm_bindgen_futures::spawn_local;
-    use eframe::wasm_bindgen::JsCast;
     use web_sys::{window, HtmlCanvasElement};
 
-    spawn_local(async {
-        let doc = window().unwrap().document().unwrap();
-        let canvas: HtmlCanvasElement = doc
-            .get_element_by_id("the_canvas_id")
-            .expect("Missing <canvas id=\"the_canvas_id\"> in HTML")
-            .dyn_into()
-            .unwrap();
+    let canvas: HtmlCanvasElement = window().unwrap()
+        .document().unwrap()
+        .get_element_by_id("the_canvas_id")
+        .expect("Missing <canvas id=\"the_canvas_id\"> in HTML")
+        .dyn_into().unwrap();
 
-        let options = WebOptions::default();
-        WebRunner::new()
-            .start(canvas, options, Box::new(|_cc| Ok(Box::<App>::default())))
+    let web_options = eframe::WebOptions::default();
+    spawn_local(async move {
+        eframe::WebRunner::new()
+            .start(canvas, web_options, Box::new(|_cc| Ok(Box::<App>::default())))
             .await
             .expect("failed to start eframe WebRunner");
     });
