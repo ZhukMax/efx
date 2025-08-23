@@ -1,0 +1,23 @@
+name: examples-build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { example: eframe_demo,    target: x86_64-unknown-linux-gnu }
+          - { example: eframe_demo,    target: wasm32-unknown-unknown }
+          - { example: bevy_overlay,   target: x86_64-unknown-linux-gnu }
+          - { example: winit_wgpu_min, target: x86_64-unknown-linux-gnu }
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - if: matrix.target == 'wasm32-unknown-unknown'
+        run: rustup target add wasm32-unknown-unknown
+      - run: cargo build --example ${{ matrix.example }} --target ${{ matrix.target }}
