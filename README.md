@@ -18,11 +18,11 @@ You can embed arbitrary Rust expressions inside braces (`{...}`).
 
 ### Install & import
 
-Requires `eframe/egui` (the project currently uses `eframe 0.32`). Add to `Cargo.toml`:
+Requires `egui` (the project currently uses `egui 0.32`). Add to `Cargo.toml`:
 ```toml
 [dependencies]
 efx = "0.4"
-eframe = "0.32"
+egui = "0.32" # or egui-based framework
 ```
 
 Inside this repo just import the macro:
@@ -95,8 +95,9 @@ The next three releases focus on expressiveness and first-class examples across 
 
 This plan is incremental and **non-breaking**; new features are opt-in. Priorities may change based on community feedback.
 
-👉 **Full RFC:** [EFX-0001 — Roadmap 0.5–0.7](docs/rfcs/EFX-0001-roadmap-0.5-0.7.md)
-👉 **RFC index:** [docs/rfcs/README.md](docs/rfcs/README.md)
+👉 **Full RFC:** [EFX-0001 — Roadmap 0.5–0.7](efx/docs/rfcs/EFX-0001-roadmap-0.5-0.7.md)
+
+👉 **RFC index:** [RFC/README.md](efx/docs/rfcs/README.md)
 
 ---
 
@@ -177,6 +178,7 @@ Use the example in `examples/winit_wgpu_min.rs` as a starting point.
 ### Contributing
 
 * Start with the roadmap RFC: [EFX-0001](efx/docs/rfcs/EFX-0001-roadmap-0.5-0.7.md).
+* You can write me with your ideas on [mail@zhukmax.com](mailto:mail@zhukmax.com).
 * Open issues are grouped by milestones **0.5 / 0.6 / 0.7**.
 * PRs that change behavior should reference the relevant RFC section.
 * Looking for help with: Bevy example(s), raw `winit+wgpu` example, attribute codegen & compile-fail tests, `TextField` docs.

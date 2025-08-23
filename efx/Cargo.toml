@@ -1,6 +1,6 @@
 [package]
 name = "efx"
-description = "Rust XML templating engine for building egui/eframe UIs with procedural macros"
+description = "Rust XML templating engine for building egui UIs with procedural macros"
 authors = ["Max Zhuk <mail@zhukmax.com>"]
 version = "0.4.2"
 edition = "2024"
