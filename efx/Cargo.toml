@@ -36,3 +36,10 @@ efx-core = { version = "1.0", path = "../efx-core" }
 
 [dev-dependencies]
 trybuild = "1.0"
+# For the eframe example
+eframe = "0.32"
+# For the raw egui skeleton
+egui = "0.32"
+# For the bevy_egui example
+bevy = "0.16"
+bevy_egui = "0.36"
