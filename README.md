@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/crates/l/efx)](https://github.com/ZhukMax/efx/blob/main/LICENSE)
 ![Crates.io Total Downloads](https://img.shields.io/crates/d/efx)
 
-**EFx** — Rust 🦀 XML Template Engine for [eframe](https://github.com/emilk/egui/tree/master/crates/eframe) / [egui](https://github.com/emilk/egui) framework.
+**EFx** — Rust 🦀 XML Template Engine for  [egui](https://github.com/emilk/egui)-based frameworks: [eframe](https://github.com/emilk/egui/tree/master/crates/eframe), [bevy_egui](https://github.com/vladbat00/bevy_egui), [egui-winit](https://crates.io/crates/egui-winit), [egui-miniquad](https://github.com/not-fl3/egui-miniquad).
 `efx!` is a proc-macro for writing tiny XML-like UI snippets in `eframe/egui`. It converts short tags into `egui` calls.
 
 You can embed arbitrary Rust expressions inside braces (`{...}`).
@@ -109,11 +109,11 @@ EFx renders into any runtime that provides `&mut egui::Ui`. We officially build 
 
 * `eframe` (native + wasm)
 * `bevy_egui` (native)
-* raw `winit+wgpu` (via `egui-winit` + `egui-wgpu`)
+* raw `winit+wgpu` (via `egui-winit` + `egui-wgpu`). [Wgpu](https://github.com/gfx-rs/wgpu) - a cross-platform, safe, pure-rust graphics API. It runs natively on Vulkan, Metal, D3D12, and OpenGL; and on top of WebGL2 and WebGPU on wasm. Follows WebGPU specification. With async/await API.
 
 **Tier-2 (compatible today; examples later / community support)**
 
-* `egui-miniquad` (for `macroquad/miniquad` overlays)
+* `egui-miniquad` (for `macroquad/miniquad` overlays) - Relatively minimalistic API well suited for small to medium graphics projects. Supports multiple backends, including browser target.
 * `egui_sdl2_*` backends
 * `egui_glow` / `tao` (lower-level backends)
 

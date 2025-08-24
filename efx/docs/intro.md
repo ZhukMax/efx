@@ -7,6 +7,18 @@ efx — declarative UI template engine in Rust
 
 ```rust
 use efx::efx;
+# // --- doctest prelude (hidden) ---
+# #[derive(Default)] struct Ui;
+# struct Resp; impl Resp { fn clicked(&self)->bool { false } }
+# impl Ui {
+    #   fn label<S: Into<String>>(&mut self, _s: S) {}
+    #   fn button<S: Into<String>>(&mut self, _s: S) -> Resp { Resp }
+    #   fn separator(&mut self) {}
+    #   fn horizontal<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut inner = Ui::default(); f(&mut inner); }
+    #   fn vertical<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut inner = Ui::default(); f(&mut inner); }
+    # }
+# let mut ui = Ui::default();
+# // --- end prelude ---
 
 efx!(ui, r#"
     <Column>

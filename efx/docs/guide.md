@@ -10,6 +10,17 @@ You can insert arbitrary Rust expressions inside the text:
 ```rust
 use efx::efx;
 
+# #[derive(Default)] struct Ui;
+# impl Ui {
+#    fn label<S: Into<String>>(&mut self, _s: S) {}
+#    fn button<S: Into<String>>(&mut self, _s: S) -> Resp { Resp::default() }
+#    fn separator(&mut self) {}
+#    fn horizontal<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut inner = Ui::default(); f(&mut inner); }
+#    fn vertical<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut inner = Ui::default(); f(&mut inner); }
+# }
+# #[derive(Clone, Copy, Default)] struct Resp; impl Resp { fn clicked(&self) -> bool { false } }
+# let mut ui = Ui::default();
+
 efx!(ui, "<Label>Hello {1 + 1}</Label>");
 ```
 
@@ -30,5 +41,4 @@ but the renderer **does not use them** - the processing API will be added in fut
 - Invalid fragment in interpolation `{ … }` → `compile_error!` with source fragment.
 
 ### Debugging
-If you want to see what `efx!` generates, compile with `RUSTFLAGS="--emit=mir,llvm-ir"` 
-or use `cargo expand` to examine the expanded macro.
+If you want to see what `efx!` generates, compile with `RUSTFLAGS="--emit=mir,llvm-ir"`.
