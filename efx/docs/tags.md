@@ -6,18 +6,8 @@
 Vertical container. Generates `ui.vertical(|ui| { ... })`.
 
 ```rust
-use efx::efx;
-
-# #[derive(Default)] struct Ui;
-# impl Ui {
-#    fn label<S: Into<String>>(&mut self, _s: S) {}
-#    fn button<S: Into<String>>(&mut self, _s: S) -> Resp { Resp::default() }
-#    fn separator(&mut self) {}
-#    fn horizontal<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut inner = Ui::default(); f(&mut inner); }
-#    fn vertical<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut inner = Ui::default(); f(&mut inner); }
-# }
-# #[derive(Clone, Copy, Default)] struct Resp; impl Resp { fn clicked(&self) -> bool { false } }
-# let mut ui = Ui::default();
+use efx::*;
+# efx_doc_prelude!();
 
 efx!(ui, "<Column><Label>A</Label></Column>");
 ```
@@ -26,18 +16,8 @@ efx!(ui, "<Column><Label>A</Label></Column>");
 Horizontal container. Generates `ui.horizontal(|ui| { ... })`.
 
 ```rust
-use efx::efx;
-
-# #[derive(Default)] struct Ui;
-# impl Ui {
-#    fn label<S: Into<String>>(&mut self, _s: S) {}
-#    fn button<S: Into<String>>(&mut self, _s: S) -> Resp { Resp::default() }
-#    fn separator(&mut self) {}
-#    fn horizontal<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut inner = Ui::default(); f(&mut inner); }
-#    fn vertical<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut inner = Ui::default(); f(&mut inner); }
-# }
-# #[derive(Clone, Copy, Default)] struct Resp; impl Resp { fn clicked(&self) -> bool { false } }
-# let mut ui = Ui::default();
+use efx::*;
+# efx_doc_prelude!();
 
 efx!(ui, "<Row><Label>B</Label></Row>");
 ```
@@ -46,18 +26,8 @@ efx!(ui, "<Row><Label>B</Label></Row>");
 Text widget. Only text and interpolations (`{expr}`) in child nodes are allowed.
 
 ```rust
-use efx::efx;
-
-# #[derive(Default)] struct Ui;
-# impl Ui {
-#    fn label<S: Into<String>>(&mut self, _s: S) {}
-#    fn button<S: Into<String>>(&mut self, _s: S) -> Resp { Resp::default() }
-#    fn separator(&mut self) {}
-#    fn horizontal<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut inner = Ui::default(); f(&mut inner); }
-#    fn vertical<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut inner = Ui::default(); f(&mut inner); }
-# }
-# #[derive(Clone, Copy, Default)] struct Resp; impl Resp { fn clicked(&self) -> bool { false } }
-# let mut ui = Ui::default();
+use efx::*;
+# efx_doc_prelude!();
 
 efx!(ui, "<Label>Hello {1+1}</Label>");
 ```
@@ -66,35 +36,15 @@ efx!(ui, "<Label>Hello {1+1}</Label>");
 Self-closing divider. No children allowed (otherwise `compile_error!`).
 
 ```rust
-use efx::efx;
-
-# #[derive(Default)] struct Ui;
-# impl Ui {
-#    fn label<S: Into<String>>(&mut self, _s: S) {}
-#    fn button<S: Into<String>>(&mut self, _s: S) -> Resp { Resp::default() }
-#    fn separator(&mut self) {}
-#    fn horizontal<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut inner = Ui::default(); f(&mut inner); }
-#    fn vertical<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut inner = Ui::default(); f(&mut inner); }
-# }
-# #[derive(Clone, Copy, Default)] struct Resp; impl Resp { fn clicked(&self) -> bool { false } }
-# let mut ui = Ui::default();
+use efx::*;
+# efx_doc_prelude!();
 
 efx!(ui, "<Separator/>");
 ```
 
 ```rust,compile_fail
-use efx::efx;
-
-# #[derive(Default)] struct Ui;
-# impl Ui {
-#    fn label<S: Into<String>>(&mut self, _s: S) {}
-#    fn button<S: Into<String>>(&mut self, _s: S) -> Resp { Resp::default() }
-#    fn separator(&mut self) {}
-#    fn horizontal<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut inner = Ui::default(); f(&mut inner); }
-#    fn vertical<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut inner = Ui::default(); f(&mut inner); }
-# }
-# #[derive(Clone, Copy, Default)] struct Resp; impl Resp { fn clicked(&self) -> bool { false } }
-# let mut ui = Ui::default();
+use efx::*;
+# efx_doc_prelude!();
 
 /// compile_fail
 efx!(ui, "<Separator>child</Separator>");
@@ -104,18 +54,8 @@ efx!(ui, "<Separator>child</Separator>");
 Button is the only tag that returns a response value (`Resp`) at the root of an expression.
 
 ```rust
-use efx::efx;
-
-# #[derive(Default)] struct Ui;
-# impl Ui {
-#    fn label<S: Into<String>>(&mut self, _s: S) {}
-#    fn button<S: Into<String>>(&mut self, _s: S) -> Resp { Resp::default() }
-#    fn separator(&mut self) {}
-#    fn horizontal<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut inner = Ui::default(); f(&mut inner); }
-#    fn vertical<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut inner = Ui::default(); f(&mut inner); }
-# }
-# #[derive(Clone, Copy, Default)] struct Resp; impl Resp { fn clicked(&self) -> bool { false } }
-# let mut ui = Ui::default();
+use efx::*;
+# efx_doc_prelude!();
 
 let resp = efx!(ui, "<Button>Click {40+2}</Button>");
 assert!(!resp.clicked());

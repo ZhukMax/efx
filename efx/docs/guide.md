@@ -8,18 +8,8 @@
 ### Interpolations
 You can insert arbitrary Rust expressions inside the text:
 ```rust
-use efx::efx;
-
-# #[derive(Default)] struct Ui;
-# impl Ui {
-#    fn label<S: Into<String>>(&mut self, _s: S) {}
-#    fn button<S: Into<String>>(&mut self, _s: S) -> Resp { Resp::default() }
-#    fn separator(&mut self) {}
-#    fn horizontal<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut inner = Ui::default(); f(&mut inner); }
-#    fn vertical<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut inner = Ui::default(); f(&mut inner); }
-# }
-# #[derive(Clone, Copy, Default)] struct Resp; impl Resp { fn clicked(&self) -> bool { false } }
-# let mut ui = Ui::default();
+use efx::*;
+# efx_doc_prelude!();
 
 efx!(ui, "<Label>Hello {1 + 1}</Label>");
 ```

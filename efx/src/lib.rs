@@ -10,7 +10,42 @@ use syn::{parse_macro_input, Expr, LitStr};
 
 use efx_core::{parse_str, Element, Node};
 
+/// Helper macro for doctests: expands a dummy `Ui/Resp` and creates `let mut ui = Ui::default();`.
+/// Hidden from documentation to avoid cluttering the public API.
 #[proc_macro]
+#[doc(hidden)]
+pub fn efx_doc_prelude(_input: TokenStream) -> TokenStream {
+    quote! {
+        #[allow(unused, dead_code)]
+        #[derive(Default)]
+        struct Ui;
+
+        #[allow(unused, dead_code)]
+        #[derive(Clone, Copy, Default)]
+        struct Resp;
+
+        #[allow(unused, dead_code)]
+        impl Resp { fn clicked(&self) -> bool { false } }
+
+        #[allow(unused, dead_code)]
+        impl Ui {
+            fn label<S: Into<String>>(&mut self, _s: S) {}
+            fn button<S: Into<String>>(&mut self, _s: S) -> Resp { Resp }
+            fn separator(&mut self) {}
+            fn horizontal<F: FnOnce(&mut Ui)>(&mut self, f: F) {
+                let mut inner = Ui::default();
+                f(&mut inner);
+            }
+            fn vertical<F: FnOnce(&mut Ui)>(&mut self, f: F) {
+                let mut inner = Ui::default();
+                f(&mut inner);
+            }
+        }
+
+        let mut ui = Ui::default();
+    }.into()
+}
+
 /// Functional procedural macro `efx!` - parses compact XML-like markup
 /// and executes it against the passed UI context.
 ///
@@ -19,17 +54,9 @@ use efx_core::{parse_str, Element, Node};
 /// 2) **template** — a string literal with markup.
 /// # Example
 /// ```rust
-/// use efx::efx;
-/// # #[derive(Default)] struct Ui;
-/// # impl Ui {
-/// #   fn label<S: Into<String>>(&mut self, _s: S) {}
-/// #   fn button<S: Into<String>>(&mut self, _s: S) -> Resp { Resp::default() }
-/// #   fn separator(&mut self) {}
-/// #   fn horizontal<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut inner = Ui::default(); f(&mut inner); }
-/// #   fn vertical<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut inner = Ui::default(); f(&mut inner); }
-/// # }
-/// # #[derive(Clone, Copy, Default)] struct Resp; impl Resp { fn clicked(&self) -> bool { false } }
-/// # let mut ui = Ui::default();
+/// use efx::*;
+/// # efx_doc_prelude!();
+/// 
 /// efx!(ui, r#"
 ///   <Column>
 ///      <Label>Hello</Label>
@@ -45,6 +72,7 @@ use efx_core::{parse_str, Element, Node};
 /// - Invalid interpolation `{ expr }` → `compile_error!`.
 ///
 /// Tag attributes are **parsed** (since 0.4), but are currently **ignored** by the renderer.
+#[proc_macro]
 pub fn efx(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as EfxInput);
     let ui = input.ui;
