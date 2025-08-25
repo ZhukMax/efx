@@ -13,10 +13,10 @@ Vertical container. Generates `ui.vertical(|ui| { ... })`.
 - `padding="N"` — extra top/bottom padding (f32).
 
 ```rust
+use efx_core::doc_prelude::*;
 use efx::*;
-# efx_doc_prelude!();
 
-efx!(ui, "<Column gap=\"8\"><Label>A</Label></Column>");
+efx!(Ui::default(), "<Column gap=\"8\"><Label>A</Label></Column>");
 ```
 
 ### `Row`
@@ -30,12 +30,12 @@ Horizontal container. Generates `ui.horizontal(|ui| { ... })`.
 - `padding="N"` — extra left/right padding (f32).
 
 ```rust
+use efx_core::doc_prelude::*;
 use efx::*;
-# efx_doc_prelude!();
 
-efx!(ui, r#"<Row gap="8" padding="4" align="center"><Label>A</Label><Label>B</Label></Row>"#);
+efx!(Ui::default(), r#"<Row gap="8" padding="4" align="center"><Label>A</Label><Label>B</Label></Row>"#);
 
-efx!(ui, r#"<Row wrap="true"><Label>Item1</Label><Label>Item2</Label><Label>Item3</Label></Row>"#);
+efx!(Ui::default(), r#"<Row wrap="true"><Label>Item1</Label><Label>Item2</Label><Label>Item3</Label></Row>"#);
 
 ```
 
@@ -54,10 +54,10 @@ Text widget. Only text and interpolations (`{expr}`) in child nodes are allowed.
 - `wrap="true|false"` — enable line wrapping.
 
 ```rust
+use efx_core::doc_prelude::*;
 use efx::*;
-# efx_doc_prelude!();
 
-efx!(ui, r##"<Label color="#66CCFF" size="16" bold="true">Hello user</Label>"##);
+efx!(Ui::default(), r##"<Label color="#66CCFF" size="16" bold="true">Hello user</Label>"##);
 ```
 
 ### `Separator`
@@ -70,18 +70,18 @@ Self-closing divider. No children allowed (otherwise `compile_error!`).
 - `space_after="N"` — spacing below.
 
 ```rust
+use efx_core::doc_prelude::*;
 use efx::*;
-# efx_doc_prelude!();
 
-efx!(ui, "<Separator space_before=\"12\"/>");
+efx!(Ui::default(), "<Separator space_before=\"12\"/>");
 ```
 
 ```rust,compile_fail
+use efx_core::doc_prelude::*;
 use efx::*;
-# efx_doc_prelude!();
 
 /// compile_fail
-efx!(ui, "<Separator>child</Separator>");
+efx!(Ui::default(), "<Separator>child</Separator>");
 ```
 
 ### `Button`
@@ -97,9 +97,9 @@ Button is the only tag that returns a response value (`Resp`) at the root of an 
 - `tooltip="text"` — hover tooltip.
 
 ```rust
+use efx_core::doc_prelude::*;
 use efx::*;
-# efx_doc_prelude!();
 
-let resp: Resp = efx!(ui, r#"<Button rounding="8" enabled="false" tooltip="Soon">Run</Button>"#);
+let resp: Resp = efx!(Ui::default(), r#"<Button rounding="8" enabled="false" tooltip="Soon">Run</Button>"#);
 assert!(!resp.clicked());
 ```

@@ -6,7 +6,6 @@
 
 mod attr_adapters;
 mod buffer;
-mod helpers;
 mod input;
 mod render;
 mod tags;
@@ -21,14 +20,6 @@ use crate::render::render_nodes_as_stmts;
 use crate::tags::button::render_button;
 use efx_core::{Node, parse_str};
 
-/// Helper macro for doctests: expands a dummy `Ui/Resp` and creates `let mut ui = Ui::default();`.
-/// Hidden from documentation to avoid cluttering the public API.
-#[proc_macro]
-#[doc(hidden)]
-pub fn efx_doc_prelude(_input: TokenStream) -> TokenStream {
-    helpers::prelude_maker().into()
-}
-
 /// Functional procedural macro `efx!` - parses compact XML-like markup
 /// and executes it against the passed UI context.
 ///
@@ -37,9 +28,10 @@ pub fn efx_doc_prelude(_input: TokenStream) -> TokenStream {
 /// 2) **template** — a string literal with markup.
 /// # Example
 /// ```rust
+/// use efx_core::doc_prelude::*;
 /// use efx::*;
-/// # efx_doc_prelude!();
 ///
+/// let mut ui = Ui::default();
 /// efx!(ui, r#"
 ///   <Column>
 ///      <Label>Hello</Label>

@@ -8,10 +8,10 @@
 ### Interpolations
 You can insert arbitrary Rust expressions inside the text:
 ```rust
+use efx_core::doc_prelude::*;
 use efx::*;
-# efx_doc_prelude!();
 
-efx!(ui, "<Label>Hello {1 + 1}</Label>");
+efx!(Ui::default(), r#"<Label>Hello {1 + 1}</Label>"#);
 ```
 
 #### Escaping curly braces

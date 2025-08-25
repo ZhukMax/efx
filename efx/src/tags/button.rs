@@ -14,7 +14,7 @@ pub(crate) fn render_button<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2:
 
     let mut has_style_attrs = false;
     let mut fill_ts: Option<proc_macro2::TokenStream> = None;
-    let mut rounding: Option<f32> = None;
+    let mut rounding_u8: Option<u8> = None;
     let mut min_w: Option<f32> = None;
     let mut min_h: Option<f32> = None;
     let mut frame: Option<bool> = None;
@@ -48,7 +48,13 @@ pub(crate) fn render_button<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2:
                     Ok(n) => n,
                     Err(msg) => return quote! { compile_error!(#msg); },
                 };
-                rounding = Some(n);
+                if !(0.0..=255.0).contains(&n) {
+                    let msg = format!("efx: <Button rounding> must be in 0..=255, got {}", n);
+                    return quote! { compile_error!(#msg); };
+                }
+
+                let r: u8 = n.round() as u8;
+                rounding_u8 = Some(r);
                 has_style_attrs = true;
             }
             "min_width" => {
@@ -110,10 +116,8 @@ pub(crate) fn render_button<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2:
         btn_build.extend(quote!( __efx_btn = __efx_btn.fill(#ts); ));
     }
 
-    if let Some(n) = rounding {
-        // Rounding API may differ between egui versions;
-        // safe via egui::Rounding::same(n)
-        btn_build.extend(quote!( __efx_btn = __efx_btn.rounding(egui::Rounding::same(#n as f32)); ));
+    if let Some(r) = rounding_u8 {
+        btn_build.extend(quote!( __efx_btn = __efx_btn.rounding(egui::Rounding::same(#r)); ));
     }
 
     if min_w.is_some() || min_h.is_some() {

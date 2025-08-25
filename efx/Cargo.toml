@@ -35,6 +35,7 @@ proc-macro2 = "1.0"
 efx-core = { version = "1.0", path = "../efx-core" }
 
 [dev-dependencies]
+efx-core = { path = "../efx-core", features = ["doc-prelude"] }
 trybuild = "1.0"
 # For the eframe example
 eframe = "0.32"
