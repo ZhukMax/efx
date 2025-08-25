@@ -9,6 +9,7 @@ mod input;
 mod tags;
 mod buffer;
 mod render;
+mod attr;
 
 use proc_macro::TokenStream;
 use quote::quote;

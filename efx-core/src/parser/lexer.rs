@@ -7,20 +7,32 @@ pub(crate) struct Lexer<'a> {
 }
 
 impl<'a> Lexer<'a> {
-    pub(crate) fn new(src: &'a str) -> Self { Self { src, i: 0 } }
+    pub(crate) fn new(src: &'a str) -> Self {
+        Self { src, i: 0 }
+    }
 
     pub(crate) fn all(mut self) -> Vec<(Tok, SpanRange)> {
         let mut v = Vec::new();
-        while let Some(t) = self.next_tok() { v.push(t); }
+        while let Some(t) = self.next_tok() {
+            v.push(t);
+        }
+
         v
     }
 
-    fn eof(&self) -> bool { self.i >= self.src.len() }
+    fn eof(&self) -> bool {
+        self.i >= self.src.len()
+    }
 
-    fn peek(&self) -> Option<char> { self.src[self.i..].chars().next() }
+    fn peek(&self) -> Option<char> {
+        self.src[self.i..].chars().next()
+    }
 
     fn bump(&mut self) -> Option<char> {
-        if self.eof() { return None; }
+        if self.eof() {
+            return None;
+        }
+
         let mut it = self.src[self.i..].char_indices();
         let (_, ch) = it.next().unwrap();
         let next_i = it.next().map(|(o, _)| self.i + o).unwrap_or(self.src.len());
@@ -34,14 +46,18 @@ impl<'a> Lexer<'a> {
         while let Some(ch) = self.peek() {
             match ch {
                 '<' | '>' | '/' | '{' | '}' => break,
-                _ => { out.push(self.bump().unwrap()); }
+                _ => {
+                    out.push(self.bump().unwrap());
+                }
             }
         }
         out
     }
 
     fn next_tok(&mut self) -> Option<(Tok, SpanRange)> {
-        if self.eof() { return None; }
+        if self.eof() {
+            return None;
+        }
         let start = self.i;
 
         match self.peek().unwrap() {

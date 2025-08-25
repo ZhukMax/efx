@@ -28,6 +28,12 @@ minor: ## Publish new minor version
 	@cargo release minor -p efx
 	@cargo publish -p efx
 
+minor-core: ## Publish new efx-core minor version
+	@cargo test -p efx-core
+	@make check
+	@cargo release minor -p efx-core
+	@cargo publish -p efx-core
+
 dump: ## Make dump of project
 	@find ./ -type f \( -name "*.rs" -o -name "*.toml"  -o -name "*.md" \) \
 		 ! -path "./target/*" \
