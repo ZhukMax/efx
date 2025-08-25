@@ -54,7 +54,7 @@ Text widget. Only text and interpolations (`{expr}`) in child nodes are allowed.
 use efx::*;
 # efx_doc_prelude!();
 
-efx!(ui, r#"<Label color="\#66CCFF" size="16" bold="true">Hello user</Label>"#);
+efx!(ui, r##"<Label color="#66CCFF" size="16" bold="true">Hello user</Label>"##);
 ```
 
 ### `Separator`
@@ -97,6 +97,6 @@ Button is the only tag that returns a response value (`Resp`) at the root of an 
 use efx::*;
 # efx_doc_prelude!();
 
-let resp = efx!(ui, "<Button rounding="8" enabled="false">Run</Button>");
+let resp = efx!(ui, r#"<Button rounding="8" enabled="false">Run</Button>"#);
 assert!(!resp.clicked());
 ```

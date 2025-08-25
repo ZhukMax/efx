@@ -1,0 +1,7 @@
+error: efx: attribute `size` expects number (f32), got `big`
+  --> tests/ui/label_bad_size.rs:10:5
+   |
+10 |     efx!(ui, r#"<Label size="big">X</Label>"#);
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: this error originates in the macro `efx` (in Nightly builds, run with -Z macro-backtrace for more info)

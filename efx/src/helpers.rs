@@ -7,17 +7,11 @@ pub(crate) fn prelude_maker() -> proc_macro2::TokenStream {
         #[derive(Default)]
         struct Ui;
 
-        #[allow(unused, dead_code)]
-        #[derive(Clone, Copy, Default)]
-        struct Resp;
-
-        #[allow(unused, dead_code)]
-        impl Resp { fn clicked(&self) -> bool { false } }
-
+        // Accept any text-like type, including String & egui::RichText.
         #[allow(unused, dead_code)]
         impl Ui {
-            fn label<S: Into<String>>(&mut self, _s: S) {}
-            fn button<S: Into<String>>(&mut self, _s: S) -> Resp { Resp }
+            fn label<T>(&mut self, _text: T) {}
+            fn button<T>(&mut self, _text: T) -> Resp { Resp }
             fn separator(&mut self) {}
             fn horizontal<F: FnOnce(&mut Ui)>(&mut self, f: F) {
                 let mut inner = Ui::default();
@@ -26,6 +20,56 @@ pub(crate) fn prelude_maker() -> proc_macro2::TokenStream {
             fn vertical<F: FnOnce(&mut Ui)>(&mut self, f: F) {
                 let mut inner = Ui::default();
                 f(&mut inner);
+            }
+
+            // Accept any widget-like type (e.g., egui::widgets::Label).
+            fn add<T>(&mut self, _widget: T) {}
+        }
+
+        #[allow(unused, dead_code)]
+        #[derive(Clone, Copy, Default)]
+        struct Resp;
+
+        #[allow(unused, dead_code)]
+        impl Resp { fn clicked(&self) -> bool { false } }
+
+        // Optional helpers if examples refer to them:
+        #[allow(dead_code)]
+        mod egui {
+            pub struct RichText;
+            impl RichText {
+                pub fn new<T>(_t: T) -> Self { RichText }
+                pub fn color(self, _c: Color32) -> Self { self }
+                pub fn size(self, _s: f32) -> Self { self }
+                pub fn strong(self) -> Self { self }
+                pub fn italics(self) -> Self { self }
+                pub fn underline(self) -> Self { self }
+                pub fn strikethrough(self) -> Self { self }
+                pub fn monospace(self) -> Self { self }
+            }
+            pub mod widgets {
+                use super::RichText;
+                pub struct Label;
+                impl Label {
+                    pub fn new(_r: RichText) -> Self { Label }
+                    pub fn wrap(self, _b: bool) -> Self { self }
+                }
+            }
+            #[derive(Clone, Copy)]
+            pub struct Color32;
+            impl Color32 {
+                pub const RED: Color32 = Color32;
+                pub const GREEN: Color32 = Color32;
+                pub const BLUE: Color32 = Color32;
+                pub const WHITE: Color32 = Color32;
+                pub const BLACK: Color32 = Color32;
+                pub const GRAY: Color32 = Color32;
+                pub const DARK_GRAY: Color32 = Color32;
+                pub const LIGHT_GRAY: Color32 = Color32;
+                pub const YELLOW: Color32 = Color32;
+                pub const TRANSPARENT: Color32 = Color32;
+
+                pub fn from_rgba_unmultiplied(_: u8, _: u8, _: u8, _: u8) -> Color32 { Color32 }
             }
         }
 
