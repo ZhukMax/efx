@@ -12,6 +12,10 @@ pub(crate) fn prelude_maker() -> proc_macro2::TokenStream {
         impl Ui {
             fn label<T>(&mut self, _text: T) {}
             fn button<T>(&mut self, _text: T) -> Resp { Resp }
+
+            fn add<T>(&mut self, _w: T) -> Resp { Resp }
+            fn add_enabled<T>(&mut self, _enabled: bool, _w: T) -> Resp { Resp }
+
             fn separator(&mut self) {}
             fn horizontal<F: FnOnce(&mut Ui)>(&mut self, f: F) {
                 let mut inner = Ui::default();
@@ -21,9 +25,6 @@ pub(crate) fn prelude_maker() -> proc_macro2::TokenStream {
                 let mut inner = Ui::default();
                 f(&mut inner);
             }
-
-            // Accept any widget-like type (e.g., egui::widgets::Label).
-            fn add<T>(&mut self, _widget: T) {}
         }
 
         #[allow(unused, dead_code)]
@@ -31,7 +32,10 @@ pub(crate) fn prelude_maker() -> proc_macro2::TokenStream {
         struct Resp;
 
         #[allow(unused, dead_code)]
-        impl Resp { fn clicked(&self) -> bool { false } }
+        impl Resp {
+            fn clicked(&self) -> bool { false }
+            fn on_hover_text(self, _t: &str) -> Self { self }
+        }
 
         // Optional helpers if examples refer to them:
         #[allow(dead_code)]
@@ -55,6 +59,25 @@ pub(crate) fn prelude_maker() -> proc_macro2::TokenStream {
                     pub fn wrap(self, _b: bool) -> Self { self }
                 }
             }
+
+            pub struct Button;
+            impl Button {
+                pub fn new(_t: RichText) -> Self { Button }
+                pub fn fill(self, _c: Color32) -> Self { self }
+                pub fn rounding(self, _r: Rounding) -> Self { self }
+                pub fn min_size(self, _v: Vec2) -> Self { self }
+                pub fn frame(self, _b: bool) -> Self { self }
+            }
+
+            pub struct Rounding(f32);
+            impl Rounding {
+                pub fn same(r: f32) -> Self { Rounding(r) }
+            }
+
+            #[derive(Clone, Copy)]
+            pub struct Vec2(pub f32, pub f32);
+            pub fn vec2(x: f32, y: f32) -> Vec2 { Vec2(x, y) }
+
             #[derive(Clone, Copy)]
             pub struct Color32;
             impl Color32 {

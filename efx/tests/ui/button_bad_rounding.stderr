@@ -1,0 +1,15 @@
+error: macro expansion ignores `;` and any tokens following
+  --> tests/ui/button_bad_rounding.rs:14:13
+   |
+14 |     let _ = efx!(ui, r#"<Button rounding="big">Run</Button>"#);
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ caused by the macro expansion here
+   |
+   = note: the usage of `efx!` is likely invalid in expression context
+
+error: efx: attribute `rounding` expects number (f32), got `big`
+  --> tests/ui/button_bad_rounding.rs:14:13
+   |
+14 |     let _ = efx!(ui, r#"<Button rounding="big">Run</Button>"#);
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: this error originates in the macro `efx` (in Nightly builds, run with -Z macro-backtrace for more info)

@@ -1,0 +1,15 @@
+error: macro expansion ignores `;` and any tokens following
+  --> tests/ui/button_enabled_nonbool.rs:15:13
+   |
+15 |     let _ = efx!(ui, r#"<Button enabled="maybe">Run</Button>"#);
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ caused by the macro expansion here
+   |
+   = note: the usage of `efx!` is likely invalid in expression context
+
+error: efx: attribute `enabled` expects boolean (true/false), got `maybe`
+  --> tests/ui/button_enabled_nonbool.rs:15:13
+   |
+15 |     let _ = efx!(ui, r#"<Button enabled="maybe">Run</Button>"#);
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: this error originates in the macro `efx` (in Nightly builds, run with -Z macro-backtrace for more info)

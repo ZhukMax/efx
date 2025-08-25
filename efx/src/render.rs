@@ -43,7 +43,7 @@ fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::Toke
         "Label" => render_label_stmt(ui, el),
         "Button" => {
             let btn_expr = render_button(ui, el);
-            quote! { let _ = #btn_expr; }
+            quote! { #btn_expr; }
         }
         "Row" => {
             let inner_ui = quote!(ui);

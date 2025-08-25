@@ -97,6 +97,6 @@ Button is the only tag that returns a response value (`Resp`) at the root of an 
 use efx::*;
 # efx_doc_prelude!();
 
-let resp = efx!(ui, r#"<Button rounding="8" enabled="false">Run</Button>"#);
+let resp: Resp = efx!(ui, r#"<Button rounding="8" enabled="false" tooltip="Soon">Run</Button>"#);
 assert!(!resp.clicked());
 ```

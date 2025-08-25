@@ -1,0 +1,15 @@
+error: macro expansion ignores `;` and any tokens following
+  --> tests/ui/button_unknown_attr.rs:14:13
+   |
+14 |     let _ = efx!(ui, r#"<Button mystery="42">Run</Button>"#);
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ caused by the macro expansion here
+   |
+   = note: the usage of `efx!` is likely invalid in expression context
+
+error: efx: <Button> unknown attribute `mystery`
+  --> tests/ui/button_unknown_attr.rs:14:13
+   |
+14 |     let _ = efx!(ui, r#"<Button mystery="42">Run</Button>"#);
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: this error originates in the macro `efx` (in Nightly builds, run with -Z macro-backtrace for more info)

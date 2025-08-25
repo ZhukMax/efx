@@ -72,8 +72,7 @@ pub fn efx(input: TokenStream) -> TokenStream {
     let expanded = if ast.len() == 1 {
         if let Node::Element(el) = &ast[0] {
             if el.name == "Button" {
-                let render_btn = render_button(&ui, el);
-                quote! { #render_btn }
+                return render_button(&ui, el).into();
             } else {
                 // Any other unit root is like a block with statements (return ())
                 let body = render_nodes_as_stmts(&ui, &ast);
