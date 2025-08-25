@@ -4,12 +4,11 @@
 #![doc = "\n\n---\n\n"]
 #![doc = include_str!("../docs/guide.md")]
 
+mod buffer;
 mod helpers;
 mod input;
-mod tags;
-mod buffer;
 mod render;
-mod attr;
+mod tags;
 
 use proc_macro::TokenStream;
 use quote::quote;
@@ -19,7 +18,7 @@ use crate::buffer::build_buffer_from_children;
 use crate::input::EfxInput;
 use crate::render::render_nodes_as_stmts;
 use crate::tags::button::render_button;
-use efx_core::{parse_str, Node};
+use efx_core::{Node, parse_str};
 
 /// Helper macro for doctests: expands a dummy `Ui/Resp` and creates `let mut ui = Ui::default();`.
 /// Hidden from documentation to avoid cluttering the public API.

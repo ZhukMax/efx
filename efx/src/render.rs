@@ -1,9 +1,12 @@
-use efx_core::{Element, Node};
-use quote::{quote, ToTokens};
 use crate::tags::button::render_button;
 use crate::tags::label::render_label_stmt;
+use efx_core::{Element, Node};
+use quote::{ToTokens, quote};
 
-pub(crate) fn render_nodes_as_stmts<UI: ToTokens>(ui: &UI, nodes: &[Node]) -> proc_macro2::TokenStream {
+pub(crate) fn render_nodes_as_stmts<UI: ToTokens>(
+    ui: &UI,
+    nodes: &[Node],
+) -> proc_macro2::TokenStream {
     let mut out = proc_macro2::TokenStream::new();
     for n in nodes {
         out.extend(render_node_stmt(ui, n));
@@ -22,7 +25,10 @@ fn render_node_stmt<UI: ToTokens>(ui: &UI, node: &Node) -> proc_macro2::TokenStr
             let expr: syn::Expr = match syn::parse_str(&i.expr_src) {
                 Ok(e) => e,
                 Err(_) => {
-                    let msg = format!("efx: invalid Rust expression in interpolation: {}", i.expr_src);
+                    let msg = format!(
+                        "efx: invalid Rust expression in interpolation: {}",
+                        i.expr_src
+                    );
                     return quote! { compile_error!(#msg); };
                 }
             };

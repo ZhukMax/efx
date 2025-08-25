@@ -1,7 +1,7 @@
 //! Minimal EFx + bevy_egui overlay example.
 //! Run: `cargo run -p efx --example bevy_overlay`
 use bevy::prelude::*;
-use bevy_egui::{egui, EguiContexts, EguiPlugin, EguiPrimaryContextPass};
+use bevy_egui::{EguiContexts, EguiPlugin, EguiPrimaryContextPass, egui};
 use efx::efx;
 
 fn main() {
