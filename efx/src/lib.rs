@@ -4,6 +4,7 @@
 #![doc = "\n\n---\n\n"]
 #![doc = include_str!("../docs/guide.md")]
 
+mod attr_adapters;
 mod buffer;
 mod helpers;
 mod input;
