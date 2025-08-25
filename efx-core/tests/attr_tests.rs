@@ -1,13 +1,15 @@
-use efx_core::attr::{parse_bool, parse_f32, parse_enum, parse_color_rgba, Rgba};
+use efx_core::attr::{Rgba, parse_bool, parse_color_rgba, parse_enum, parse_f32};
 
-fn rgba(r: u8, g: u8, b: u8, a: u8) -> Rgba { Rgba { r, g, b, a } }
+fn rgba(r: u8, g: u8, b: u8, a: u8) -> Rgba {
+    Rgba { r, g, b, a }
+}
 
 #[test]
 fn parse_bool_ok() {
-    assert_eq!(parse_bool("b", "true").unwrap(), true);
-    assert_eq!(parse_bool("b", "false").unwrap(), false);
+    assert!(parse_bool("b", "true").unwrap());
+    assert!(!parse_bool("b", "false").unwrap());
     // case-insensitive and with spaces
-    assert_eq!(parse_bool("b", "  TrUe ").unwrap(), true);
+    assert!(parse_bool("b", "  TrUe ").unwrap());
 }
 
 #[test]
@@ -47,15 +49,30 @@ fn parse_enum_err() {
 
 #[test]
 fn parse_color_named_ok() {
-    assert_eq!(parse_color_rgba("color", "red").unwrap(), rgba(255, 0, 0, 255));
-    assert_eq!(parse_color_rgba("color", "light_grey").unwrap(), rgba(192, 192, 192, 255)); // алиасы
-    assert_eq!(parse_color_rgba("color", "TRANSPARENT").unwrap(), rgba(0, 0, 0, 0));
+    assert_eq!(
+        parse_color_rgba("color", "red").unwrap(),
+        rgba(255, 0, 0, 255)
+    );
+    assert_eq!(
+        parse_color_rgba("color", "light_grey").unwrap(),
+        rgba(192, 192, 192, 255)
+    ); // алиасы
+    assert_eq!(
+        parse_color_rgba("color", "TRANSPARENT").unwrap(),
+        rgba(0, 0, 0, 0)
+    );
 }
 
 #[test]
 fn parse_color_hex_ok() {
-    assert_eq!(parse_color_rgba("color", "#112233").unwrap(), rgba(0x11, 0x22, 0x33, 0xFF));
-    assert_eq!(parse_color_rgba("color", "#AABBCCDD").unwrap(), rgba(0xAA, 0xBB, 0xCC, 0xDD));
+    assert_eq!(
+        parse_color_rgba("color", "#112233").unwrap(),
+        rgba(0x11, 0x22, 0x33, 0xFF)
+    );
+    assert_eq!(
+        parse_color_rgba("color", "#AABBCCDD").unwrap(),
+        rgba(0xAA, 0xBB, 0xCC, 0xDD)
+    );
 }
 
 #[test]

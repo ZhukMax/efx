@@ -61,9 +61,18 @@ impl<'a> Lexer<'a> {
         let start = self.i;
 
         match self.peek().unwrap() {
-            '<' => { self.bump(); Some((Tok::LAngle, SpanRange::new(start, self.i))) }
-            '>' => { self.bump(); Some((Tok::RAngle, SpanRange::new(start, self.i))) }
-            '/' => { self.bump(); Some((Tok::Slash,  SpanRange::new(start, self.i))) }
+            '<' => {
+                self.bump();
+                Some((Tok::LAngle, SpanRange::new(start, self.i)))
+            }
+            '>' => {
+                self.bump();
+                Some((Tok::RAngle, SpanRange::new(start, self.i)))
+            }
+            '/' => {
+                self.bump();
+                Some((Tok::Slash, SpanRange::new(start, self.i)))
+            }
             '{' => {
                 self.bump();
                 if self.peek() == Some('{') {
@@ -75,7 +84,8 @@ impl<'a> Lexer<'a> {
             }
             '}' => {
                 self.bump();
-                if self.peek() == Some('}') { self.bump();
+                if self.peek() == Some('}') {
+                    self.bump();
                     Some((Tok::Text("}".to_string()), SpanRange::new(start, self.i)))
                 } else {
                     Some((Tok::RBrace, SpanRange::new(start, self.i)))

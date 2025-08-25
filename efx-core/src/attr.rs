@@ -62,13 +62,13 @@ pub fn parse_color_rgba(name: &str, s: &str) -> Result<Rgba, String> {
 
 fn named_color_rgba(s: &str) -> Option<Rgba> {
     let (r, g, b, a) = match s.to_ascii_lowercase().as_str() {
-        "red" => (255,   0,   0, 255),
-        "green" => (  0, 255,   0, 255),
-        "blue" => (  0,   0, 255, 255),
+        "red" => (255, 0, 0, 255),
+        "green" => (0, 255, 0, 255),
+        "blue" => (0, 0, 255, 255),
         "white" => (255, 255, 255, 255),
-        "black" => (  0,   0,   0, 255),
+        "black" => (0, 0, 0, 255),
         "gray" | "grey" => (128, 128, 128, 255),
-        "dark_gray" | "darkgrey" | "dark_grey" => ( 64,  64,  64, 255),
+        "dark_gray" | "darkgrey" | "dark_grey" => (64, 64, 64, 255),
         "light_gray" | "lightgrey" | "light_grey" => (192, 192, 192, 255),
         "yellow" => (255, 255, 0, 255),
         "transparent" => (0, 0, 0, 0),

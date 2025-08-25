@@ -31,6 +31,7 @@ minor: ## Publish new minor version
 minor-core: ## Publish new efx-core minor version
 	@cargo test -p efx-core
 	@make check
+	@cargo fmt --all
 	@cargo release minor -p efx-core
 	@cargo publish -p efx-core
 
