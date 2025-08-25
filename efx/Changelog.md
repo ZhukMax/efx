@@ -1,6 +1,13 @@
 ## Changelog
 
 #### 0.5
+- Attribute rendering (efx-core)
+- Label, Button, Row, Column, Separator attributes
+- Updated documentation (attributes, quickstarts for eframe/bevy/winit+wgpu)
+- Added examples
+- New Tags: Heading, Hyperlink, TextField, Image, Grid
+- Added Panel Tags: Window, CentralPanel, SidePanel
+- Added tests
 
 #### 0.4
 - Basic Nodes Parser (efx-core) refactoring

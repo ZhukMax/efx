@@ -33,7 +33,7 @@ Horizontal container. Generates `ui.horizontal(|ui| { ... })`.
 use efx::*;
 # efx_doc_prelude!();
 
-efx!(ui, "<Row align=\"center\" gap=\"6\"><Label>B</Label></Row>");
+efx!(ui, r#"<Row gap="8" padding="6"><Label>A</Label><Label>B</Label></Row>"#);
 ```
 
 ### `Label`
