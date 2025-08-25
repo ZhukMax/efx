@@ -1,9 +1,9 @@
-use crate::parser::PResult;
-use crate::parser::error::ParseError;
-use crate::parser::lexer::Lexer;
-use crate::parser::nodes::{Attr, Element, Interpolation, Node, Text};
-use crate::parser::span_range::SpanRange;
-use crate::parser::tok::Tok;
+use crate::ast::PResult;
+use crate::ast::error::ParseError;
+use crate::ast::lexer::Lexer;
+use crate::ast::nodes::{Attr, Element, Interpolation, Node, Text};
+use crate::ast::span_range::SpanRange;
+use crate::ast::tok::Tok;
 
 pub struct Parser<'a> {
     toks: Vec<(Tok, SpanRange)>,

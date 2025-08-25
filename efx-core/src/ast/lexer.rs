@@ -1,5 +1,5 @@
-use crate::parser::span_range::SpanRange;
-use crate::parser::tok::Tok;
+use crate::ast::span_range::SpanRange;
+use crate::ast::tok::Tok;
 
 pub(crate) struct Lexer<'a> {
     src: &'a str,

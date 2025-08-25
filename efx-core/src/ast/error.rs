@@ -1,4 +1,4 @@
-use crate::parser::span_range::SpanRange;
+use crate::ast::span_range::SpanRange;
 use std::fmt;
 
 /// Parser error with human-readable message and range

@@ -1,6 +1,6 @@
-pub use crate::parser::error::ParseError;
-pub use crate::parser::nodes::{Attr, Element, Interpolation, Node, Text};
-pub use crate::parser::parser::Parser;
+pub use crate::ast::error::ParseError;
+pub use crate::ast::nodes::{Attr, Element, Interpolation, Node, Text};
+pub use crate::ast::parser::Parser;
 
 pub mod error;
 mod lexer;
