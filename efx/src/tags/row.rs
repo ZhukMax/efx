@@ -1,17 +1,17 @@
-use quote::{quote, ToTokens};
 use efx_core::Element;
-use crate::buffer::build_buffer_from_children;
+use quote::{quote, ToTokens};
 
 use crate::attr_adapters as A;
+use crate::render::render_nodes_as_stmts;
 
 pub(crate) fn render_row_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {
-    let (buf_init, buf_build) = build_buffer_from_children(&el.children);
-
     const KNOWN: &[&str] = &["gap", "padding", "align", "wrap"];
 
     let mut seen = std::collections::BTreeSet::<&str>::new();
     let mut gap: Option<f32> = None;
     let mut padding: Option<f32> = None;
+    let mut align: Option<String> = None;
+    let mut wrap: bool = false;
 
     for a in &el.attrs {
         let name = a.name.as_str();
@@ -28,24 +28,32 @@ pub(crate) fn render_row_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro
 
         match name {
             "gap" => {
-                let n = match A::parse_f32("gap", val) {
-                    Ok(n) => n,
+                match A::parse_f32("gap", val) {
+                    Ok(n) => gap = Some(n),
                     Err(msg) => return quote! { compile_error!(#msg); },
-                };
-                gap = Some(n);
+                }
             }
             "padding" => {
-                let n = match A::parse_f32("padding", val) {
-                    Ok(n) => n,
+                match A::parse_f32("padding", val) {
+                    Ok(n) => padding = Some(n),
                     Err(msg) => return quote! { compile_error!(#msg); },
-                };
-                padding = Some(n);
+                }
             }
-            "align" | "wrap" => { /* TODO(0.5): Layout + horizontal_wrapped */ }
+            "align" => {
+                align = Some(val.to_string());
+            }
+            "wrap" => {
+                // "true"/"false"
+                match A::parse_bool("wrap", val) {
+                    Ok(b) => wrap = b,
+                    Err(msg) => return quote! { compile_error!(#msg); },
+                }
+            }
             _ => {}
         }
     }
 
+    // Settings
     let mut prolog = proc_macro2::TokenStream::new();
     let mut epilog = proc_macro2::TokenStream::new();
 
@@ -58,23 +66,50 @@ pub(crate) fn render_row_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro
             #ui.spacing_mut().item_spacing.x = __efx_old_gap_x;
         });
     }
-
     if let Some(p) = padding {
         prolog.extend(quote! { #ui.add_space(#p as f32); });
         epilog.extend(quote! { #ui.add_space(#p as f32); });
     }
 
-    let inner_ui = quote!(ui);
-    let body = crate::render::render_nodes_as_stmts(&inner_ui, &el.children);
+    let body = render_nodes_as_stmts(&quote!(ui), &el.children);
+
+    // align / wrap
+    let content = if wrap {
+        // horizontal_wrapped
+        quote! {
+            #ui.horizontal_wrapped(|ui| {
+                #body
+            });
+        }
+    } else if let Some(al) = align {
+        // map string → egui::Align
+        let align_expr = match al.as_str() {
+            "top"    => quote!(::egui::Align::Min),
+            "bottom" => quote!(::egui::Align::Max),
+            "center" => quote!(::egui::Align::Center),
+            other => {
+                let msg = format!("efx: invalid align '{}', expected top|bottom|center", other);
+                return quote! { compile_error!(#msg); };
+            }
+        };
+        quote! {
+            #ui.with_layout(::egui::Layout::left_to_right(#align_expr), |ui| {
+                #body
+            });
+        }
+    } else {
+        // default horizontal
+        quote! {
+            #ui.horizontal(|ui| {
+                #body
+            });
+        }
+    };
 
     quote! {
         {
             #prolog
-            #ui.horizontal(|ui| {
-                #buf_init
-                #buf_build
-                #body
-            });
+            #content
             #epilog
         }
     }

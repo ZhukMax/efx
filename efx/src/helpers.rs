@@ -5,26 +5,40 @@ pub(crate) fn prelude_maker() -> proc_macro2::TokenStream {
     quote! {
         #[allow(unused, dead_code)]
         #[derive(Default)]
-        struct Ui;
+        struct Ui {
+            spacing_state: egui::Spacing,
+        }
+
+        impl Default for Ui {
+            fn default() -> Self {
+                Ui {
+                    spacing_state: egui::Spacing { item_spacing: egui::ItemSpacing { x: 0.0, y: 0.0 } },
+                }
+            }
+        }
 
         // Accept any text-like type, including String & egui::RichText.
         #[allow(unused, dead_code)]
         impl Ui {
-            fn label<T>(&mut self, _text: T) {}
-            fn button<T>(&mut self, _text: T) -> Resp { Resp }
-
-            fn add<T>(&mut self, _w: T) -> Resp { Resp }
-            fn add_enabled<T>(&mut self, _enabled: bool, _w: T) -> Resp { Resp }
-
+            // basic text/widgets
+            fn label<T>(&mut self, _t: T) {}
+            fn button<T>(&mut self, _t: T) -> Resp { Resp }
             fn separator(&mut self) {}
-            fn horizontal<F: FnOnce(&mut Ui)>(&mut self, f: F) {
-                let mut inner = Ui::default();
-                f(&mut inner);
-            }
-            fn vertical<F: FnOnce(&mut Ui)>(&mut self, f: F) {
-                let mut inner = Ui::default();
-                f(&mut inner);
-            }
+
+            // widget adders (used by Button impl with attrs)
+            fn add<T>(&mut self, _w: T) -> Resp { Resp }
+            fn add_enabled<T>(&mut self, _b: bool, _w: T) -> Resp { Resp }
+
+            // spacing API
+            fn spacing(&self) -> &egui::Spacing { &self.spacing_state }
+            fn spacing_mut(&mut self) -> &mut egui::Spacing { &mut self.spacing_state }
+            fn add_space(&mut self, _v: f32) {}
+
+            // layouts
+            fn horizontal<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut u = Ui::default(); f(&mut u); }
+            fn vertical<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut u = Ui::default(); f(&mut u); }
+            fn horizontal_wrapped<F: FnOnce(&mut Ui)>(&mut self, f: F) { let mut u = Ui::default(); f(&mut u); }
+            fn with_layout<F: FnOnce(&mut Ui)>(&mut self, _layout: egui::Layout, f: F) { let mut u = Ui::default(); f(&mut u); }
         }
 
         #[allow(unused, dead_code)]
@@ -94,6 +108,18 @@ pub(crate) fn prelude_maker() -> proc_macro2::TokenStream {
 
                 pub fn from_rgba_unmultiplied(_: u8, _: u8, _: u8, _: u8) -> Color32 { Color32 }
             }
+
+            #[derive(Clone, Copy)]
+            pub enum Align { Min, Center, Max }
+
+            pub struct Layout;
+            impl Layout {
+                pub fn left_to_right(_y: Align) -> Layout { Layout }
+                pub fn top_down(_x: Align) -> Layout { Layout }
+            }
+
+            pub struct ItemSpacing { pub x: f32, pub y: f32 }
+            pub struct Spacing { pub item_spacing: ItemSpacing }
         }
 
         let mut ui = Ui::default();
