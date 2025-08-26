@@ -66,7 +66,7 @@ pub(crate) fn render_separator_stmt<UI: ToTokens>(
     } else {
         quote!()
     };
-    
+
     let after_ts = if after > 0.0 {
         quote!( #ui.add_space(#after  as f32); )
     } else {

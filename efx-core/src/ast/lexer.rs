@@ -52,7 +52,9 @@ impl<'a> Lexer<'a> {
                     let mut it = self.src[self.i..].char_indices();
                     let _ = it.next(); // consume '/'
                     if let Some((_, next)) = it.next() {
-                        if next == '>' { break; }
+                        if next == '>' {
+                            break;
+                        }
                     }
                     out.push(self.bump().unwrap());
                 }

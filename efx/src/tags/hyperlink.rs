@@ -1,7 +1,7 @@
-use quote::{quote, ToTokens};
-use efx_core::Element;
 use crate::attr_adapters as A;
 use crate::buffer::build_buffer_from_children;
+use efx_core::Element;
+use quote::{ToTokens, quote};
 
 /// <Hyperlink url="..." [open_external=bool] [color=..] [underline=bool] [tooltip=...]>text?</Hyperlink>
 pub(crate) fn render_hyperlink_stmt<UI: ToTokens>(
@@ -41,15 +41,13 @@ pub(crate) fn render_hyperlink_stmt<UI: ToTokens>(
             "url" => {
                 url = Some(val.to_string());
             }
-            "open_external" => {
-                match A::parse_bool("open_external", val) {
-                    Ok(b) => {
-                        open_external = Some(b);
-                        has_style_or_behavior = true;
-                    }
-                    Err(msg) => return quote! { compile_error!(#msg); },
+            "open_external" => match A::parse_bool("open_external", val) {
+                Ok(b) => {
+                    open_external = Some(b);
+                    has_style_or_behavior = true;
                 }
-            }
+                Err(msg) => return quote! { compile_error!(#msg); },
+            },
             "color" => {
                 let ts = match A::parse_color_tokens("color", val) {
                     Ok(ts) => ts,
@@ -58,12 +56,13 @@ pub(crate) fn render_hyperlink_stmt<UI: ToTokens>(
                 color_ts = Some(ts);
                 has_style_or_behavior = true;
             }
-            "underline" => {
-                match A::parse_bool("underline", val) {
-                    Ok(b) => { underline = Some(b); has_style_or_behavior = true; }
-                    Err(msg) => return quote! { compile_error!(#msg); },
+            "underline" => match A::parse_bool("underline", val) {
+                Ok(b) => {
+                    underline = Some(b);
+                    has_style_or_behavior = true;
                 }
-            }
+                Err(msg) => return quote! { compile_error!(#msg); },
+            },
             "tooltip" => {
                 tooltip = Some(val.to_string());
                 has_style_or_behavior = true;
@@ -107,7 +106,9 @@ pub(crate) fn render_hyperlink_stmt<UI: ToTokens>(
 
     if let Some(b) = underline {
         // true → .underline(), false → .underline() not call (in egui RichText underline=true enables underlining)
-        if b { rich_mods.extend(quote!( .underline() )); }
+        if b {
+            rich_mods.extend(quote!( .underline() ));
+        }
     }
 
     let open_tab_ts = match open_external {
