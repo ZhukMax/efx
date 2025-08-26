@@ -7,6 +7,12 @@ pub fn parse_bool(name: &str, s: &str) -> Result<bool, String> {
     core_attr::parse_bool(name, s)
 }
 
+/// Parse unsigned 8-bit integer attribute (0..=255).
+#[inline]
+pub fn parse_u8(name: &str, s: &str) -> Result<u8, String> {
+    core_attr::parse_u8(name, s)
+}
+
 #[inline]
 pub fn parse_f32(name: &str, s: &str) -> Result<f32, String> {
     core_attr::parse_f32(name, s)

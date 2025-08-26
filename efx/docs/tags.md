@@ -166,3 +166,37 @@ efx!(Ui::default(), r#"<TextField value="state.name" password="true"/>"#);
 // Multiline editor
 efx!(Ui::default(), r#"<TextField value="state.name" multiline="true" width="320"/>"#);
 ```
+
+### `CentralPanel`
+
+Main content area that fills all remaining space. Wraps children in `egui::CentralPanel` and applies an optional `Frame`.
+
+**Attributes**
+
+- `frame="true|false"` — use default frame (`true`, default) or `none` (`false`).
+- `fill="name|#RRGGBB[AA]"` — background fill color.
+- `rounding="N"` — corner radius (u8).
+- `stroke_width="N"` — frame stroke width (f32).
+- `stroke_color="name|#RRGGBB[AA]"` — frame stroke color.
+- `padding="N"` — inner margin on all sides (f32).
+- `padding_l|padding_r|padding_t|padding_b="N"` — per-side inner margin.
+- `margin="N"` — outer margin on all sides (f32).
+- `margin_l|margin_r|margin_t|margin_b="N"` — per-side outer margin.
+
+```rust
+use efx_core::doc_prelude::*;
+use efx::*;
+
+efx!(Ui::default(), r##"
+  <CentralPanel fill="#101014" rounding="8" padding="12" stroke_width="1" stroke_color="#222638">
+    <Column gap="8">
+      <Label size="18" bold="true">Dashboard</Label>
+      <Separator space="6"/>
+      <Row gap="12">
+        <Label>Welcome!</Label>
+        <Hyperlink url="https://efxui.com">Docs</Hyperlink>
+      </Row>
+    </Column>
+  </CentralPanel>
+"##);
+```

@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Rgba {
     pub r: u8,
@@ -13,6 +15,20 @@ pub fn parse_bool(name: &str, s: &str) -> Result<bool, String> {
         other => Err(format!(
             "efx: attribute `{}` expects boolean (true/false), got `{}`",
             name, other
+        )),
+    }
+}
+
+pub fn parse_u8(name: &str, s: &str) -> Result<u8, String> {
+    let raw = s.trim();
+    if raw.is_empty() {
+        return Err(format!("efx: attribute `{}` expects u8, got empty", name));
+    }
+    match u8::from_str(raw) {
+        Ok(v) => Ok(v),
+        Err(_) => Err(format!(
+            "efx: attribute `{}` must be an integer in 0..=255 (u8), got `{}`",
+            name, s
         )),
     }
 }
