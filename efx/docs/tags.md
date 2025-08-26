@@ -1,7 +1,6 @@
 ## Supported Tags (v0.4+)
 
-> Attributes are parsed (since 0.4).
-> Starting with 0.5 some tags support basic attributes.
+> Starting with 0.5 some tags support attributes.
 > Unknown attributes result in `compile_error!`.
 
 ### `Column`
@@ -16,7 +15,10 @@ Vertical container. Generates `ui.vertical(|ui| { ... })`.
 use efx_core::doc_prelude::*;
 use efx::*;
 
-efx!(Ui::default(), "<Column gap=\"8\"><Label>A</Label></Column>");
+efx!(Ui::default(), r#"<Column gap="10" padding="6" align="center">
+  <Label>Title</Label>
+  <Label size="12">Subtitle</Label>
+</Column>"#);
 ```
 
 ### `Row`

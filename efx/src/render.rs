@@ -2,6 +2,7 @@ use crate::tags::button::render_button;
 use crate::tags::label::render_label_stmt;
 use efx_core::{Element, Node};
 use quote::{ToTokens, quote};
+use crate::tags::column::render_column_stmt;
 use crate::tags::row::render_row_stmt;
 
 pub(crate) fn render_nodes_as_stmts<UI: ToTokens>(
@@ -49,15 +50,7 @@ fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::Toke
         "Row" => {
             render_row_stmt(ui, el)
         }
-        "Column" => {
-            let inner_ui = quote!(ui);
-            let body = render_nodes_as_stmts(&inner_ui, &el.children);
-            quote! {
-                #ui.vertical(|ui| {
-                    #body
-                });
-            }
-        }
+        "Column" => render_column_stmt(ui, el),
         "Separator" => {
             if el.children.is_empty() {
                 quote! { #ui.separator(); }

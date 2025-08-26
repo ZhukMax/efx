@@ -1,0 +1,7 @@
+error: efx: invalid align 'middle', expected left|center|right
+ --> tests/ui/column_bad_align.rs:6:5
+  |
+6 |     efx!(ui, r#"<Column align="middle"><Label>A</Label></Column>"#);
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: this error originates in the macro `efx` (in Nightly builds, run with -Z macro-backtrace for more info)
