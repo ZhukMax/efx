@@ -175,7 +175,6 @@ Main content area that fills all remaining space. Wraps children in `egui::Centr
 
 - `frame="true|false"` — use default frame (`true`, default) or `none` (`false`).
 - `fill="name|#RRGGBB[AA]"` — background fill color.
-- `rounding="N"` — corner radius (u8).
 - `stroke_width="N"` — frame stroke width (f32).
 - `stroke_color="name|#RRGGBB[AA]"` — frame stroke color.
 - `padding="N"` — inner margin on all sides (f32).
@@ -183,12 +182,12 @@ Main content area that fills all remaining space. Wraps children in `egui::Centr
 - `margin="N"` — outer margin on all sides (f32).
 - `margin_l|margin_r|margin_t|margin_b="N"` — per-side outer margin.
 
-```rust
+```rust,no_run
 use efx_core::doc_prelude::*;
 use efx::*;
 
 efx!(Ui::default(), r##"
-  <CentralPanel fill="#101014" rounding="8" padding="12" stroke_width="1" stroke_color="#222638">
+  <CentralPanel fill="#101014" padding="12" stroke_width="1" stroke_color="#222638">
     <Column gap="8">
       <Label size="18" bold="true">Dashboard</Label>
       <Separator space="6"/>

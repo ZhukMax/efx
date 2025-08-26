@@ -11,8 +11,6 @@ pub fn render_central_panel_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_ma
         "fill",
         "stroke_width",
         "stroke_color",
-        // rounding
-        "rounding",
         // padding (inner_margin)
         "padding",
         "padding_l",
@@ -36,9 +34,6 @@ pub fn render_central_panel_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_ma
     let mut fill_ts: Option<proc_macro2::TokenStream> = None;
     let mut stroke_w: Option<f32> = None;
     let mut stroke_color_ts: Option<proc_macro2::TokenStream> = None;
-
-    // rounding (u8 → f32)
-    let mut rounding_u8: Option<u8> = None;
 
     // padding (inner) & margin (outer)
     // uniform + per-side
@@ -83,12 +78,6 @@ pub fn render_central_panel_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_ma
                     Err(msg) => return quote! { compile_error!(#msg); },
                 }
             }
-            "rounding" => {
-                match A::parse_u8("rounding", val) {
-                    Ok(r) => rounding_u8 = Some(r),
-                    Err(msg) => return quote! { compile_error!(#msg); },
-                }
-            }
 
             // padding (inner_margin)
             "padding"    => { pad    = A::parse_f32("padding", val).ok(); }
@@ -130,10 +119,6 @@ pub fn render_central_panel_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_ma
     if let Some(ts) = fill_ts {
         frame_build.extend(quote!( __efx_frame = __efx_frame.fill(#ts); ));
     }
-    if let Some(r) = rounding_u8 {
-        // In egui/epaint 0.32 Rounding::same(u8)
-        frame_build.extend(quote!( __efx_frame = __efx_frame.rounding(egui::Rounding::same(#r)); ));
-    }
     if let Some(im) = inner_margin_ts {
         frame_build.extend(quote!( __efx_frame = __efx_frame.inner_margin(#im); ));
     }
@@ -144,45 +129,34 @@ pub fn render_central_panel_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_ma
         let w = stroke_w.unwrap_or(1.0);
         let c = stroke_color_ts.unwrap_or_else(|| quote!( egui::Color32::BLACK ));
         frame_build.extend(quote! {
-            __efx_frame = __efx_frame.stroke(egui::Stroke { width: #w as f32, color: #c });
+            __efx_frame = __efx_frame.stroke(egui::Stroke { width: #w as _, color: #c });
         });
     }
 
     quote! {{
         #frame_build
-        egui::CentralPanel::default().frame(__efx_frame).show(#ui.ctx(), |ui| {
-            #children_ts
-        });
+        egui::CentralPanel::default()
+            .frame(__efx_frame)
+            .show(&#ui.ctx(), |ui| { #children_ts });
     }}
 }
 
 /// Building egui::Margin from uniform/per-side options.
 /// Returns Some(TokenStream) if something is given, None otherwise.
 fn margin_tokens(
-    uniform: Option<f32>,
-    l: Option<f32>,
-    r: Option<f32>,
-    t: Option<f32>,
-    b: Option<f32>,
+    uniform: Option<f32>, l: Option<f32>, r: Option<f32>, t: Option<f32>, b: Option<f32>,
 ) -> Option<proc_macro2::TokenStream> {
     if uniform.is_none() && l.is_none() && r.is_none() && t.is_none() && b.is_none() {
         return None;
     }
-
     let mk = |side: Option<f32>, uni: Option<f32>| -> proc_macro2::TokenStream {
-        if let Some(v) = side {
-            quote!( #v as f32 )
-        } else if let Some(u) = uni {
-            quote!( #u as f32 )
-        } else {
-            quote!( 0.0f32 )
-        }
+        if let Some(v) = side { quote!( #v as _ ) }
+        else if let Some(u) = uni { quote!( #u as _ ) }
+        else { quote!( 0 as _ ) }
     };
-
     let l_ts = mk(l, uniform);
     let r_ts = mk(r, uniform);
     let t_ts = mk(t, uniform);
     let b_ts = mk(b, uniform);
-
     Some(quote!( egui::Margin { left: #l_ts, right: #r_ts, top: #t_ts, bottom: #b_ts } ))
 }

@@ -53,6 +53,10 @@ impl Ui {
     pub fn hyperlink<T: Into<String>>(&mut self, _url: T) {}
     #[inline]
     pub fn hyperlink_to<T1: Into<String>, T2: Into<String>>(&mut self, _label: T1, _url: T2) {}
+    #[inline]
+    pub fn ctx(&self) -> egui::Context {
+        egui::Context::default()
+    }
 
     // --- add/add_enabled for Button w/attr ---
     #[inline]
