@@ -1,10 +1,11 @@
 use crate::tags::button::render_button;
-use crate::tags::label::render_label_stmt;
-use efx_core::{Element, Node};
-use quote::{ToTokens, quote};
 use crate::tags::column::render_column_stmt;
+use crate::tags::label::render_label_stmt;
 use crate::tags::row::render_row_stmt;
 use crate::tags::separator::render_separator_stmt;
+use efx_core::{Element, Node};
+use quote::{ToTokens, quote};
+use crate::tags::hyperlink::render_hyperlink_stmt;
 
 pub(crate) fn render_nodes_as_stmts<UI: ToTokens>(
     ui: &UI,
@@ -51,6 +52,7 @@ fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::Toke
         "Row" => render_row_stmt(ui, el),
         "Column" => render_column_stmt(ui, el),
         "Separator" => render_separator_stmt(ui, el),
+        "Hyperlink" => { let ts = render_hyperlink_stmt(ui, el); quote! { #ts; } },
         other => {
             let msg = format!("efx: unknown tag <{}>", other);
             quote! { compile_error!(#msg); }

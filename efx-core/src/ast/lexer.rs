@@ -40,12 +40,22 @@ impl<'a> Lexer<'a> {
         Some(ch)
     }
 
-    /// Reads the sequence up to the nearest special character, processing escapes {{ and }}
+    /// Reads the sequence up to the nearest special character, processing escapes {{ and }}.
+    /// NOTE: allow '/' inside attribute values; only treat '/>' as a boundary.
     fn read_text(&mut self) -> String {
         let mut out = String::new();
         while let Some(ch) = self.peek() {
             match ch {
-                '<' | '>' | '/' | '{' | '}' => break,
+                '<' | '>' | '{' | '}' => break,
+                '/' => {
+                    // lookahead: only stop on `/>`
+                    let mut it = self.src[self.i..].char_indices();
+                    let _ = it.next(); // consume '/'
+                    if let Some((_, next)) = it.next() {
+                        if next == '>' { break; }
+                    }
+                    out.push(self.bump().unwrap());
+                }
                 _ => {
                     out.push(self.bump().unwrap());
                 }

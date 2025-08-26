@@ -1,13 +1,19 @@
+use crate::attr_adapters as A;
 use crate::buffer::build_buffer_from_children;
 use efx_core::Element;
 use quote::{ToTokens, quote};
-use crate::attr_adapters as A;
 
 pub(crate) fn render_button<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {
     let (buf_init, buf_build) = build_buffer_from_children(&el.children);
 
     const KNOWN: &[&str] = &[
-        "fill","rounding","min_width","min_height","frame","enabled","tooltip",
+        "fill",
+        "rounding",
+        "min_width",
+        "min_height",
+        "frame",
+        "enabled",
+        "tooltip",
     ];
 
     let mut seen = std::collections::BTreeSet::<&str>::new();
@@ -123,7 +129,8 @@ pub(crate) fn render_button<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2:
     if min_w.is_some() || min_h.is_some() {
         let w = min_w.unwrap_or(0.0f32);
         let h = min_h.unwrap_or(0.0f32);
-        btn_build.extend(quote!( __efx_btn = __efx_btn.min_size(egui::vec2(#w as f32, #h as f32)); ));
+        btn_build
+            .extend(quote!( __efx_btn = __efx_btn.min_size(egui::vec2(#w as f32, #h as f32)); ));
     }
     if let Some(b) = frame {
         btn_build.extend(quote!( __efx_btn = __efx_btn.frame(#b); ));

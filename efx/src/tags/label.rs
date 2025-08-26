@@ -1,14 +1,21 @@
+use crate::attr_adapters as A;
 use crate::build_buffer_from_children;
 use efx_core::Element;
 use quote::{ToTokens, quote};
-use crate::attr_adapters as A;
 
 pub(crate) fn render_label_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {
     let (buf_init, buf_build) = build_buffer_from_children(&el.children);
 
     // Allowed attributes
     const KNOWN: &[&str] = &[
-        "color","size","bold","italic","underline","strike","monospace","wrap",
+        "color",
+        "size",
+        "bold",
+        "italic",
+        "underline",
+        "strike",
+        "monospace",
+        "wrap",
     ];
 
     // Collecting modifiers for RichText and the wrap flag
@@ -19,7 +26,7 @@ pub(crate) fn render_label_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_mac
 
     for a in &el.attrs {
         let name = a.name.as_str();
-        let val  = a.value.as_str();
+        let val = a.value.as_str();
 
         // unknown - compilation error
         if !KNOWN.iter().any(|k| *k == name) {
@@ -55,35 +62,50 @@ pub(crate) fn render_label_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_mac
                     Ok(b) => b,
                     Err(msg) => return quote! { compile_error!(#msg); },
                 };
-                if b { mods.extend(quote! { .strong() }); has_style_attrs = true; }
+                if b {
+                    mods.extend(quote! { .strong() });
+                    has_style_attrs = true;
+                }
             }
             "italic" => {
                 let b = match A::parse_bool("italic", val) {
                     Ok(b) => b,
                     Err(msg) => return quote! { compile_error!(#msg); },
                 };
-                if b { mods.extend(quote! { .italics() }); has_style_attrs = true; }
+                if b {
+                    mods.extend(quote! { .italics() });
+                    has_style_attrs = true;
+                }
             }
             "underline" => {
                 let b = match A::parse_bool("underline", val) {
                     Ok(b) => b,
                     Err(msg) => return quote! { compile_error!(#msg); },
                 };
-                if b { mods.extend(quote! { .underline() }); has_style_attrs = true; }
+                if b {
+                    mods.extend(quote! { .underline() });
+                    has_style_attrs = true;
+                }
             }
             "strike" => {
                 let b = match A::parse_bool("strike", val) {
                     Ok(b) => b,
                     Err(msg) => return quote! { compile_error!(#msg); },
                 };
-                if b { mods.extend(quote! { .strikethrough() }); has_style_attrs = true; }
+                if b {
+                    mods.extend(quote! { .strikethrough() });
+                    has_style_attrs = true;
+                }
             }
             "monospace" => {
                 let b = match A::parse_bool("monospace", val) {
                     Ok(b) => b,
                     Err(msg) => return quote! { compile_error!(#msg); },
                 };
-                if b { mods.extend(quote! { .monospace() }); has_style_attrs = true; }
+                if b {
+                    mods.extend(quote! { .monospace() });
+                    has_style_attrs = true;
+                }
             }
             "wrap" => {
                 let b = match A::parse_bool("wrap", val) {

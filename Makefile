@@ -6,6 +6,9 @@ CLIPPY_TARGETS = --all-targets
 fmt: ## Checking formatting
 	@cargo fmt --all -- --check
 
+format: ## Fixing formatting
+	@cargo fmt --all
+
 lint:
 	@cargo clippy $(WORKSPACE_FLAGS) $(CLIPPY_TARGETS) -- -D warnings
 

@@ -1,5 +1,5 @@
 use efx_core::Element;
-use quote::{quote, ToTokens};
+use quote::{ToTokens, quote};
 
 use crate::attr_adapters as A;
 use crate::render::render_nodes_as_stmts;
@@ -27,18 +27,14 @@ pub(crate) fn render_row_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro
         }
 
         match name {
-            "gap" => {
-                match A::parse_f32("gap", val) {
-                    Ok(n) => gap = Some(n),
-                    Err(msg) => return quote! { compile_error!(#msg); },
-                }
-            }
-            "padding" => {
-                match A::parse_f32("padding", val) {
-                    Ok(n) => padding = Some(n),
-                    Err(msg) => return quote! { compile_error!(#msg); },
-                }
-            }
+            "gap" => match A::parse_f32("gap", val) {
+                Ok(n) => gap = Some(n),
+                Err(msg) => return quote! { compile_error!(#msg); },
+            },
+            "padding" => match A::parse_f32("padding", val) {
+                Ok(n) => padding = Some(n),
+                Err(msg) => return quote! { compile_error!(#msg); },
+            },
             "align" => {
                 align = Some(val.to_string());
             }
@@ -84,7 +80,7 @@ pub(crate) fn render_row_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro
     } else if let Some(al) = align {
         // map string → egui::Align
         let align_expr = match al.as_str() {
-            "top"    => quote!(::egui::Align::Min),
+            "top" => quote!(::egui::Align::Min),
             "bottom" => quote!(::egui::Align::Max),
             "center" => quote!(::egui::Align::Center),
             other => {

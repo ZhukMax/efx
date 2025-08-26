@@ -1,5 +1,5 @@
-use quote::{quote, ToTokens};
 use efx_core::Element;
+use quote::{ToTokens, quote};
 
 use crate::attr_adapters as A;
 use crate::render::render_nodes_as_stmts;
@@ -9,13 +9,13 @@ pub(crate) fn render_column_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_ma
 
     let mut seen = std::collections::BTreeSet::<&str>::new();
 
-    let mut gap: Option<f32> = None;       // vertical spacing between children
-    let mut padding: Option<f32> = None;   // top/bottom
-    let mut align: Option<String> = None;  // left|center|right (horizontal alignment of children)
+    let mut gap: Option<f32> = None; // vertical spacing between children
+    let mut padding: Option<f32> = None; // top/bottom
+    let mut align: Option<String> = None; // left|center|right (horizontal alignment of children)
 
     for a in &el.attrs {
         let name = a.name.as_str();
-        let val  = a.value.as_str();
+        let val = a.value.as_str();
 
         if !KNOWN.iter().any(|k| *k == name) {
             let msg = format!("efx: <Column> unknown attribute `{}`", name);
@@ -27,18 +27,14 @@ pub(crate) fn render_column_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_ma
         }
 
         match name {
-            "gap" => {
-                match A::parse_f32("gap", val) {
-                    Ok(n) => gap = Some(n),
-                    Err(msg) => return quote! { compile_error!(#msg); },
-                }
-            }
-            "padding" => {
-                match A::parse_f32("padding", val) {
-                    Ok(n) => padding = Some(n),
-                    Err(msg) => return quote! { compile_error!(#msg); },
-                }
-            }
+            "gap" => match A::parse_f32("gap", val) {
+                Ok(n) => gap = Some(n),
+                Err(msg) => return quote! { compile_error!(#msg); },
+            },
+            "padding" => match A::parse_f32("padding", val) {
+                Ok(n) => padding = Some(n),
+                Err(msg) => return quote! { compile_error!(#msg); },
+            },
             "align" => {
                 // parse the line, check below
                 align = Some(val.to_string());
@@ -70,8 +66,8 @@ pub(crate) fn render_column_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_ma
     // align: left|center|right → egui::Align::{Min,Center,Max} in Layout::top_down(...)
     let content = if let Some(al) = align {
         let align_expr = match al.as_str() {
-            "left"   => quote!(::egui::Align::Min),
-            "right"  => quote!(::egui::Align::Max),
+            "left" => quote!(::egui::Align::Min),
+            "right" => quote!(::egui::Align::Max),
             "center" => quote!(::egui::Align::Center),
             other => {
                 let msg = format!("efx: invalid align '{}', expected left|center|right", other);

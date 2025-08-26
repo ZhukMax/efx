@@ -1,9 +1,12 @@
-use quote::{quote, ToTokens};
 use efx_core::Element;
+use quote::{ToTokens, quote};
 
 use crate::attr_adapters as A;
 
-pub(crate) fn render_separator_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {
+pub(crate) fn render_separator_stmt<UI: ToTokens>(
+    ui: &UI,
+    el: &Element,
+) -> proc_macro2::TokenStream {
     // no children
     if !el.children.is_empty() {
         return quote! { compile_error!("efx: <Separator/> must be self-closing without children"); };
@@ -31,24 +34,18 @@ pub(crate) fn render_separator_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc
         }
 
         match name {
-            "space" => {
-                match A::parse_f32("space", val) {
-                    Ok(n) => space = Some(n),
-                    Err(msg) => return quote! { compile_error!(#msg); },
-                }
-            }
-            "space_before" => {
-                match A::parse_f32("space_before", val) {
-                    Ok(n) => space_before = Some(n),
-                    Err(msg) => return quote! { compile_error!(#msg); },
-                }
-            }
-            "space_after" => {
-                match A::parse_f32("space_after", val) {
-                    Ok(n) => space_after = Some(n),
-                    Err(msg) => return quote! { compile_error!(#msg); },
-                }
-            }
+            "space" => match A::parse_f32("space", val) {
+                Ok(n) => space = Some(n),
+                Err(msg) => return quote! { compile_error!(#msg); },
+            },
+            "space_before" => match A::parse_f32("space_before", val) {
+                Ok(n) => space_before = Some(n),
+                Err(msg) => return quote! { compile_error!(#msg); },
+            },
+            "space_after" => match A::parse_f32("space_after", val) {
+                Ok(n) => space_after = Some(n),
+                Err(msg) => return quote! { compile_error!(#msg); },
+            },
             "vertical" => {
                 match A::parse_bool("vertical", val) {
                     Ok(b) => _vertical = Some(b), // ignore for now: there is no vertical separator in the doc prelude
@@ -62,10 +59,19 @@ pub(crate) fn render_separator_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc
     // Calculate the final indents:
     // if space_* is specified, they have priority; otherwise, we use space (the same before/after)
     let before = space_before.or(space).unwrap_or(0.0f32);
-    let after  = space_after.or(space).unwrap_or(0.0f32);
+    let after = space_after.or(space).unwrap_or(0.0f32);
 
-    let before_ts = if before > 0.0 { quote!( #ui.add_space(#before as f32); ) } else { quote!() };
-    let after_ts  = if after  > 0.0 { quote!( #ui.add_space(#after  as f32); ) } else { quote!() };
+    let before_ts = if before > 0.0 {
+        quote!( #ui.add_space(#before as f32); )
+    } else {
+        quote!()
+    };
+    
+    let after_ts = if after > 0.0 {
+        quote!( #ui.add_space(#after  as f32); )
+    } else {
+        quote!()
+    };
 
     quote! {{
         #before_ts
