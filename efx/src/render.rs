@@ -4,6 +4,7 @@ use efx_core::{Element, Node};
 use quote::{ToTokens, quote};
 use crate::tags::column::render_column_stmt;
 use crate::tags::row::render_row_stmt;
+use crate::tags::separator::render_separator_stmt;
 
 pub(crate) fn render_nodes_as_stmts<UI: ToTokens>(
     ui: &UI,
@@ -47,17 +48,9 @@ fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::Toke
             let btn_expr = render_button(ui, el);
             quote! { #btn_expr; }
         }
-        "Row" => {
-            render_row_stmt(ui, el)
-        }
+        "Row" => render_row_stmt(ui, el),
         "Column" => render_column_stmt(ui, el),
-        "Separator" => {
-            if el.children.is_empty() {
-                quote! { #ui.separator(); }
-            } else {
-                quote! { compile_error!("efx: <Separator/> must be self-closing without children"); }
-            }
-        }
+        "Separator" => render_separator_stmt(ui, el),
         other => {
             let msg = format!("efx: unknown tag <{}>", other);
             quote! { compile_error!(#msg); }

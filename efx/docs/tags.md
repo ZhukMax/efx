@@ -75,7 +75,8 @@ Self-closing divider. No children allowed (otherwise `compile_error!`).
 use efx_core::doc_prelude::*;
 use efx::*;
 
-efx!(Ui::default(), "<Separator space_before=\"12\"/>");
+efx!(Ui::default(), r#"<Separator space="12"/>"#);
+efx!(Ui::default(), r#"<Separator space_before="8" space_after="4"/>"#);
 ```
 
 ```rust,compile_fail
