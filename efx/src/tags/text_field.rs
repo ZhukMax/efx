@@ -3,10 +3,7 @@ use quote::{ToTokens, quote};
 
 use crate::attr_adapters as A;
 
-pub(crate) fn render_text_field_stmt<UI: ToTokens>(
-    ui: &UI,
-    el: &Element,
-) -> proc_macro2::TokenStream {
+pub fn render_text_field_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {
     // Disallow children (<TextField>...</TextField>) is a widget, not a container
     if !el.children.is_empty() {
         return quote! { compile_error!("efx: <TextField> must be self-closing and have no children"); };

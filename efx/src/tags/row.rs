@@ -4,7 +4,7 @@ use quote::{ToTokens, quote};
 use crate::attr_adapters as A;
 use crate::render::render_nodes_as_stmts;
 
-pub(crate) fn render_row_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {
+pub fn render_row_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {
     const KNOWN: &[&str] = &["gap", "padding", "align", "wrap"];
 
     let mut seen = std::collections::BTreeSet::<&str>::new();

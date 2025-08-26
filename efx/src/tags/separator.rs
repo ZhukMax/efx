@@ -3,10 +3,7 @@ use quote::{ToTokens, quote};
 
 use crate::attr_adapters as A;
 
-pub(crate) fn render_separator_stmt<UI: ToTokens>(
-    ui: &UI,
-    el: &Element,
-) -> proc_macro2::TokenStream {
+pub fn render_separator_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {
     // no children
     if !el.children.is_empty() {
         return quote! { compile_error!("efx: <Separator/> must be self-closing without children"); };

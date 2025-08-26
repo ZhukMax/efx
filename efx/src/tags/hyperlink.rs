@@ -4,10 +4,7 @@ use efx_core::Element;
 use quote::{ToTokens, quote};
 
 /// <Hyperlink url="..." [open_external=bool] [color=..] [underline=bool] [tooltip=...]>text?</Hyperlink>
-pub(crate) fn render_hyperlink_stmt<UI: ToTokens>(
-    ui: &UI,
-    el: &Element,
-) -> proc_macro2::TokenStream {
+pub fn render_hyperlink_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {
     const KNOWN: &[&str] = &["url", "open_external", "color", "underline", "tooltip"];
 
     // Collect the caption (text) from children: allow only text/interpolations, like in Label/Button
