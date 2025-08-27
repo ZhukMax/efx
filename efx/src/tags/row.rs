@@ -3,41 +3,25 @@ use quote::{ToTokens, quote};
 
 use crate::attr_adapters as A;
 use crate::render::render_nodes_as_stmts;
+use crate::tags::util::{attr_map, f32_opt};
 
 pub fn render_row_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {
     const KNOWN: &[&str] = &["gap", "padding", "align", "wrap"];
+    let map = match attr_map(el, KNOWN, "Row") {
+        Ok(m) => m,
+        Err(err) => return err,
+    };
 
-    let mut seen = std::collections::BTreeSet::<&str>::new();
-    let mut gap: Option<f32> = None;
-    let mut padding: Option<f32> = None;
-    let mut align: Option<String> = None;
+    let gap = f32_opt("Row", &map, "gap").unwrap_or(None);
+    let padding = f32_opt("Row", &map, "padding").unwrap_or(None);
+    let align = map.get("align").map(|s| (*s).to_string());
     let mut wrap: bool = false;
 
     for a in &el.attrs {
         let name = a.name.as_str();
         let val = a.value.as_str();
 
-        if !KNOWN.iter().any(|k| *k == name) {
-            let msg = format!("efx: <Row> unknown attribute `{}`", name);
-            return quote! { compile_error!(#msg); };
-        }
-        if !seen.insert(name) {
-            let msg = format!("efx: <Row> duplicate attribute `{}`", name);
-            return quote! { compile_error!(#msg); };
-        }
-
         match name {
-            "gap" => match A::parse_f32("gap", val) {
-                Ok(n) => gap = Some(n),
-                Err(msg) => return quote! { compile_error!(#msg); },
-            },
-            "padding" => match A::parse_f32("padding", val) {
-                Ok(n) => padding = Some(n),
-                Err(msg) => return quote! { compile_error!(#msg); },
-            },
-            "align" => {
-                align = Some(val.to_string());
-            }
             "wrap" => {
                 // "true"/"false"
                 match A::parse_bool("wrap", val) {

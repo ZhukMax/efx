@@ -1,7 +1,7 @@
 use efx_core::Element;
 use quote::{ToTokens, quote};
 
-use crate::attr_adapters as A;
+use crate::tags::util::{attr_map, f32_opt};
 
 pub fn render_separator_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {
     // no children
@@ -10,48 +10,14 @@ pub fn render_separator_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2
     }
 
     const KNOWN: &[&str] = &["space", "space_before", "space_after", "vertical"];
+    let map = match attr_map(el, KNOWN, "Separator") {
+        Ok(m) => m,
+        Err(err) => return err,
+    };
 
-    let mut seen = std::collections::BTreeSet::<&str>::new();
-    let mut space: Option<f32> = None;
-    let mut space_before: Option<f32> = None;
-    let mut space_after: Option<f32> = None;
-    let mut _vertical: Option<bool> = None;
-
-    for a in &el.attrs {
-        let name = a.name.as_str();
-        let val = a.value.as_str();
-
-        if !KNOWN.iter().any(|k| *k == name) {
-            let msg = format!("efx: <Separator> unknown attribute `{}`", name);
-            return quote! { compile_error!(#msg); };
-        }
-        if !seen.insert(name) {
-            let msg = format!("efx: <Separator> duplicate attribute `{}`", name);
-            return quote! { compile_error!(#msg); };
-        }
-
-        match name {
-            "space" => match A::parse_f32("space", val) {
-                Ok(n) => space = Some(n),
-                Err(msg) => return quote! { compile_error!(#msg); },
-            },
-            "space_before" => match A::parse_f32("space_before", val) {
-                Ok(n) => space_before = Some(n),
-                Err(msg) => return quote! { compile_error!(#msg); },
-            },
-            "space_after" => match A::parse_f32("space_after", val) {
-                Ok(n) => space_after = Some(n),
-                Err(msg) => return quote! { compile_error!(#msg); },
-            },
-            "vertical" => {
-                match A::parse_bool("vertical", val) {
-                    Ok(b) => _vertical = Some(b), // ignore for now: there is no vertical separator in the doc prelude
-                    Err(msg) => return quote! { compile_error!(#msg); },
-                }
-            }
-            _ => {}
-        }
-    }
+    let space = f32_opt("Separator", &map, "space").unwrap_or(None);
+    let space_before = f32_opt("Separator", &map, "space_before").unwrap_or(None);
+    let space_after = f32_opt("Separator", &map, "space_after").unwrap_or(None);
 
     // Calculate the final indents:
     // if space_* is specified, they have priority; otherwise, we use space (the same before/after)

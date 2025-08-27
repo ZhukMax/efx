@@ -1,8 +1,7 @@
 use efx_core::Element;
 use quote::{ToTokens, quote};
 
-use crate::attr_adapters as A;
-use crate::render::render_node_stmt;
+use crate::tags::util::*;
 
 pub fn render_central_panel_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {
     const KNOWN: &[&str] = &[
@@ -25,88 +24,38 @@ pub fn render_central_panel_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_ma
         "margin_b",
     ];
 
-    let mut seen = std::collections::BTreeSet::<&str>::new();
+    let map = match attr_map(el, KNOWN, "CentralPanel") {
+        Ok(m) => m,
+        Err(err) => return err,
+    };
 
-    // frame
-    let mut frame_on: Option<bool> = None;
+    let frame_on = bool_opt("CentralPanel", &map, "frame").unwrap_or(None);
 
     // fill & stroke
-    let mut fill_ts: Option<proc_macro2::TokenStream> = None;
-    let mut stroke_w: Option<f32> = None;
-    let mut stroke_color_ts: Option<proc_macro2::TokenStream> = None;
+    let fill_ts = color_tokens_opt(&map, "fill").unwrap_or(None);
+    let stroke_w = f32_opt("CentralPanel", &map, "stroke_width").unwrap_or(None);
+    let stroke_col = color_tokens_opt(&map, "stroke_color").unwrap_or(None);
 
     // padding (inner) & margin (outer)
-    // uniform + per-side
-    let (mut pad, mut pad_l, mut pad_r, mut pad_t, mut pad_b): (Option<f32>, Option<f32>, Option<f32>, Option<f32>, Option<f32>) = (None, None, None, None, None);
-    let (mut mar, mut mar_l, mut mar_r, mut mar_t, mut mar_b): (Option<f32>, Option<f32>, Option<f32>, Option<f32>, Option<f32>) = (None, None, None, None, None);
+    let pad = f32_opt("CentralPanel", &map, "padding").unwrap_or(None);
+    let pad_l = f32_opt("CentralPanel", &map, "padding_l").unwrap_or(None);
+    let pad_r = f32_opt("CentralPanel", &map, "padding_r").unwrap_or(None);
+    let pad_t = f32_opt("CentralPanel", &map, "padding_t").unwrap_or(None);
+    let pad_b = f32_opt("CentralPanel", &map, "padding_b").unwrap_or(None);
 
-    for a in &el.attrs {
-        let name = a.name.as_str();
-        let val = a.value.as_str();
-
-        if !KNOWN.iter().any(|k| *k == name) {
-            let msg = format!("efx: <CentralPanel> unknown attribute `{}`", name);
-            return quote! { compile_error!(#msg); };
-        }
-        if !seen.insert(name) {
-            let msg = format!("efx: <CentralPanel> duplicate attribute `{}`", name);
-            return quote! { compile_error!(#msg); };
-        }
-
-        match name {
-            "frame" => {
-                match A::parse_bool("frame", val) {
-                    Ok(b) => frame_on = Some(b),
-                    Err(msg) => return quote! { compile_error!(#msg); },
-                }
-            }
-            "fill" => {
-                fill_ts = match A::parse_color_tokens("fill", val) {
-                    Ok(ts) => Some(ts),
-                    Err(msg) => return quote! { compile_error!(#msg); },
-                }
-            }
-            "stroke_width" => {
-                match A::parse_f32("stroke_width", val) {
-                    Ok(w) => stroke_w = Some(w),
-                    Err(msg) => return quote! { compile_error!(#msg); },
-                }
-            }
-            "stroke_color" => {
-                stroke_color_ts = match A::parse_color_tokens("stroke_color", val) {
-                    Ok(ts) => Some(ts),
-                    Err(msg) => return quote! { compile_error!(#msg); },
-                }
-            }
-
-            // padding (inner_margin)
-            "padding"    => { pad    = A::parse_f32("padding", val).ok(); }
-            "padding_l"  => { pad_l  = A::parse_f32("padding_l", val).ok(); }
-            "padding_r"  => { pad_r  = A::parse_f32("padding_r", val).ok(); }
-            "padding_t"  => { pad_t  = A::parse_f32("padding_t", val).ok(); }
-            "padding_b"  => { pad_b  = A::parse_f32("padding_b", val).ok(); }
-
-            // margin (outer_margin)
-            "margin"     => { mar    = A::parse_f32("margin", val).ok(); }
-            "margin_l"   => { mar_l  = A::parse_f32("margin_l", val).ok(); }
-            "margin_r"   => { mar_r  = A::parse_f32("margin_r", val).ok(); }
-            "margin_t"   => { mar_t  = A::parse_f32("margin_t", val).ok(); }
-            "margin_b"   => { mar_b  = A::parse_f32("margin_b", val).ok(); }
-
-            _ => {}
-        }
-    }
+    let mar = f32_opt("CentralPanel", &map, "margin").unwrap_or(None);
+    let mar_l = f32_opt("CentralPanel", &map, "margin_l").unwrap_or(None);
+    let mar_r = f32_opt("CentralPanel", &map, "margin_r").unwrap_or(None);
+    let mar_t = f32_opt("CentralPanel", &map, "margin_t").unwrap_or(None);
+    let mar_b = f32_opt("CentralPanel", &map, "margin_b").unwrap_or(None);
 
     // Generate expressions for Margin if necessary
     let inner_margin_ts = margin_tokens(pad, pad_l, pad_r, pad_t, pad_b);
     let outer_margin_ts = margin_tokens(mar, mar_l, mar_r, mar_t, mar_b);
 
-    // Generate children body
-    let mut children_ts = proc_macro2::TokenStream::new();
-    for ch in &el.children {
-        let stmt = render_node_stmt(&quote!(ui), ch);
-        children_ts.extend(quote! { #stmt });
-    }
+    // Generate children
+    let children_rt = render_children_stmt(&quote!(ui), &el.children);
+    let children_doc = render_children_stmt(&quote!(__efx_doc_ui), &el.children);
 
     // Assembling an expression for Frame
     let mut frame_build = proc_macro2::TokenStream::new();
@@ -125,9 +74,9 @@ pub fn render_central_panel_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_ma
     if let Some(om) = outer_margin_ts {
         frame_build.extend(quote!( __efx_frame = __efx_frame.outer_margin(#om); ));
     }
-    if stroke_w.is_some() || stroke_color_ts.is_some() {
+    if stroke_w.is_some() || stroke_col.is_some() {
         let w = stroke_w.unwrap_or(1.0);
-        let c = stroke_color_ts.unwrap_or_else(|| quote!( egui::Color32::BLACK ));
+        let c = stroke_col.unwrap_or_else(|| quote!(egui::Color32::BLACK));
         frame_build.extend(quote! {
             __efx_frame = __efx_frame.stroke(egui::Stroke { width: #w as _, color: #c });
         });
@@ -135,28 +84,20 @@ pub fn render_central_panel_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_ma
 
     quote! {{
         #frame_build
-        egui::CentralPanel::default()
-            .frame(__efx_frame)
-            .show(&#ui.ctx(), |ui| { #children_ts });
-    }}
-}
 
-/// Building egui::Margin from uniform/per-side options.
-/// Returns Some(TokenStream) if something is given, None otherwise.
-fn margin_tokens(
-    uniform: Option<f32>, l: Option<f32>, r: Option<f32>, t: Option<f32>, b: Option<f32>,
-) -> Option<proc_macro2::TokenStream> {
-    if uniform.is_none() && l.is_none() && r.is_none() && t.is_none() && b.is_none() {
-        return None;
-    }
-    let mk = |side: Option<f32>, uni: Option<f32>| -> proc_macro2::TokenStream {
-        if let Some(v) = side { quote!( #v as _ ) }
-        else if let Some(u) = uni { quote!( #u as _ ) }
-        else { quote!( 0 as _ ) }
-    };
-    let l_ts = mk(l, uniform);
-    let r_ts = mk(r, uniform);
-    let t_ts = mk(t, uniform);
-    let b_ts = mk(b, uniform);
-    Some(quote!( egui::Margin { left: #l_ts, right: #r_ts, top: #t_ts, bottom: #b_ts } ))
+        // doctest-friendly
+        #[cfg(any(test, doctest))]
+        {
+            let mut __efx_doc_ui = ::efx_core::doc_prelude::Ui::default();
+            #children_doc
+        }
+
+        // runtime: real CentralPanel
+        #[cfg(not(any(test, doctest)))]
+        {
+            egui::CentralPanel::default()
+                .frame(__efx_frame)
+                .show(&#ui.ctx(), |ui| { #children_rt });
+        }
+    }}
 }

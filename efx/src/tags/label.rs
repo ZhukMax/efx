@@ -4,8 +4,6 @@ use efx_core::Element;
 use quote::{ToTokens, quote};
 
 pub fn render_label_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {
-    let (buf_init, buf_build) = build_buffer_from_children(&el.children);
-
     // Allowed attributes
     const KNOWN: &[&str] = &[
         "color",
@@ -117,6 +115,8 @@ pub fn render_label_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::To
             _ => {}
         }
     }
+
+    let (buf_init, buf_build) = build_buffer_from_children(&el.children);
 
     // Backward compatibility:
     // if there is NO style attribute and wrap != true — leave the old semantics:

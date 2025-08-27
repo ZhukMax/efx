@@ -39,6 +39,7 @@ pub(crate) fn render_node_stmt<UI: ToTokens>(ui: &UI, node: &Node) -> proc_macro
 
 fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {
     match el.name.as_str() {
+        "CentralPanel" => render_central_panel_stmt(ui, el),
         "Label" => render_label_stmt(ui, el),
         "Button" => {
             let btn_expr = render_button(ui, el);
@@ -52,7 +53,6 @@ fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::Toke
             quote! { #ts; }
         }
         "TextField" => render_text_field_stmt(ui, el),
-        "CentralPanel" => render_central_panel_stmt(ui, el),
         other => {
             let msg = format!("efx: unknown tag <{}>", other);
             quote! { compile_error!(#msg); }
