@@ -17,8 +17,8 @@ pub fn render_hyperlink_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2
     };
 
     // web: .open_in_new_tab
-    let open_external = bool_opt("Hyperlink", &map, "open_external").unwrap_or(None);
-    let underline = bool_opt("Hyperlink", &map, "underline").unwrap_or(None);
+    let open_external = bool_opt(&map, "open_external").unwrap_or(None);
+    let underline = bool_opt(&map, "underline").unwrap_or(None);
     let color_ts = color_tokens_opt(&map, "color").unwrap_or(None);
     let tooltip = map.get("tooltip").map(|s| (*s).to_string());
 

@@ -12,8 +12,8 @@ pub fn render_row_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::Toke
         Err(err) => return err,
     };
 
-    let gap = f32_opt("Row", &map, "gap").unwrap_or(None);
-    let padding = f32_opt("Row", &map, "padding").unwrap_or(None);
+    let gap = f32_opt(&map, "gap").unwrap_or(None);
+    let padding = f32_opt(&map, "padding").unwrap_or(None);
     let align = map.get("align").map(|s| (*s).to_string());
     let mut wrap: bool = false;
 

@@ -12,8 +12,8 @@ pub fn render_column_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::T
     };
 
     // vertical spacing between children
-    let gap = f32_opt("Column", &map, "gap").unwrap_or(None);
-    let padding = f32_opt("Column", &map, "padding").unwrap_or(None);
+    let gap = f32_opt(&map, "gap").unwrap_or(None);
+    let padding = f32_opt(&map, "padding").unwrap_or(None);
     // left|center|right (horizontal alignment of children)
     let align = map.get("align").map(|s| (*s).to_string());
 

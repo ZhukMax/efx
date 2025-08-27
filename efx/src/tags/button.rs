@@ -20,9 +20,9 @@ pub fn render_button<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenS
         Err(err) => return err,
     };
 
-    let min_w = f32_opt("Button", &map, "min_width").unwrap_or(None);
-    let min_h = f32_opt("Button", &map, "min_height").unwrap_or(None);
-    let frame = bool_opt("Button", &map, "frame").unwrap_or(None);
+    let min_w = f32_opt(&map, "min_width").unwrap_or(None);
+    let min_h = f32_opt(&map, "min_height").unwrap_or(None);
+    let frame = bool_opt(&map, "frame").unwrap_or(None);
     let mut fill_ts: Option<proc_macro2::TokenStream> = None;
     let mut rounding_u8: Option<u8> = None;
     let mut enabled: Option<bool> = None;

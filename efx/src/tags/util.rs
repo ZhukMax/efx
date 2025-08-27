@@ -30,7 +30,6 @@ pub fn attr_map<'a>(
 }
 
 pub fn bool_opt(
-    tag: &str,
     map: &BTreeMap<&str, &str>,
     key: &str,
 ) -> Result<Option<bool>, TokenStream> {
@@ -41,7 +40,6 @@ pub fn bool_opt(
 }
 
 pub fn f32_opt(
-    tag: &str,
     map: &BTreeMap<&str, &str>,
     key: &str,
 ) -> Result<Option<f32>, TokenStream> {

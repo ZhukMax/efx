@@ -15,9 +15,9 @@ pub fn render_separator_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2
         Err(err) => return err,
     };
 
-    let space = f32_opt("Separator", &map, "space").unwrap_or(None);
-    let space_before = f32_opt("Separator", &map, "space_before").unwrap_or(None);
-    let space_after = f32_opt("Separator", &map, "space_after").unwrap_or(None);
+    let space = f32_opt(&map, "space").unwrap_or(None);
+    let space_before = f32_opt(&map, "space_before").unwrap_or(None);
+    let space_after = f32_opt(&map, "space_after").unwrap_or(None);
 
     // Calculate the final indents:
     // if space_* is specified, they have priority; otherwise, we use space (the same before/after)
