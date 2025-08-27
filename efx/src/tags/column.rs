@@ -1,10 +1,10 @@
-use proc_macro2::TokenStream;
 use efx_core::Element;
+use proc_macro2::TokenStream;
 use quote::{ToTokens, quote};
 
 use crate::render::render_nodes_as_stmts;
-use crate::tags::{TagAttributes, Tagged};
 use crate::tags::util::{attr_map, f32_opt};
+use crate::tags::{TagAttributes, Tagged};
 
 pub struct Column;
 
@@ -33,11 +33,25 @@ impl Tagged for Column {
             epilog.extend(quote! { #ui.add_space(#p as f32); });
         }
 
+        let content = Column::content(ui, el, attributes);
+
+        quote! {
+            {
+                #prolog
+                #content
+                #epilog
+            }
+        }
+    }
+}
+
+impl Column {
+    fn content<UI: ToTokens>(ui: &UI, el: &Element, attributes: Attributes) -> TokenStream {
         let body = render_nodes_as_stmts(&quote!(ui), &el.children);
 
         // align: left|center|right → egui::Align::{Min,Center,Max} in Layout::top_down(...)
-        let content = if let Some(al) = attributes.align {
-            let align_expr = match al.as_str() {
+        if let Some(align) = attributes.align {
+            let align_expr = match align.as_str() {
                 "left" => quote!(::egui::Align::Min),
                 "right" => quote!(::egui::Align::Max),
                 "center" => quote!(::egui::Align::Center),
@@ -58,14 +72,6 @@ impl Tagged for Column {
                 #ui.vertical(|ui| {
                     #body
                 });
-            }
-        };
-
-        quote! {
-            {
-                #prolog
-                #content
-                #epilog
             }
         }
     }
