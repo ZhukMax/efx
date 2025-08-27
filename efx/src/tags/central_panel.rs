@@ -80,20 +80,8 @@ pub fn render_central_panel_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_ma
 
     quote! {{
         #frame_build
-
-        // doctest-friendly
-        #[cfg(any(test, doctest))]
-        {
-            let mut __efx_doc_ui = ::efx_core::doc_prelude::Ui::default();
-            #children_doc
-        }
-
-        // runtime: real CentralPanel
-        #[cfg(not(any(test, doctest)))]
-        {
-            egui::CentralPanel::default()
+        egui::CentralPanel::default()
                 .frame(__efx_frame)
                 .show(&#ui.ctx(), |ui| { #children_rt });
-        }
     }}
 }

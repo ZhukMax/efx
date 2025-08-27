@@ -126,6 +126,7 @@ pub fn expr_req(
     }
 }
 
+#[allow(dead_code)]
 /// Optional expression attribute: `None` if absent; `compile_error!` if present but not parsed.
 pub fn expr_opt(map: &BTreeMap<&str, &str>, key: &str) -> Result<Option<syn::Expr>, TokenStream> {
     match map.get(key) {

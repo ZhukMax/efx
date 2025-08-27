@@ -50,7 +50,7 @@ fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::Toke
         "Separator" => render_separator_stmt(ui, el),
         "ScrollArea" => render_scroll_area_stmt(ui, el),
         "Hyperlink" => {
-            let ts = render_hyperlink_stmt(ui, el);
+            let ts = Hyperlink::parse(ui, el);
             quote! { #ts; }
         }
         "TextField" => render_text_field_stmt(ui, el),
