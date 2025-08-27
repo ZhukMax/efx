@@ -29,20 +29,14 @@ pub fn attr_map<'a>(
     Ok(out)
 }
 
-pub fn bool_opt(
-    map: &BTreeMap<&str, &str>,
-    key: &str,
-) -> Result<Option<bool>, TokenStream> {
+pub fn bool_opt(map: &BTreeMap<&str, &str>, key: &str) -> Result<Option<bool>, TokenStream> {
     Ok(match map.get(key) {
         Some(v) => Some(A::parse_bool(key, v).map_err(|m| quote! { compile_error!(#m); })?),
         None => None,
     })
 }
 
-pub fn f32_opt(
-    map: &BTreeMap<&str, &str>,
-    key: &str,
-) -> Result<Option<f32>, TokenStream> {
+pub fn f32_opt(map: &BTreeMap<&str, &str>, key: &str) -> Result<Option<f32>, TokenStream> {
     Ok(match map.get(key) {
         Some(v) => Some(A::parse_f32(key, v).map_err(|m| quote! { compile_error!(#m); })?),
         None => None,
