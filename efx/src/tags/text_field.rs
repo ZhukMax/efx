@@ -2,6 +2,7 @@ use efx_core::Element;
 use quote::{ToTokens, quote};
 
 use crate::attr_adapters as A;
+use crate::tags::util::{attr_map, bool_opt, expr_req, f32_opt};
 
 pub fn render_text_field_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {
     // Disallow children (<TextField>...</TextField>) is a widget, not a container
@@ -10,68 +11,29 @@ pub fn render_text_field_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro
     }
 
     const KNOWN: &[&str] = &["value", "hint", "password", "width", "multiline"];
-
-    let mut seen = std::collections::BTreeSet::<&str>::new();
-
-    // value — required (Rust expression without curly braces)
-    let mut value_expr_src: Option<String> = None;
-
-    let mut hint: Option<String> = None;
-    let mut password: Option<bool> = None;
-    let mut width: Option<f32> = None;
-    let mut multiline: Option<bool> = None;
-
-    for a in &el.attrs {
-        let name = a.name.as_str();
-        let val = a.value.as_str();
-
-        if !KNOWN.iter().any(|k| *k == name) {
-            let msg = format!("efx: <TextField> unknown attribute `{}`", name);
-            return quote! { compile_error!(#msg); };
-        }
-        if !seen.insert(name) {
-            let msg = format!("efx: <TextField> duplicate attribute `{}`", name);
-            return quote! { compile_error!(#msg); };
-        }
-
-        match name {
-            "value" => {
-                // Здесь ожидаем валидное Rust-выражение, например: state.name
-                value_expr_src = Some(a.value.clone());
-            }
-            "hint" => {
-                hint = Some(a.value.clone());
-            }
-            "password" => match A::parse_bool("password", val) {
-                Ok(b) => password = Some(b),
-                Err(msg) => return quote! { compile_error!(#msg); },
-            },
-            "width" => match A::parse_f32("width", val) {
-                Ok(n) => width = Some(n),
-                Err(msg) => return quote! { compile_error!(#msg); },
-            },
-            "multiline" => match A::parse_bool("multiline", val) {
-                Ok(b) => multiline = Some(b),
-                Err(msg) => return quote! { compile_error!(#msg); },
-            },
-            _ => {}
-        }
-    }
-
-    let Some(expr_src) = value_expr_src else {
-        return quote! { compile_error!("efx: <TextField> requires `value=\"<expr>\"` attribute"); };
+    let map = match attr_map(el, KNOWN, "TextField") {
+        Ok(m) => m,
+        Err(err) => return err,
     };
 
-    // Parse the string into syn::Expr - this will give a type-safe code generator
-    let value_expr: syn::Expr = match syn::parse_str(&expr_src) {
+    // value — required (Rust expression without curly braces)
+    let value_expr = match expr_req(&map, "value", "TextField") {
         Ok(e) => e,
-        Err(_) => {
-            let msg = format!(
-                "efx: attribute `value` must be a valid Rust expression, got `{}`",
-                expr_src
-            );
-            return quote! { compile_error!(#msg); };
-        }
+        Err(err) => return err,
+    };
+
+    let hint = map.get("hint").map(|s| (*s).to_string());
+    let password = match bool_opt(&map, "password") {
+        Ok(v) => v,
+        Err(err) => return err,
+    };
+    let width = match f32_opt(&map, "width") {
+        Ok(v) => v,
+        Err(err) => return err,
+    };
+    let multiline = match bool_opt(&map, "multiline") {
+        Ok(v) => v,
+        Err(err) => return err,
     };
 
     let base = if matches!(multiline, Some(true)) {

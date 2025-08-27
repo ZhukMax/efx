@@ -6,8 +6,7 @@
 - Updated documentation (attributes, quickstarts for eframe/bevy/winit+wgpu)
 - New Tags: Heading, Hyperlink, TextField, Image, Grid
 - Added Panel Tags: Window, CentralPanel, SidePanel, ScrollArea
-- Added examples
-- Added tests
+- Added examples & tests
 
 #### 0.4
 - Basic Nodes Parser (efx-core) refactoring

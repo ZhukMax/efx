@@ -48,7 +48,7 @@ fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::Toke
         "Row" => render_row_stmt(ui, el),
         "Column" => render_column_stmt(ui, el),
         "Separator" => render_separator_stmt(ui, el),
-        "ScrollArea"   => render_scroll_area_stmt(ui, el),
+        "ScrollArea" => render_scroll_area_stmt(ui, el),
         "Hyperlink" => {
             let ts = render_hyperlink_stmt(ui, el);
             quote! { #ts; }
