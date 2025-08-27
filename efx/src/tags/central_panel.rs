@@ -74,12 +74,8 @@ pub fn render_central_panel_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_ma
     if let Some(om) = outer_margin_ts {
         frame_build.extend(quote!( __efx_frame = __efx_frame.outer_margin(#om); ));
     }
-    if stroke_w.is_some() || stroke_col.is_some() {
-        let w = stroke_w.unwrap_or(1.0);
-        let c = stroke_col.unwrap_or_else(|| quote!(egui::Color32::BLACK));
-        frame_build.extend(quote! {
-            __efx_frame = __efx_frame.stroke(egui::Stroke { width: #w as _, color: #c });
-        });
+    if let Some(st) = stroke_tokens(stroke_w, stroke_col) {
+        frame_build.extend(quote!( __efx_frame = __efx_frame.stroke(#st); ));
     }
 
     quote! {{

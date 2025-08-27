@@ -147,3 +147,15 @@ pub fn expr_opt(map: &BTreeMap<&str, &str>, key: &str) -> Result<Option<syn::Exp
         }
     }
 }
+
+/// Build `egui::Stroke` from optional width and color.
+/// Returns `None` if both parameters are missing.
+/// Numeric casts are done via `as _`, so as not to be limited to a specific type.
+pub fn stroke_tokens(width: Option<f32>, color: Option<TokenStream>) -> Option<TokenStream> {
+    if width.is_none() && color.is_none() {
+        return None;
+    }
+    let w = width.unwrap_or(1.0);
+    let c = color.unwrap_or_else(|| quote!( egui::Color32::BLACK ));
+    Some(quote!( egui::Stroke { width: #w as _, color: #c } ))
+}
