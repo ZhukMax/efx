@@ -20,7 +20,7 @@ pub use hyperlink::Hyperlink;
 pub use label::render_label_stmt;
 pub use row::render_row_stmt;
 pub use scroll_area::render_scroll_area_stmt;
-pub use separator::render_separator_stmt;
+pub use separator::Separator;
 pub use text_field::render_text_field_stmt;
 
 pub trait Tagged {
