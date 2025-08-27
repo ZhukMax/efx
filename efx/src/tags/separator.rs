@@ -1,8 +1,8 @@
-use proc_macro2::TokenStream;
-use efx_core::Element;
-use quote::{ToTokens, quote};
-use crate::tags::{TagAttributes, Tagged};
 use crate::tags::util::{attr_map, f32_opt};
+use crate::tags::{TagAttributes, Tagged};
+use efx_core::Element;
+use proc_macro2::TokenStream;
+use quote::{ToTokens, quote};
 
 pub struct Separator;
 
@@ -20,8 +20,14 @@ impl Tagged for Separator {
 
         // Calculate the final indents:
         // if space_* is specified, they have priority; otherwise, we use space (the same before/after)
-        let before = attributes.space_before.or(attributes.space).unwrap_or(0.0f32);
-        let after = attributes.space_after.or(attributes.space).unwrap_or(0.0f32);
+        let before = attributes
+            .space_before
+            .or(attributes.space)
+            .unwrap_or(0.0f32);
+        let after = attributes
+            .space_after
+            .or(attributes.space)
+            .unwrap_or(0.0f32);
 
         let before_ts = if before > 0.0 {
             quote!( #ui.add_space(#before as f32); )

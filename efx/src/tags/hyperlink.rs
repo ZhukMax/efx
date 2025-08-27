@@ -1,9 +1,9 @@
-use proc_macro2::TokenStream;
 use crate::buffer::build_buffer_from_children;
 use crate::tags::util::*;
-use efx_core::Element;
-use quote::{ToTokens, quote};
 use crate::tags::{TagAttributes, Tagged};
+use efx_core::Element;
+use proc_macro2::TokenStream;
+use quote::{ToTokens, quote};
 
 /// <Hyperlink url="..." [open_external=bool] [color=...] [underline=bool] [tooltip=...]>text?</Hyperlink>
 pub struct Hyperlink;
@@ -110,9 +110,9 @@ impl TagAttributes for Attributes {
 
 impl Attributes {
     pub(crate) fn has_style_or_behavior(self: Self) -> bool {
-        self.open_external.is_some() ||
-            self.underline.is_some() ||
-            self.color_ts.is_some() ||
-            self.tooltip.is_some()
+        self.open_external.is_some()
+            || self.underline.is_some()
+            || self.color_ts.is_some()
+            || self.tooltip.is_some()
     }
 }

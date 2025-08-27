@@ -46,7 +46,7 @@ fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::Toke
             quote! { #btn_expr; }
         }
         "Row" => render_row_stmt(ui, el),
-        "Column" => render_column_stmt(ui, el),
+        "Column" => Column::parse(ui, el),
         "Separator" => Separator::parse(ui, el),
         "ScrollArea" => render_scroll_area_stmt(ui, el),
         "Hyperlink" => {
