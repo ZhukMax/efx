@@ -4,8 +4,8 @@
 - Attribute rendering (efx-core)
 - Label, Button, Row, Column, Separator attributes
 - Updated documentation (attributes, quickstarts for eframe/bevy/winit+wgpu)
-- New Tags: Heading, Hyperlink, TextField, Image, Grid
-- Added Panel Tags: Window, CentralPanel, SidePanel, ScrollArea
+- New Tags: ~~Heading~~, Hyperlink, TextField, ~~Image~~, ~~Grid~~
+- Added Panel Tags: ~~Window~~, CentralPanel, ~~SidePanel~~, ScrollArea
 - Added examples & tests
 
 #### 0.4

@@ -35,13 +35,11 @@ impl Tagged for Column {
 
         let content = Column::content(ui, el, attributes);
 
-        quote! {
-            {
-                #prolog
-                #content
-                #epilog
-            }
-        }
+        quote! {{
+            #prolog
+            #content
+            #epilog
+        }}
     }
 }
 

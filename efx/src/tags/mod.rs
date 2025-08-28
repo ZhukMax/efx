@@ -18,7 +18,7 @@ pub use hyperlink::Hyperlink;
 pub use label::render_label_stmt;
 use proc_macro2::TokenStream;
 use quote::ToTokens;
-pub use row::render_row_stmt;
+pub use row::Row;
 pub use scroll_area::render_scroll_area_stmt;
 pub use separator::Separator;
 pub use text_field::render_text_field_stmt;

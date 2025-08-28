@@ -1,7 +1,6 @@
 use efx_core::Element;
 use quote::{ToTokens, quote};
 
-use crate::attr_adapters as A;
 use crate::tags::util::{attr_map, bool_opt, expr_req, f32_opt};
 
 pub fn render_text_field_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {

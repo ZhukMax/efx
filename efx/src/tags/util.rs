@@ -36,6 +36,15 @@ pub fn bool_opt(map: &BTreeMap<&str, &str>, key: &str) -> Result<Option<bool>, T
     })
 }
 
+#[inline]
+pub fn bool_or(map: &BTreeMap<&str, &str>, key: &str, default: bool) -> Result<bool, TokenStream> {
+    match map.get(key) {
+        None => Ok(default),
+        Some(v) => crate::attr_adapters::parse_bool(key, v)
+            .map_err(|m| quote::quote! { compile_error!(#m); }),
+    }
+}
+
 pub fn f32_opt(map: &BTreeMap<&str, &str>, key: &str) -> Result<Option<f32>, TokenStream> {
     Ok(match map.get(key) {
         Some(v) => Some(A::parse_f32(key, v).map_err(|m| quote! { compile_error!(#m); })?),
@@ -43,7 +52,7 @@ pub fn f32_opt(map: &BTreeMap<&str, &str>, key: &str) -> Result<Option<f32>, Tok
     })
 }
 
-pub fn u8_opt(tag: &str, map: &BTreeMap<&str, &str>, key: &str) -> Result<Option<u8>, TokenStream> {
+pub fn u8_opt(map: &BTreeMap<&str, &str>, key: &str) -> Result<Option<u8>, TokenStream> {
     Ok(match map.get(key) {
         Some(v) => Some(A::parse_u8(key, v).map_err(|m| quote! { compile_error!(#m); })?),
         None => None,
@@ -157,6 +166,6 @@ pub fn stroke_tokens(width: Option<f32>, color: Option<TokenStream>) -> Option<T
         return None;
     }
     let w = width.unwrap_or(1.0);
-    let c = color.unwrap_or_else(|| quote!( egui::Color32::BLACK ));
+    let c = color.unwrap_or_else(|| quote!(egui::Color32::BLACK));
     Some(quote!( egui::Stroke { width: #w as _, color: #c } ))
 }
