@@ -4,61 +4,34 @@ use quote::{ToTokens, quote};
 
 use crate::render::render_nodes_as_stmts;
 use crate::tags::util::{attr_map, bool_or, f32_opt};
-use crate::tags::{TagAttributes, Tagged};
+use crate::tags::{Tag, TagAttributes, Tagged};
 
-pub struct Row;
-
-impl Tagged for Row {
-    fn parse<UI: ToTokens>(ui: &UI, el: &Element) -> TokenStream {
-        let attributes = match Attributes::new(el) {
-            Ok(attr) => attr,
-            Err(err) => return err,
-        };
-
-        let mut prolog = TokenStream::new();
-        let mut epilog = TokenStream::new();
-
-        if let Some(n) = attributes.gap {
-            prolog.extend(quote! {
-                let __efx_old_gap_x = #ui.spacing().item_spacing.x;
-                #ui.spacing_mut().item_spacing.x = #n as f32;
-            });
-
-            epilog.extend(quote! {
-                #ui.spacing_mut().item_spacing.x = __efx_old_gap_x;
-            });
-        }
-
-        if let Some(p) = attributes.padding {
-            prolog.extend(quote! { #ui.add_space(#p as f32); });
-            epilog.extend(quote! { #ui.add_space(#p as f32); });
-        }
-
-        let content = Row::content(ui, &*el.children, attributes.clone());
-
-        quote! {
-            {
-                #prolog
-                #content
-                #epilog
-            }
-        }
-    }
+pub struct Row {
+    attributes: Attributes,
+    element: Element,
 }
 
-impl Row {
-    fn content<UI: ToTokens>(ui: &UI, children: &[Node], attributes: Attributes) -> TokenStream {
-        let body = render_nodes_as_stmts(&quote!(ui), children);
+impl Tag for Row {
+    fn from_element(el: &Element) -> Result<Self, TokenStream> {
+        let attributes = Attributes::new(el)?;
+        Ok(Self {
+            attributes,
+            element: el.clone(),
+        })
+    }
+
+    fn content<UI: ToTokens>(&self, ui: &UI) -> TokenStream {
+        let body = render_nodes_as_stmts(&quote!(ui), &self.element.children);
 
         // align / wrap
-        if attributes.wrap {
+        if self.attributes.wrap {
             // horizontal_wrapped
             quote! {
                 #ui.horizontal_wrapped(|ui| {
                     #body
                 });
             }
-        } else if let Some(al) = attributes.align {
+        } else if let Some(al) = &self.attributes.align {
             // map string → egui::Align
             let align_expr = match al.as_str() {
                 "top" => quote!(::egui::Align::Min),
@@ -84,6 +57,37 @@ impl Row {
             }
         }
     }
+
+    /// Full render: prologue → content → epilogue.
+    fn render<UI: ToTokens>(&self, ui: &UI) -> TokenStream {
+        let (prolog, epilogue) = self.prolog_epilogue(ui);
+        let content = self.content(ui);
+        quote! {{ #prolog #content #epilogue }}
+    }
+}
+
+impl Row {
+    fn prolog_epilogue<UI: ToTokens>(&self, ui: &UI) -> (TokenStream, TokenStream) {
+        let mut prolog = TokenStream::new();
+        let mut epilogue = TokenStream::new();
+
+        if let Some(n) = self.attributes.gap {
+            prolog.extend(quote! {
+                let __efx_old_gap_x = #ui.spacing().item_spacing.x;
+                #ui.spacing_mut().item_spacing.x = #n as _;
+            });
+            epilogue.extend(quote! {
+                #ui.spacing_mut().item_spacing.x = __efx_old_gap_x;
+            });
+        }
+
+        if let Some(p) = self.attributes.padding {
+            prolog.extend(quote! { #ui.add_space(#p as _); });
+            epilogue.extend(quote! { #ui.add_space(#p as _); });
+        }
+
+        (prolog, epilogue)
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -102,10 +106,7 @@ impl TagAttributes for Attributes {
             Err(err) => return Err(err),
         };
 
-        let wrap: bool = match bool_or(&map, "wrap", false) {
-            Ok(v) => v,
-            Err(err) => return Err(err),
-        };
+        let wrap = bool_or(&map, "wrap", false)?;
 
         Ok(Attributes {
             gap: f32_opt(&map, "gap").unwrap_or(None),

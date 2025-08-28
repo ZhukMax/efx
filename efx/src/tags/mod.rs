@@ -27,6 +27,17 @@ pub trait Tagged {
     fn parse<UI: ToTokens>(ui: &UI, el: &Element) -> TokenStream;
 }
 
+pub trait Tag {
+    /// Constructor from Element (parses attributes and captures children inside self).
+    fn from_element(el: &Element) -> Result<Self, TokenStream>
+    where
+        Self: Sized;
+    /// Render contents
+    fn content<UI: ToTokens>(&self, ui: &UI) -> TokenStream;
+    /// Full render
+    fn render<UI: ToTokens>(&self, ui: &UI) -> TokenStream;
+}
+
 pub(crate) trait TagAttributes {
     fn new(el: &Element) -> Result<Self, TokenStream>
     where

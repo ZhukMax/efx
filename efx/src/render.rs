@@ -45,7 +45,7 @@ fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::Toke
             let btn_expr = render_button(ui, el);
             quote! { #btn_expr; }
         }
-        "Row" => Row::parse(ui, el),
+        "Row" => Row::from_element(el).unwrap().render(ui),
         "Column" => Column::parse(ui, el),
         "Separator" => Separator::parse(ui, el),
         "ScrollArea" => render_scroll_area_stmt(ui, el),

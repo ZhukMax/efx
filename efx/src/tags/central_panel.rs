@@ -1,9 +1,10 @@
+use proc_macro2::TokenStream;
 use efx_core::Element;
 use quote::{ToTokens, quote};
 
 use crate::tags::util::*;
 
-pub fn render_central_panel_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {
+pub fn render_central_panel_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> TokenStream {
     const KNOWN: &[&str] = &[
         "frame",
         // fill / stroke
@@ -58,7 +59,7 @@ pub fn render_central_panel_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_ma
     let children_doc = render_children_stmt(&quote!(__efx_doc_ui), &el.children);
 
     // Assembling an expression for Frame
-    let mut frame_build = proc_macro2::TokenStream::new();
+    let mut frame_build = TokenStream::new();
     // main frame: true/default → default(); false → none();
     frame_build.extend(match frame_on {
         Some(false) => quote!( let mut __efx_frame = egui::Frame::none(); ),
