@@ -1,7 +1,7 @@
 use efx_core::Element;
 use proc_macro2::TokenStream;
-use quote::{quote, ToTokens};
-
+use quote::{ToTokens, quote};
+use efx_attrnames::AttrNames;
 use crate::render::render_nodes_as_stmts;
 use crate::tags::util::{attr_map, bool_or, f32_opt};
 use crate::tags::{Tag, TagAttributes};
@@ -90,7 +90,7 @@ impl Row {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, AttrNames)]
 struct Attributes {
     gap: Option<f32>,
     padding: Option<f32>,
@@ -100,8 +100,7 @@ struct Attributes {
 
 impl TagAttributes for Attributes {
     fn new(el: &Element) -> Result<Self, TokenStream> {
-        const KNOWN: &[&str] = &["gap", "padding", "align", "wrap"];
-        let map = match attr_map(el, KNOWN, "Row") {
+        let map = match attr_map(el, Attributes::ATTR_NAMES, "Row") {
             Ok(m) => m,
             Err(err) => return Err(err),
         };

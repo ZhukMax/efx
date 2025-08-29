@@ -2,7 +2,7 @@
 
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{parse_macro_input, DeriveInput, Data, Fields, Meta, Lit, LitStr};
+use syn::{Data, DeriveInput, Fields, LitStr, parse_macro_input};
 
 /// Derive for generating `ATTR_NAMES` constant for attribute structure.
 /// Supports field renaming via `#[attr(name = "align")]`.
@@ -20,17 +20,14 @@ pub fn derive_attr_names(input: TokenStream) -> TokenStream {
                     &st.fields,
                     "AttrNames supports only structs with named fields",
                 )
-                    .to_compile_error()
-                    .into()
+                .to_compile_error()
+                .into();
             }
         },
         _ => {
-            return syn::Error::new_spanned(
-                &input.ident,
-                "AttrNames supports only structs",
-            )
+            return syn::Error::new_spanned(&input.ident, "AttrNames supports only structs")
                 .to_compile_error()
-                .into()
+                .into();
         }
     };
 
@@ -41,12 +38,9 @@ pub fn derive_attr_names(input: TokenStream) -> TokenStream {
         let ident = match &f.ident {
             Some(id) => id,
             None => {
-                return syn::Error::new_spanned(
-                    f,
-                    "expected named field",
-                )
+                return syn::Error::new_spanned(f, "expected named field")
                     .to_compile_error()
-                    .into()
+                    .into();
             }
         };
 

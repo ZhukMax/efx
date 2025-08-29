@@ -1,6 +1,6 @@
-use proc_macro2::TokenStream;
 use crate::tags::*;
 use efx_core::{Element, Node};
+use proc_macro2::TokenStream;
 use quote::{ToTokens, quote};
 
 pub(crate) fn render_nodes_as_stmts<UI: ToTokens>(
@@ -64,7 +64,7 @@ fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::Toke
 
 fn render_tag<T: Tag>(ui: &impl ToTokens, el: &Element) -> TokenStream {
     match T::from_element(el) {
-        Ok(tag)  => tag.render(ui),
+        Ok(tag) => tag.render(ui),
         Err(err) => err,
     }
 }
