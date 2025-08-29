@@ -4,14 +4,14 @@ use quote::{ToTokens, quote};
 use efx_attrnames::AttrNames;
 use crate::render::render_nodes_as_stmts;
 use crate::tags::util::{attr_map, bool_or, f32_opt};
-use crate::tags::{Tag, TagAttributes};
+use crate::tags::{Block, Tag, TagAttributes};
 
 pub struct Row {
     attributes: Attributes,
     element: Element,
 }
 
-impl Tag for Row {
+impl Block for Row {
     fn from_element(el: &Element) -> Result<Self, TokenStream> {
         let attributes = Attributes::new(el)?;
         Ok(Self {
@@ -58,20 +58,11 @@ impl Tag for Row {
         }
     }
 
-    /// Full render: prologue → content → epilogue.
-    fn render<UI: ToTokens>(&self, ui: &UI) -> TokenStream {
-        let (prolog, epilogue) = self.prolog_epilogue(ui);
-        let content = self.content(ui);
-        quote! {{ #prolog #content #epilogue }}
-    }
-}
-
-impl Row {
     fn prolog_epilogue<UI: ToTokens>(&self, ui: &UI) -> (TokenStream, TokenStream) {
         let mut prolog = TokenStream::new();
         let mut epilogue = TokenStream::new();
 
-        if let Some(n) = self.attributes.gap {
+        if let Some(n) = &self.attributes.gap {
             prolog.extend(quote! {
                 let __efx_old_gap_x = #ui.spacing().item_spacing.x;
                 #ui.spacing_mut().item_spacing.x = #n as _;

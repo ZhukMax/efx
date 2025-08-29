@@ -4,7 +4,7 @@ use quote::{ToTokens, quote};
 
 use crate::render::render_nodes_as_stmts;
 use crate::tags::util::{attr_map, f32_opt};
-use crate::tags::{Tag, TagAttributes};
+use crate::tags::{Block, Tag, TagAttributes};
 use efx_attrnames::AttrNames;
 
 pub struct Column {
@@ -12,7 +12,7 @@ pub struct Column {
     element: Element,
 }
 
-impl Tag for Column {
+impl Block for Column {
     fn from_element(el: &Element) -> Result<Self, TokenStream> {
         let attributes = Attributes::new(el)?;
         Ok(Self {
@@ -51,19 +51,6 @@ impl Tag for Column {
         }
     }
 
-    /// Full render: prologue → content → epilogue.
-    fn render<UI: ToTokens>(&self, ui: &UI) -> TokenStream {
-        let (prolog, epilogue) = self.prolog_epilogue(ui);
-        let content = self.content(ui);
-        quote! {{
-            #prolog
-            #content
-            #epilogue
-        }}
-    }
-}
-
-impl Column {
     fn prolog_epilogue<UI: ToTokens>(&self, ui: &UI) -> (TokenStream, TokenStream) {
         let mut prolog = TokenStream::new();
         let mut epilogue = TokenStream::new();
