@@ -1,159 +1,138 @@
-use crate::attr_adapters as A;
 use crate::build_buffer_from_children;
+use crate::tags::util::{attr_map, bool_opt, color_tokens_opt, f32_opt};
+use crate::tags::{Tag, TagAttributes};
+use efx_attrnames::AttrNames;
 use efx_core::Element;
+use proc_macro2::TokenStream;
 use quote::{ToTokens, quote};
 
-pub fn render_label_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {
-    // Allowed attributes
-    const KNOWN: &[&str] = &[
-        "color",
-        "size",
-        "bold",
-        "italic",
-        "underline",
-        "strike",
-        "monospace",
-        "wrap",
-    ];
+pub struct Label {
+    attributes: Attributes,
+    element: Element,
+}
 
-    // Collecting modifiers for RichText and the wrap flag
-    let mut seen = std::collections::BTreeSet::<&str>::new();
-    let mut mods = proc_macro2::TokenStream::new();
-    let mut wrap: Option<bool> = None;
-    let mut has_style_attrs = false;
+impl Tag for Label {
+    fn from_element(el: &Element) -> Result<Self, TokenStream>
+    where
+        Self: Sized,
+    {
+        let attributes = Attributes::new(el)?;
+        Ok(Self {
+            attributes,
+            element: el.clone(),
+        })
+    }
 
-    for a in &el.attrs {
-        let name = a.name.as_str();
-        let val = a.value.as_str();
-
-        // unknown - compilation error
-        if !KNOWN.iter().any(|k| *k == name) {
-            let msg = format!("efx: <Label> unknown attribute `{}`", name);
-            return quote! { compile_error!(#msg); };
-        }
-
-        // duplicates - error
-        if !seen.insert(name) {
-            let msg = format!("efx: <Label> duplicate attribute `{}`", name);
-            return quote! { compile_error!(#msg); };
-        }
-
-        match name {
-            "color" => {
-                let ts = match A::parse_color_tokens("color", val) {
-                    Ok(ts) => ts,
-                    Err(msg) => return quote! { compile_error!(#msg); },
-                };
-                mods.extend(quote! { .color(#ts) });
-                has_style_attrs = true;
-            }
-            "size" => {
-                let n = match A::parse_f32("size", val) {
-                    Ok(n) => n,
-                    Err(msg) => return quote! { compile_error!(#msg); },
-                };
-                mods.extend(quote! { .size(#n as f32) });
-                has_style_attrs = true;
-            }
-            "bold" => {
-                let b = match A::parse_bool("bold", val) {
-                    Ok(b) => b,
-                    Err(msg) => return quote! { compile_error!(#msg); },
-                };
-                if b {
-                    mods.extend(quote! { .strong() });
-                    has_style_attrs = true;
+    fn content<UI: ToTokens>(&self, ui: &UI) -> TokenStream {
+        match &self.attributes.wrap {
+            Some(true) => {
+                quote! {
+                    let __efx_widget = egui::widgets::Label::new(__efx_rich).wrap(true);
+                    #ui.add(__efx_widget);
                 }
             }
-            "italic" => {
-                let b = match A::parse_bool("italic", val) {
-                    Ok(b) => b,
-                    Err(msg) => return quote! { compile_error!(#msg); },
-                };
-                if b {
-                    mods.extend(quote! { .italics() });
-                    has_style_attrs = true;
-                }
+            _ => {
+                quote! { #ui.label(__efx_rich); }
             }
-            "underline" => {
-                let b = match A::parse_bool("underline", val) {
-                    Ok(b) => b,
-                    Err(msg) => return quote! { compile_error!(#msg); },
-                };
-                if b {
-                    mods.extend(quote! { .underline() });
-                    has_style_attrs = true;
-                }
-            }
-            "strike" => {
-                let b = match A::parse_bool("strike", val) {
-                    Ok(b) => b,
-                    Err(msg) => return quote! { compile_error!(#msg); },
-                };
-                if b {
-                    mods.extend(quote! { .strikethrough() });
-                    has_style_attrs = true;
-                }
-            }
-            "monospace" => {
-                let b = match A::parse_bool("monospace", val) {
-                    Ok(b) => b,
-                    Err(msg) => return quote! { compile_error!(#msg); },
-                };
-                if b {
-                    mods.extend(quote! { .monospace() });
-                    has_style_attrs = true;
-                }
-            }
-            "wrap" => {
-                let b = match A::parse_bool("wrap", val) {
-                    Ok(b) => b,
-                    Err(msg) => return quote! { compile_error!(#msg); },
-                };
-                wrap = Some(b);
-            }
-            _ => {}
         }
     }
 
-    let (buf_init, buf_build) = build_buffer_from_children(&el.children);
+    fn render<UI: ToTokens>(&self, ui: &UI) -> TokenStream {
+        let mods = self.set_mods();
+        let (buf_init, buf_build) = build_buffer_from_children(&self.element.children);
 
-    // Backward compatibility:
-    // if there is NO style attribute and wrap != true — leave the old semantics:
-    // ui.label(__efx_buf) -> suitable for test stubs with Into<String>.
-    let use_plain_string = !has_style_attrs && wrap != Some(true);
+        let use_plain_string = mods.is_empty() && self.attributes.wrap != Some(true);
 
-    if use_plain_string {
-        return quote! {
+        if use_plain_string {
+            return quote! {
+                #buf_init
+                #buf_build
+                #ui.label(__efx_buf);
+            };
+        }
+
+        // Generation: RichText + ui.label(...) or Label::new(...).wrap(true)
+        let rich_apply = if mods.is_empty() {
+            quote!( let __efx_rich = egui::RichText::new(__efx_buf); )
+        } else {
+            quote!( let __efx_rich = egui::RichText::new(__efx_buf) #mods ; )
+        };
+
+        let content = self.content(ui);
+
+        quote! {
             #buf_init
             #buf_build
-            #ui.label(__efx_buf);
-        };
+            #rich_apply
+            #content
+        }
     }
+}
 
-    // Generation: RichText + ui.label(...) or Label::new(...).wrap(true)
-    let rich_apply = if mods.is_empty() {
-        quote!( let __efx_rich = egui::RichText::new(__efx_buf); )
-    } else {
-        quote!( let __efx_rich = egui::RichText::new(__efx_buf) #mods ; )
-    };
+impl Label {
+    fn set_mods(&self) -> TokenStream {
+        let mut mods = TokenStream::new();
 
-    let call = match wrap {
-        Some(true) => {
-            quote! {
-                let __efx_widget = egui::widgets::Label::new(__efx_rich).wrap(true);
-                #ui.add(__efx_widget);
-            }
+        if let Some(ts) = &self.attributes.color {
+            mods.extend(quote!{ .color(#ts) });
         }
-        _ => {
-            quote! { #ui.label(__efx_rich); }
-        }
-    };
 
-    quote! {
-        #buf_init
-        #buf_build
-        #rich_apply
-        #call
+        if let Some(n) = self.attributes.size {
+            mods.extend(quote! { .size(#n as f32) });
+        }
+
+        if matches!(self.attributes.italic, Some(true)) {
+            mods.extend(quote! { .italics() });
+        }
+
+        if matches!(self.attributes.bold, Some(true)) {
+            mods.extend(quote! { .strong() });
+        }
+
+        if matches!(self.attributes.underline, Some(true)) {
+            mods.extend(quote! { .underline() });
+        }
+
+        if matches!(self.attributes.strike, Some(true)) {
+            mods.extend(quote! { .strikethrough() });
+        }
+
+        if matches!(self.attributes.monospace, Some(true)) {
+            mods.extend(quote! { .monospace() });
+        }
+
+        mods
+    }
+}
+
+#[derive(Clone, Debug, AttrNames)]
+struct Attributes {
+    color: Option<TokenStream>,
+    size: Option<f32>,
+    italic: Option<bool>,
+    bold: Option<bool>,
+    underline: Option<bool>,
+    strike: Option<bool>,
+    monospace: Option<bool>,
+    wrap: Option<bool>,
+}
+
+impl TagAttributes for Attributes {
+    fn new(el: &Element) -> Result<Self, TokenStream> {
+        let map = match attr_map(el, Self::ATTR_NAMES, "Label") {
+            Ok(m) => m,
+            Err(err) => return Err(err),
+        };
+
+        Ok(Attributes {
+            color: color_tokens_opt(&map, "color")?,
+            size: f32_opt(&map, "size")?,
+            italic: bool_opt(&map, "italic")?,
+            bold: bool_opt(&map, "bold")?,
+            underline: bool_opt(&map, "underline")?,
+            strike: bool_opt(&map, "strike")?,
+            monospace: bool_opt(&map, "monospace")?,
+            wrap: bool_opt(&map, "wrap").unwrap_or(None),
+        })
     }
 }

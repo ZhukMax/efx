@@ -15,9 +15,9 @@ pub use central_panel::render_central_panel_stmt;
 pub use column::Column;
 use efx_core::Element;
 pub use hyperlink::Hyperlink;
-pub use label::render_label_stmt;
+pub use label::Label;
 use proc_macro2::TokenStream;
-use quote::{quote, ToTokens};
+use quote::{ToTokens, quote};
 pub use row::Row;
 pub use scroll_area::render_scroll_area_stmt;
 pub use separator::Separator;
@@ -38,11 +38,10 @@ pub trait Tag: Sized {
     fn render<UI: ToTokens>(&self, ui: &UI) -> TokenStream;
 }
 
-pub trait Block: Sized {
+pub(crate) trait Block: Sized {
     fn from_element(el: &Element) -> Result<Self, TokenStream>
     where
         Self: Sized;
-    /// Render contents
     fn content<UI: ToTokens>(&self, ui: &UI) -> TokenStream;
     fn prolog_epilogue<UI: ToTokens>(&self, ui: &UI) -> (TokenStream, TokenStream);
 

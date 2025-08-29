@@ -4,7 +4,7 @@ use quote::{ToTokens, quote};
 
 use crate::render::render_nodes_as_stmts;
 use crate::tags::util::{attr_map, f32_opt};
-use crate::tags::{Block, Tag, TagAttributes};
+use crate::tags::{Block, TagAttributes};
 use efx_attrnames::AttrNames;
 
 pub struct Column {
@@ -83,7 +83,7 @@ struct Attributes {
 
 impl TagAttributes for Attributes {
     fn new(el: &Element) -> Result<Self, TokenStream> {
-        let map = match attr_map(el, Attributes::ATTR_NAMES, "Column") {
+        let map = match attr_map(el, Self::ATTR_NAMES, "Column") {
             Ok(m) => m,
             Err(err) => return Err(err),
         };

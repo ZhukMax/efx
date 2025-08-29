@@ -41,17 +41,17 @@ pub(crate) fn render_node_stmt<UI: ToTokens>(ui: &UI, node: &Node) -> proc_macro
 fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {
     match el.name.as_str() {
         "CentralPanel" => render_central_panel_stmt(ui, el),
-        "Label" => render_label_stmt(ui, el),
+        "Label" => render_tag::<Label>(ui, el),
         "Button" => {
             let btn_expr = render_button(ui, el);
             quote! { #btn_expr; }
         }
         "Row" => render_tag::<Row>(ui, el),
         "Column" => render_tag::<Column>(ui, el),
-        "Separator" => Separator::parse(ui, el),
+        "Separator" => render_tag::<Separator>(ui, el),
         "ScrollArea" => render_scroll_area_stmt(ui, el),
         "Hyperlink" => {
-            let ts = Hyperlink::parse(ui, el);
+            let ts = render_tag::<Hyperlink>(ui, el);
             quote! { #ts; }
         }
         "TextField" => render_text_field_stmt(ui, el),
