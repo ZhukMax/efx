@@ -5,6 +5,7 @@ use quote::{quote, ToTokens};
 use crate::render::render_nodes_as_stmts;
 use crate::tags::util::{attr_map, f32_opt};
 use crate::tags::{Tag, TagAttributes};
+use efx_attrnames::AttrNames;
 
 pub struct Column {
     attributes: Attributes,
@@ -86,7 +87,7 @@ impl Column {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, AttrNames)]
 struct Attributes {
     gap: Option<f32>,
     padding: Option<f32>,
@@ -95,8 +96,7 @@ struct Attributes {
 
 impl TagAttributes for Attributes {
     fn new(el: &Element) -> Result<Self, TokenStream> {
-        const KNOWN: &[&str] = &["gap", "padding", "align"];
-        let map = match attr_map(el, KNOWN, "Column") {
+        let map = match attr_map(el, Attributes::ATTR_NAMES, "Column") {
             Ok(m) => m,
             Err(err) => return Err(err),
         };

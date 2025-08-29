@@ -1,4 +1,4 @@
 [workspace]
-members = ["efx", "efx-core"]
+members = ["efx", "efx-core", "efx-attrnames"]
 resolver = "2"
 rust-version = "1.85"

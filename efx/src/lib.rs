@@ -18,7 +18,7 @@ use crate::buffer::build_buffer_from_children;
 use crate::input::EfxInput;
 use crate::render::render_nodes_as_stmts;
 use crate::tags::button::render_button;
-use efx_core::{Node, parse_str};
+use efx_core::{parse_str, Node};
 
 /// Functional procedural macro `efx!` - parses compact XML-like markup
 /// and executes it against the passed UI context.
