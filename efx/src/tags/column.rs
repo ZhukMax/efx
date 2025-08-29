@@ -1,54 +1,30 @@
 use efx_core::Element;
 use proc_macro2::TokenStream;
-use quote::{ToTokens, quote};
+use quote::{quote, ToTokens};
 
 use crate::render::render_nodes_as_stmts;
 use crate::tags::util::{attr_map, f32_opt};
-use crate::tags::{TagAttributes, Tagged};
+use crate::tags::{Tag, TagAttributes};
 
-pub struct Column;
-
-impl Tagged for Column {
-    fn parse<UI: ToTokens>(ui: &UI, el: &Element) -> TokenStream {
-        let attributes = match Attributes::new(el) {
-            Ok(attr) => attr,
-            Err(err) => return err,
-        };
-
-        let mut prolog = TokenStream::new();
-        let mut epilog = TokenStream::new();
-
-        if let Some(n) = attributes.gap {
-            prolog.extend(quote! {
-                let __efx_old_gap_y = #ui.spacing().item_spacing.y;
-                #ui.spacing_mut().item_spacing.y = #n as f32;
-            });
-            epilog.extend(quote! {
-                #ui.spacing_mut().item_spacing.y = __efx_old_gap_y;
-            });
-        }
-
-        if let Some(p) = attributes.padding {
-            prolog.extend(quote! { #ui.add_space(#p as f32); });
-            epilog.extend(quote! { #ui.add_space(#p as f32); });
-        }
-
-        let content = Column::content(ui, el, attributes);
-
-        quote! {{
-            #prolog
-            #content
-            #epilog
-        }}
-    }
+pub struct Column {
+    attributes: Attributes,
+    element: Element,
 }
 
-impl Column {
-    fn content<UI: ToTokens>(ui: &UI, el: &Element, attributes: Attributes) -> TokenStream {
-        let body = render_nodes_as_stmts(&quote!(ui), &el.children);
+impl Tag for Column {
+    fn from_element(el: &Element) -> Result<Self, TokenStream> {
+        let attributes = Attributes::new(el)?;
+        Ok(Self {
+            attributes,
+            element: el.clone(),
+        })
+    }
+
+    fn content<UI: ToTokens>(&self, ui: &UI) -> TokenStream {
+        let body = render_nodes_as_stmts(&quote!(ui), &self.element.children);
 
         // align: left|center|right → egui::Align::{Min,Center,Max} in Layout::top_down(...)
-        if let Some(align) = attributes.align {
+        if let Some(align) = &self.attributes.align {
             let align_expr = match align.as_str() {
                 "left" => quote!(::egui::Align::Min),
                 "right" => quote!(::egui::Align::Max),
@@ -72,6 +48,41 @@ impl Column {
                 });
             }
         }
+    }
+
+    /// Full render: prologue → content → epilogue.
+    fn render<UI: ToTokens>(&self, ui: &UI) -> TokenStream {
+        let (prolog, epilogue) = self.prolog_epilogue(ui);
+        let content = self.content(ui);
+        quote! {{
+            #prolog
+            #content
+            #epilogue
+        }}
+    }
+}
+
+impl Column {
+    fn prolog_epilogue<UI: ToTokens>(&self, ui: &UI) -> (TokenStream, TokenStream) {
+        let mut prolog = TokenStream::new();
+        let mut epilogue = TokenStream::new();
+
+        if let Some(n) = &self.attributes.gap {
+            prolog.extend(quote! {
+                let __efx_old_gap_y = #ui.spacing().item_spacing.y;
+                #ui.spacing_mut().item_spacing.y = #n as f32;
+            });
+            epilogue.extend(quote! {
+                #ui.spacing_mut().item_spacing.y = __efx_old_gap_y;
+            });
+        }
+
+        if let Some(p) = &self.attributes.padding {
+            prolog.extend(quote! { #ui.add_space(#p as f32); });
+            epilogue.extend(quote! { #ui.add_space(#p as f32); });
+        }
+
+        (prolog, epilogue)
     }
 }
 

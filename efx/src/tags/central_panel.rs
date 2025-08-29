@@ -1,5 +1,5 @@
-use proc_macro2::TokenStream;
 use efx_core::Element;
+use proc_macro2::TokenStream;
 use quote::{ToTokens, quote};
 
 use crate::tags::util::*;

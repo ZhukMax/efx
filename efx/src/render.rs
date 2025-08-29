@@ -1,3 +1,4 @@
+use proc_macro2::TokenStream;
 use crate::tags::*;
 use efx_core::{Element, Node};
 use quote::{ToTokens, quote};
@@ -45,8 +46,8 @@ fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::Toke
             let btn_expr = render_button(ui, el);
             quote! { #btn_expr; }
         }
-        "Row" => Row::from_element(el).unwrap().render(ui),
-        "Column" => Column::parse(ui, el),
+        "Row" => render_tag::<Row>(ui, el),
+        "Column" => render_tag::<Column>(ui, el),
         "Separator" => Separator::parse(ui, el),
         "ScrollArea" => render_scroll_area_stmt(ui, el),
         "Hyperlink" => {
@@ -58,5 +59,12 @@ fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::Toke
             let msg = format!("efx: unknown tag <{}>", other);
             quote! { compile_error!(#msg); }
         }
+    }
+}
+
+fn render_tag<T: Tag>(ui: &impl ToTokens, el: &Element) -> TokenStream {
+    match T::from_element(el) {
+        Ok(tag)  => tag.render(ui),
+        Err(err) => err,
     }
 }
