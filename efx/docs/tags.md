@@ -175,19 +175,19 @@ Main content area that fills all remaining space. Wraps children in `egui::Centr
 
 - `frame="true|false"` — use default frame (`true`, default) or `none` (`false`).
 - `fill="name|#RRGGBB[AA]"` — background fill color.
-- `stroke_width="N"` — frame stroke width (f32).
-- `stroke_color="name|#RRGGBB[AA]"` — frame stroke color.
+- `stroke-width="N"` — frame stroke width (f32).
+- `stroke-color="name|#RRGGBB[AA]"` — frame stroke color.
 - `padding="N"` — inner margin on all sides (f32).
-- `padding_l|padding_r|padding_t|padding_b="N"` — per-side inner margin.
+- `padding-left|padding-right|padding-top|padding-bottom="N"` — per-side inner margin.
 - `margin="N"` — outer margin on all sides (f32).
-- `margin_l|margin_r|margin_t|margin_b="N"` — per-side outer margin.
+- `margin-left|margin-right|margin-top|margin-bottom="N"` — per-side outer margin.
 
 ```rust,no_run
 use efx_core::doc_prelude::*;
 use efx::*;
 
 efx!(Ui::default(), r##"
-  <CentralPanel fill="#101014" padding="12" stroke_width="1" stroke_color="#222638">
+  <CentralPanel fill="#101014" padding="12" stroke-width="1" stroke-color="#222638">
     <Column gap="8">
       <Label size="18" bold="true">Dashboard</Label>
       <Separator space="6"/>
@@ -206,12 +206,12 @@ Scrollable container backed by `egui::ScrollArea`. Wraps its children and provid
 
 **Attributes**
 - `axis="vertical|horizontal|both"` — scroll axis (default: vertical).
-- `always_show="true|false"` — always show scrollbar even if content fits.
-- `max_height="N"` — maximum height of the scroll area (f32).
-- `max_width="N"` — maximum width of the scroll area (f32).
+- `always-show="true|false"` — always show scrollbar even if content fits.
+- `max-height="N"` — maximum height of the scroll area (f32).
+- `max-width="N"` — maximum width of the scroll area (f32).
 - `id="text"` — id source to persist scroll state between frames.
-- `stick_to_bottom="true|false"` — keep view pinned to bottom when new content arrives (useful for logs/chats).
-- `stick_to_right="true|false"` — keep view pinned to right on updates.
+- `bottom="true|false"` — keep view pinned to bottom when new content arrives (useful for logs/chats).
+- `right="true|false"` — keep view pinned to right on updates.
 
 ```rust,ignore
 use efx_core::doc_prelude::*;

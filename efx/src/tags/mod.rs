@@ -11,7 +11,7 @@ pub mod util;
 pub mod window;
 
 pub use button::Button;
-pub use central_panel::render_central_panel_stmt;
+pub use central_panel::CentralPanel;
 pub use column::Column;
 use efx_core::Element;
 pub use hyperlink::Hyperlink;
@@ -19,13 +19,9 @@ pub use label::Label;
 use proc_macro2::TokenStream;
 use quote::{ToTokens, quote};
 pub use row::Row;
-pub use scroll_area::render_scroll_area_stmt;
+pub use scroll_area::ScrollArea;
 pub use separator::Separator;
 pub use text_field::render_text_field_stmt;
-
-pub trait Tagged {
-    fn parse<UI: ToTokens>(ui: &UI, el: &Element) -> TokenStream;
-}
 
 pub trait Tag: Sized {
     /// Constructor from Element (parses attributes and captures children inside self).

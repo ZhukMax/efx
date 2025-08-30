@@ -3,18 +3,15 @@ use efx_core::{Element, Node};
 use proc_macro2::TokenStream;
 use quote::{ToTokens, quote};
 
-pub(crate) fn render_nodes_as_stmts<UI: ToTokens>(
-    ui: &UI,
-    nodes: &[Node],
-) -> proc_macro2::TokenStream {
-    let mut out = proc_macro2::TokenStream::new();
+pub(crate) fn render_nodes_as_stmts<UI: ToTokens>(ui: &UI, nodes: &[Node]) -> TokenStream {
+    let mut out = TokenStream::new();
     for n in nodes {
         out.extend(render_node_stmt(ui, n));
     }
     out
 }
 
-pub(crate) fn render_node_stmt<UI: ToTokens>(ui: &UI, node: &Node) -> proc_macro2::TokenStream {
+pub(crate) fn render_node_stmt<UI: ToTokens>(ui: &UI, node: &Node) -> TokenStream {
     use efx_core::Node::*;
     match node {
         Text(t) => {
@@ -38,18 +35,18 @@ pub(crate) fn render_node_stmt<UI: ToTokens>(ui: &UI, node: &Node) -> proc_macro
     }
 }
 
-fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {
+fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> TokenStream {
     match el.name.as_str() {
-        "CentralPanel" => render_central_panel_stmt(ui, el),
+        "CentralPanel" => render_tag::<CentralPanel>(ui, el),
+        "ScrollArea" => render_tag::<ScrollArea>(ui, el),
+        "Row" => render_tag::<Row>(ui, el),
+        "Column" => render_tag::<Column>(ui, el),
         "Label" => render_tag::<Label>(ui, el),
         "Button" => {
             let btn_expr = render_tag::<Button>(ui, el);
             quote! { #btn_expr; }
         }
-        "Row" => render_tag::<Row>(ui, el),
-        "Column" => render_tag::<Column>(ui, el),
         "Separator" => render_tag::<Separator>(ui, el),
-        "ScrollArea" => render_scroll_area_stmt(ui, el),
         "Hyperlink" => {
             let ts = render_tag::<Hyperlink>(ui, el);
             quote! { #ts; }

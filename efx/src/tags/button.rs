@@ -4,7 +4,7 @@ use crate::tags::{Tag, TagAttributes};
 use efx_attrnames::AttrNames;
 use efx_core::Element;
 use proc_macro2::TokenStream;
-use quote::{quote, ToTokens};
+use quote::{ToTokens, quote};
 
 pub struct Button {
     attributes: Attributes,
@@ -33,7 +33,8 @@ impl Tag for Button {
         }
 
         if let Some(r) = self.attributes.rounding {
-            btn_build.extend(quote!( __efx_btn = __efx_btn.rounding(egui::Rounding::same(#r as _)); ));
+            btn_build
+                .extend(quote!( __efx_btn = __efx_btn.rounding(egui::Rounding::same(#r as _)); ));
         }
 
         if self.attributes.min_width.is_some() || self.attributes.min_height.is_some() {
@@ -41,7 +42,7 @@ impl Tag for Button {
             let h = self.attributes.min_height.unwrap_or(0.0);
 
             btn_build.extend(
-                quote!( __efx_btn = __efx_btn.min_size(egui::vec2(#w as f32, #h as f32)); )
+                quote!( __efx_btn = __efx_btn.min_size(egui::vec2(#w as f32, #h as f32)); ),
             );
         }
 
@@ -71,7 +72,7 @@ impl Tag for Button {
         // Otherwise - egui::Button with RichText and modifiers
         let rich_decl = quote!( let __efx_rich = egui::RichText::new(__efx_buf); );
 
-        let contents = self.content(ui);
+        let content = self.content(ui);
 
         // Tooltip
         let tooltip_apply = if let Some(text) = self.attributes.tooltip.clone() {
@@ -84,7 +85,7 @@ impl Tag for Button {
             #buf_init
             #buf_build
             #rich_decl
-            #contents
+            #content
             #tooltip_apply
             __efx_resp
         }}

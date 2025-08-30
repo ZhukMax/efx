@@ -96,6 +96,7 @@ pub fn margin_tokens(
     let r_ts = mk(r, uniform);
     let t_ts = mk(t, uniform);
     let b_ts = mk(b, uniform);
+
     Some(quote!( egui::Margin { left: #l_ts, right: #r_ts, top: #t_ts, bottom: #b_ts } ))
 }
 
@@ -168,5 +169,6 @@ pub fn stroke_tokens(width: Option<f32>, color: Option<TokenStream>) -> Option<T
     }
     let w = width.unwrap_or(1.0);
     let c = color.unwrap_or_else(|| quote!(egui::Color32::BLACK));
+
     Some(quote!( egui::Stroke { width: #w as _, color: #c } ))
 }
