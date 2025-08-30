@@ -51,7 +51,7 @@ fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> TokenStream {
             let ts = render_tag::<Hyperlink>(ui, el);
             quote! { #ts; }
         }
-        "TextField" => render_text_field_stmt(ui, el),
+        "TextField" => render_tag::<TextField>(ui, el),
         other => {
             let msg = format!("efx: unknown tag <{}>", other);
             quote! { compile_error!(#msg); }

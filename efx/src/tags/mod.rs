@@ -21,7 +21,7 @@ use quote::{ToTokens, quote};
 pub use row::Row;
 pub use scroll_area::ScrollArea;
 pub use separator::Separator;
-pub use text_field::render_text_field_stmt;
+pub use text_field::TextField;
 
 pub trait Tag: Sized {
     /// Constructor from Element (parses attributes and captures children inside self).

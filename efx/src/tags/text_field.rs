@@ -1,62 +1,97 @@
+use crate::tags::util::*;
+use crate::tags::{Tag, TagAttributes};
+use efx_attrnames::AttrNames;
 use efx_core::Element;
+use proc_macro2::TokenStream;
 use quote::{ToTokens, quote};
+use syn::Expr;
 
-use crate::tags::util::{attr_map, bool_opt, expr_req, f32_opt};
+pub struct TextField {
+    attributes: Attributes,
+    element: Element,
+}
 
-pub fn render_text_field_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::TokenStream {
-    // Disallow children (<TextField>...</TextField>) is a widget, not a container
-    if !el.children.is_empty() {
-        return quote! { compile_error!("efx: <TextField> must be self-closing and have no children"); };
+impl Tag for TextField {
+    fn from_element(el: &Element) -> Result<Self, TokenStream>
+    where
+        Self: Sized,
+    {
+        let attributes = Attributes::new(el)?;
+        Ok(Self {
+            attributes,
+            element: el.clone(),
+        })
     }
 
-    const KNOWN: &[&str] = &["value", "hint", "password", "width", "multiline"];
-    let map = match attr_map(el, KNOWN, "TextField") {
-        Ok(m) => m,
-        Err(err) => return err,
-    };
+    fn content<UI: ToTokens>(&self, ui: &UI) -> TokenStream {
+        let value = self.attributes.value.clone();
 
-    // value — required (Rust expression without curly braces)
-    let value_expr = match expr_req(&map, "value", "TextField") {
-        Ok(e) => e,
-        Err(err) => return err,
-    };
+        let base = if matches!(self.attributes.multiline, Some(true)) {
+            quote!( egui::TextEdit::multiline(&mut (#value)) )
+        } else {
+            quote!( egui::TextEdit::singleline(&mut (#value)) )
+        };
 
-    let hint = map.get("hint").map(|s| (*s).to_string());
-    let password = match bool_opt(&map, "password") {
-        Ok(v) => v,
-        Err(err) => return err,
-    };
-    let width = match f32_opt(&map, "width") {
-        Ok(v) => v,
-        Err(err) => return err,
-    };
-    let multiline = match bool_opt(&map, "multiline") {
-        Ok(v) => v,
-        Err(err) => return err,
-    };
+        let mut build = quote!( let mut __efx_te = #base; );
 
-    let base = if matches!(multiline, Some(true)) {
-        quote!( egui::TextEdit::multiline(&mut (#value_expr)) )
-    } else {
-        quote!( egui::TextEdit::singleline(&mut (#value_expr)) )
-    };
-
-    let mut build = quote!( let mut __efx_te = #base; );
-
-    if let Some(h) = hint {
-        build.extend(quote!( __efx_te = __efx_te.hint_text(#h); ));
-    }
-    if let Some(pw) = password {
-        if pw {
-            build.extend(quote!( __efx_te = __efx_te.password(true); ));
+        if let Some(h) = self.attributes.hint.clone() {
+            build.extend(quote!( __efx_te = __efx_te.hint_text(#h); ));
         }
-    }
-    if let Some(w) = width {
-        build.extend(quote!( __efx_te = __efx_te.desired_width(#w as f32); ));
+        if let Some(pw) = self.attributes.password.clone() {
+            if pw {
+                build.extend(quote!( __efx_te = __efx_te.password(true); ));
+            }
+        }
+        if let Some(w) = self.attributes.width.clone() {
+            build.extend(quote!( __efx_te = __efx_te.desired_width(#w as f32); ));
+        }
+
+        build
     }
 
-    quote! {{
-        #build
-        let _ = #ui.add(__efx_te);
-    }}
+    fn render<UI: ToTokens>(&self, ui: &UI) -> TokenStream {
+        // Disallow children (<TextField>...</TextField>) is a widget, not a container
+        if !self.element.children.is_empty() {
+            return quote! { compile_error!("efx: <TextField> must be self-closing and have no children"); };
+        }
+
+        let build = self.content(ui);
+
+        quote! {{
+            #build
+            let _ = #ui.add(__efx_te);
+        }}
+    }
+}
+
+#[derive(Clone, Debug, AttrNames)]
+struct Attributes {
+    value: Expr,
+    hint: Option<String>,
+    width: Option<f32>,
+    multiline: Option<bool>,
+    password: Option<bool>,
+}
+
+impl TagAttributes for Attributes {
+    fn new(el: &Element) -> Result<Self, TokenStream> {
+        let map = match attr_map(el, Attributes::ATTR_NAMES, "TextField") {
+            Ok(m) => m,
+            Err(err) => return Err(err),
+        };
+
+        // value — required (Rust expression without curly braces)
+        let value_expr = match expr_req(&map, "value", "TextField") {
+            Ok(e) => e,
+            Err(err) => return Err(err),
+        };
+
+        Ok(Attributes {
+            value: value_expr,
+            hint: map.get("hint").map(|s| (*s).to_string()),
+            width: f32_opt(&map, "width")?,
+            multiline: bool_opt(&map, "multiline")?,
+            password: bool_opt(&map, "password")?,
+        })
+    }
 }
