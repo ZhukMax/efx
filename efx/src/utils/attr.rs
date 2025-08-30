@@ -1,10 +1,11 @@
-use efx_core::{Element, Node};
-use proc_macro2::TokenStream;
-use quote::{ToTokens, quote};
 use std::collections::BTreeMap;
+use proc_macro2::TokenStream;
+use quote::quote;
+use efx_core::Element;
 
 use crate::attr_adapters as A;
 
+#[inline]
 pub fn attr_map<'a>(
     el: &'a Element,
     known: &[&str],
@@ -29,6 +30,7 @@ pub fn attr_map<'a>(
     Ok(out)
 }
 
+#[inline]
 pub fn bool_opt(map: &BTreeMap<&str, &str>, key: &str) -> Result<Option<bool>, TokenStream> {
     Ok(match map.get(key) {
         Some(v) => Some(A::parse_bool(key, v).map_err(|m| quote! { compile_error!(#m); })?),
@@ -53,6 +55,7 @@ pub fn f32_opt(map: &BTreeMap<&str, &str>, key: &str) -> Result<Option<f32>, Tok
     })
 }
 
+#[inline]
 pub fn u8_opt(map: &BTreeMap<&str, &str>, key: &str) -> Result<Option<u8>, TokenStream> {
     Ok(match map.get(key) {
         Some(v) => Some(A::parse_u8(key, v).map_err(|m| quote! { compile_error!(#m); })?),
@@ -98,66 +101,6 @@ pub fn margin_tokens(
     let b_ts = mk(b, uniform);
 
     Some(quote!( egui::Margin { left: #l_ts, right: #r_ts, top: #t_ts, bottom: #b_ts } ))
-}
-
-pub fn render_children_stmt<UI: ToTokens>(ui_ident: &UI, children: &[Node]) -> TokenStream {
-    let mut out = TokenStream::new();
-    for ch in children {
-        let stmt = crate::render::render_node_stmt(&quote!(#ui_ident), ch);
-        out.extend(quote! { #stmt });
-    }
-    out
-}
-
-/// Required expression attribute: parses into syn::Expr.
-/// Returns `compile_error!` if the attribute is missing, empty, or not parsable.
-pub fn expr_req(
-    map: &BTreeMap<&str, &str>,
-    key: &str,
-    tag: &str,
-) -> Result<syn::Expr, TokenStream> {
-    let some = map.get(key).copied();
-    let src = match some {
-        Some(s) if !s.trim().is_empty() => s,
-        _ => {
-            let msg = format!("efx: <{}> requires `{}` attribute", tag, key);
-            return Err(quote! { compile_error!(#msg); });
-        }
-    };
-
-    match syn::parse_str::<syn::Expr>(src) {
-        Ok(e) => Ok(e),
-        Err(_) => {
-            let msg = format!(
-                "efx: attribute `{}` must be a valid Rust expression, got `{}`",
-                key, src
-            );
-            Err(quote! { compile_error!(#msg); })
-        }
-    }
-}
-
-#[allow(dead_code)]
-/// Optional expression attribute: `None` if absent; `compile_error!` if present but not parsed.
-pub fn expr_opt(map: &BTreeMap<&str, &str>, key: &str) -> Result<Option<syn::Expr>, TokenStream> {
-    match map.get(key) {
-        None => Ok(None),
-        Some(src) => {
-            if src.trim().is_empty() {
-                return Ok(None);
-            }
-            match syn::parse_str::<syn::Expr>(src) {
-                Ok(e) => Ok(Some(e)),
-                Err(_) => {
-                    let msg = format!(
-                        "efx: attribute `{}` must be a valid Rust expression, got `{}`",
-                        key, src
-                    );
-                    Err(quote! { compile_error!(#msg); })
-                }
-            }
-        }
-    }
 }
 
 /// Build `egui::Stroke` from optional width and color.

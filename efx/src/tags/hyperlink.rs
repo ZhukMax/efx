@@ -1,10 +1,10 @@
-use crate::buffer::build_buffer_from_children;
-use crate::tags::util::*;
 use crate::tags::{Tag, TagAttributes};
 use efx_attrnames::AttrNames;
 use efx_core::Element;
 use proc_macro2::TokenStream;
 use quote::{ToTokens, quote};
+use crate::utils::attr::*;
+use crate::utils::buffer::build_buffer_from_children;
 
 /// <Hyperlink url="..." [open_external=bool] [color=...] [underline=bool] [tooltip=...]>text?</Hyperlink>
 pub struct Hyperlink {

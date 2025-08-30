@@ -5,16 +5,15 @@
 #![doc = include_str!("../docs/guide.md")]
 
 mod attr_adapters;
-mod buffer;
 mod input;
 mod render;
 mod tags;
+mod utils;
 
 use proc_macro::TokenStream;
 use quote::quote;
 use syn::parse_macro_input;
 
-use crate::buffer::build_buffer_from_children;
 use crate::input::EfxInput;
 use crate::render::render_nodes_as_stmts;
 use crate::tags::Button;

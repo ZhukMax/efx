@@ -1,9 +1,9 @@
-use crate::tags::util::{attr_map, f32_opt};
 use crate::tags::{Block, TagAttributes};
 use efx_attrnames::AttrNames;
 use efx_core::Element;
 use proc_macro2::TokenStream;
 use quote::{ToTokens, quote};
+use crate::utils::attr::*;
 
 pub struct Separator {
     attributes: Attributes,

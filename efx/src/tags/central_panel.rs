@@ -1,9 +1,10 @@
-use crate::tags::util::*;
 use crate::tags::{Tag, TagAttributes};
 use efx_attrnames::AttrNames;
 use efx_core::Element;
 use proc_macro2::TokenStream;
 use quote::{ToTokens, quote};
+use crate::utils::attr::*;
+use crate::utils::render::render_children_stmt;
 
 pub struct CentralPanel {
     attributes: Attributes,

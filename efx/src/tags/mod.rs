@@ -7,7 +7,6 @@ pub mod row;
 pub mod scroll_area;
 pub mod separator;
 pub mod text_field;
-pub mod util;
 pub mod window;
 
 pub use button::Button;
