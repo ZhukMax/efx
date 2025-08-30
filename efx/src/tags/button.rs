@@ -32,13 +32,13 @@ impl Tag for Button {
             btn_build.extend(quote!( __efx_btn = __efx_btn.fill(#ts); ));
         }
 
-        if let Some(r) = self.attributes.rounding.clone() {
-            btn_build.extend(quote!( __efx_btn = __efx_btn.rounding(egui::Rounding::same(#r)); ));
+        if let Some(r) = self.attributes.rounding {
+            btn_build.extend(quote!( __efx_btn = __efx_btn.rounding(egui::Rounding::same(#r as _)); ));
         }
 
         if self.attributes.min_width.is_some() || self.attributes.min_height.is_some() {
-            let w = self.attributes.min_width.clone().unwrap_or(0.0f32);
-            let h = self.attributes.min_height.clone().unwrap_or(0.0f32);
+            let w = self.attributes.min_width.unwrap_or(0.0);
+            let h = self.attributes.min_height.unwrap_or(0.0);
 
             btn_build.extend(
                 quote!( __efx_btn = __efx_btn.min_size(egui::vec2(#w as f32, #h as f32)); )
@@ -54,7 +54,7 @@ impl Tag for Button {
             _ => quote!( let mut __efx_resp = #ui.add(__efx_btn); ),
         };
 
-        quote! {{ #btn_build #add_btn }}
+        quote!( #btn_build #add_btn )
     }
 
     fn render<UI: ToTokens>(&self, ui: &UI) -> TokenStream {
@@ -122,7 +122,7 @@ impl TagAttributes for Attributes {
         };
 
         Ok(Attributes {
-            fill: color_tokens_opt(&map, "color").unwrap_or(None),
+            fill: color_tokens_opt(&map, "fill")?,
             min_width: f32_opt(&map, "min_width")?,
             min_height: f32_opt(&map, "min_height")?,
             frame: bool_opt(&map, "frame")?,
