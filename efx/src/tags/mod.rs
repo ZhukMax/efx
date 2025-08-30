@@ -10,7 +10,7 @@ pub mod text_field;
 pub mod util;
 pub mod window;
 
-pub use button::render_button;
+pub use button::Button;
 pub use central_panel::render_central_panel_stmt;
 pub use column::Column;
 use efx_core::Element;

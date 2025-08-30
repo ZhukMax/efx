@@ -123,7 +123,7 @@ impl TagAttributes for Attributes {
         Ok(Attributes {
             url,
             open_external: bool_opt(&map, "open_external").unwrap_or(None), // web: .open_in_new_tab
-            underline: bool_opt(&map, "underline").unwrap_or(None),
+            underline: bool_opt(&map, "underline")?,
             color_ts: color_tokens_opt(&map, "color").unwrap_or(None),
             tooltip: map.get("tooltip").map(|s| (*s).to_string()),
         })

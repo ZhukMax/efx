@@ -43,7 +43,7 @@ fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::Toke
         "CentralPanel" => render_central_panel_stmt(ui, el),
         "Label" => render_tag::<Label>(ui, el),
         "Button" => {
-            let btn_expr = render_button(ui, el);
+            let btn_expr = render_tag::<Button>(ui, el);
             quote! { #btn_expr; }
         }
         "Row" => render_tag::<Row>(ui, el),
@@ -62,7 +62,7 @@ fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> proc_macro2::Toke
     }
 }
 
-fn render_tag<T: Tag>(ui: &impl ToTokens, el: &Element) -> TokenStream {
+pub fn render_tag<T: Tag>(ui: &impl ToTokens, el: &Element) -> TokenStream {
     match T::from_element(el) {
         Ok(tag) => tag.render(ui),
         Err(err) => err,

@@ -78,7 +78,7 @@ impl TagAttributes for Attributes {
         };
 
         Ok(Attributes {
-            space: f32_opt(&map, "space").unwrap_or(None),
+            space: f32_opt(&map, "space")?,
             space_before: f32_opt(&map, "space_before").unwrap_or(None),
             space_after: f32_opt(&map, "space_after").unwrap_or(None),
         })

@@ -74,7 +74,7 @@ impl Label {
         let mut mods = TokenStream::new();
 
         if let Some(ts) = &self.attributes.color {
-            mods.extend(quote!{ .color(#ts) });
+            mods.extend(quote! { .color(#ts) });
         }
 
         if let Some(n) = self.attributes.size {

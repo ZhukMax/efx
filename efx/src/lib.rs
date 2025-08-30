@@ -17,8 +17,8 @@ use syn::parse_macro_input;
 use crate::buffer::build_buffer_from_children;
 use crate::input::EfxInput;
 use crate::render::render_nodes_as_stmts;
-use crate::tags::button::render_button;
 use efx_core::{Node, parse_str};
+use crate::tags::Button;
 
 /// Functional procedural macro `efx!` - parses compact XML-like markup
 /// and executes it against the passed UI context.
@@ -64,7 +64,7 @@ pub fn efx(input: TokenStream) -> TokenStream {
     let expanded = if ast.len() == 1 {
         if let Node::Element(el) = &ast[0] {
             if el.name == "Button" {
-                return render_button(&ui, el).into();
+                return render::render_tag::<Button>(&ui, el).into();
             } else {
                 // Any other unit root is like a block with statements (return ())
                 let body = render_nodes_as_stmts(&ui, &ast);

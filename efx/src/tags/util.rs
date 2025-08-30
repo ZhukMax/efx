@@ -45,6 +45,7 @@ pub fn bool_or(map: &BTreeMap<&str, &str>, key: &str, default: bool) -> Result<b
     }
 }
 
+#[inline]
 pub fn f32_opt(map: &BTreeMap<&str, &str>, key: &str) -> Result<Option<f32>, TokenStream> {
     Ok(match map.get(key) {
         Some(v) => Some(A::parse_f32(key, v).map_err(|m| quote! { compile_error!(#m); })?),
