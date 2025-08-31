@@ -1,10 +1,11 @@
-use proc_macro2::TokenStream;
-use quote::{quote, ToTokens};
-use efx_attrnames::AttrNames;
-use efx_core::Element;
 use crate::tags::{Tag, TagAttributes};
 use crate::utils::attr::*;
+use crate::utils::panel::{Dim, FrameStyle, SizeOpts, emit_size_methods};
 use crate::utils::render::render_children_stmt;
+use efx_attrnames::AttrNames;
+use efx_core::Element;
+use proc_macro2::TokenStream;
+use quote::{ToTokens, quote};
 
 pub struct BottomPanel {
     attributes: Attributes,
@@ -12,62 +13,59 @@ pub struct BottomPanel {
 }
 
 impl Tag for BottomPanel {
-    fn from_element(el: &Element) -> Result<Self, TokenStream>
-    where
-        Self: Sized
-    {
-        Ok(Self { attributes: Attributes::new(el)?, element: el.clone() })
+    fn from_element(el: &Element) -> Result<Self, TokenStream> {
+        Ok(Self {
+            attributes: Attributes::new(el)?,
+            element: el.clone(),
+        })
     }
 
     fn content<UI: ToTokens>(&self, _ui: &UI) -> TokenStream {
-        let mut ts = TokenStream::new();
+        FrameStyle {
+            frame_on: self.attributes.frame,
+            fill: self.attributes.fill.clone(),
+            stroke_w: self.attributes.stroke_width,
+            stroke_color: self.attributes.stroke_color.clone(),
 
-        ts.extend(match self.attributes.frame {
-            Some(false) => quote!( let mut __efx_frame = egui::Frame::none(); ),
-            _           => quote!( let mut __efx_frame = egui::Frame::default(); ),
-        });
+            // padding
+            pad: self.attributes.padding,
+            pad_l: self.attributes.padding_l,
+            pad_r: self.attributes.padding_r,
+            pad_t: self.attributes.padding_t,
+            pad_b: self.attributes.padding_b,
 
-        if let Some(fill) = &self.attributes.fill {
-            ts.extend(quote!( __efx_frame = __efx_frame.fill(#fill); ));
+            // margin
+            mar: self.attributes.margin,
+            mar_l: self.attributes.margin_l,
+            mar_r: self.attributes.margin_r,
+            mar_t: self.attributes.margin_t,
+            mar_b: self.attributes.margin_b,
         }
-        if let Some(im) = self.attributes.padding_ts() {
-            ts.extend(quote!( __efx_frame = __efx_frame.inner_margin(#im); ));
-        }
-        if let Some(om) = self.attributes.margin_ts() {
-            ts.extend(quote!( __efx_frame = __efx_frame.outer_margin(#om); ));
-        }
-        if let Some(st) = stroke_tokens(self.attributes.stroke_width, self.attributes.stroke_color.clone()) {
-            ts.extend(quote!( __efx_frame = __efx_frame.stroke(#st); ));
-        }
-
-        ts
+        .emit()
     }
 
     fn render<UI: ToTokens>(&self, ui: &UI) -> TokenStream {
         let id = match &self.attributes.id {
             Some(s) if !s.is_empty() => s,
             _ => {
-                let msg = "efx: <BottomPanel> requires non-empty `id` attribute";
-                return quote! { compile_error!(#msg); };
+                return quote! { compile_error!("efx: <BottomPanel> requires non-empty `id` attribute"); };
             }
         };
 
         let children = render_children_stmt(&quote!(ui), &self.element.children);
         let frame_ts = self.content(ui);
 
-        let mut panel_ts = quote!( let mut __efx_panel = egui::TopBottomPanel::bottom(#id).frame(__efx_frame); );
-        if let Some(b) = self.attributes.resizable {
-            panel_ts.extend(quote!( __efx_panel = __efx_panel.resizable(#b); ));
-        }
-        if let Some(v) = self.attributes.default_height {
-            panel_ts.extend(quote!( __efx_panel = __efx_panel.default_height(#v as f32); ));
-        }
-        if let Some(v) = self.attributes.min_height {
-            panel_ts.extend(quote!( __efx_panel = __efx_panel.min_height(#v as f32); ));
-        }
-        if let Some(v) = self.attributes.max_height {
-            panel_ts.extend(quote!( __efx_panel = __efx_panel.max_height(#v as f32); ));
-        }
+        let mut panel_ts =
+            quote!( let mut __efx_panel = egui::TopBottomPanel::bottom(#id).frame(__efx_frame); );
+        panel_ts.extend(emit_size_methods(
+            Dim::Height,
+            &SizeOpts {
+                resizable: self.attributes.resizable,
+                default: self.attributes.default_height,
+                min: self.attributes.min_height,
+                max: self.attributes.max_height,
+            },
+        ));
 
         quote! {{
             #frame_ts
@@ -117,15 +115,6 @@ struct Attributes {
     margin_b: Option<f32>,
 }
 
-impl Attributes {
-    fn padding_ts(&self) -> Option<TokenStream> {
-        margin_tokens(self.padding, self.padding_l, self.padding_r, self.padding_t, self.padding_b)
-    }
-    fn margin_ts(&self) -> Option<TokenStream> {
-        margin_tokens(self.margin, self.margin_l, self.margin_r, self.margin_t, self.margin_b)
-    }
-}
-
 impl TagAttributes for Attributes {
     fn new(el: &Element) -> Result<Self, TokenStream> {
         let map = attr_map(el, Attributes::ATTR_NAMES, "BottomPanel")?;
@@ -136,19 +125,19 @@ impl TagAttributes for Attributes {
             stroke_width: f32_opt(&map, "stroke-width")?,
             stroke_color: color_tokens_opt(&map, "stroke-color")?,
             default_height: f32_opt(&map, "default-height")?,
-            min_height:     f32_opt(&map, "min-height")?,
-            max_height:     f32_opt(&map, "max-height")?,
-            resizable:      bool_opt(&map, "resizable")?,
-            padding:   f32_opt(&map, "padding")?,
+            min_height: f32_opt(&map, "min-height")?,
+            max_height: f32_opt(&map, "max-height")?,
+            resizable: bool_opt(&map, "resizable")?,
+            padding: f32_opt(&map, "padding")?,
             padding_l: f32_opt(&map, "padding-left")?,
             padding_r: f32_opt(&map, "padding-right")?,
             padding_t: f32_opt(&map, "padding-top")?,
             padding_b: f32_opt(&map, "padding-bottom")?,
-            margin:    f32_opt(&map, "margin")?,
-            margin_l:  f32_opt(&map, "margin-left")?,
-            margin_r:  f32_opt(&map, "margin-right")?,
-            margin_t:  f32_opt(&map, "margin-top")?,
-            margin_b:  f32_opt(&map, "margin-bottom")?,
+            margin: f32_opt(&map, "margin")?,
+            margin_l: f32_opt(&map, "margin-left")?,
+            margin_r: f32_opt(&map, "margin-right")?,
+            margin_t: f32_opt(&map, "margin-top")?,
+            margin_b: f32_opt(&map, "margin-bottom")?,
         })
     }
 }

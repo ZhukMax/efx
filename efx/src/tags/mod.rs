@@ -1,3 +1,4 @@
+pub mod bottom_panel;
 pub mod button;
 pub mod central_panel;
 pub mod column;
@@ -11,8 +12,8 @@ pub mod side_panel;
 pub mod text_field;
 pub mod top_panel;
 pub mod window;
-pub mod bottom_panel;
 
+pub use bottom_panel::BottomPanel;
 pub use button::Button;
 pub use central_panel::CentralPanel;
 pub use column::Column;
@@ -26,9 +27,8 @@ pub use row::Row;
 pub use scroll_area::ScrollArea;
 pub use separator::Separator;
 pub use side_panel::SidePanel;
-pub use top_panel::TopPanel;
 pub use text_field::TextField;
-pub use bottom_panel::BottomPanel;
+pub use top_panel::TopPanel;
 
 pub trait Tag: Sized {
     /// Constructor from Element (parses attributes and captures children inside self).

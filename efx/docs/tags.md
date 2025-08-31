@@ -294,7 +294,7 @@ Great for logs, consoles, timelines, or status bars.
 **Example**
 ```xml
 <BottomPanel id="console" default-height="200" resizable="true" fill="#0F1116">
-  <ScrollArea axis="vertical" max_height="180" id="console-scroll">
+  <ScrollArea axis="vertical" max-height="180" id="console-scroll">
     <Column gap="4" padding="6">
       <Label monospace="true">[12:00:01] Ready.</Label>
       <Label monospace="true">[12:00:02] Build succeeded.</Label>

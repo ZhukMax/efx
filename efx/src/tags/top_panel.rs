@@ -1,5 +1,6 @@
 use crate::tags::{Tag, TagAttributes};
 use crate::utils::attr::*;
+use crate::utils::panel::*;
 use crate::utils::render::render_children_stmt;
 use efx_attrnames::AttrNames;
 use efx_core::Element;
@@ -12,10 +13,7 @@ pub struct TopPanel {
 }
 
 impl Tag for TopPanel {
-    fn from_element(el: &Element) -> Result<Self, TokenStream>
-    where
-        Self: Sized,
-    {
+    fn from_element(el: &Element) -> Result<Self, TokenStream> {
         Ok(Self {
             attributes: Attributes::new(el)?,
             element: el.clone(),
@@ -23,59 +21,48 @@ impl Tag for TopPanel {
     }
 
     fn content<UI: ToTokens>(&self, _ui: &UI) -> TokenStream {
-        let mut ts = TokenStream::new();
+        FrameStyle {
+            frame_on: self.attributes.frame,
+            fill: self.attributes.fill.clone(),
+            stroke_w: self.attributes.stroke_width,
+            stroke_color: self.attributes.stroke_color.clone(),
 
-        // default / none
-        ts.extend(match self.attributes.frame {
-            Some(false) => quote!( let mut __efx_frame = egui::Frame::none(); ),
-            _ => quote!( let mut __efx_frame = egui::Frame::default(); ),
-        });
+            // padding (inner)
+            pad: self.attributes.padding,
+            pad_l: self.attributes.padding_l,
+            pad_r: self.attributes.padding_r,
+            pad_t: self.attributes.padding_t,
+            pad_b: self.attributes.padding_b,
 
-        if let Some(fill) = &self.attributes.fill {
-            ts.extend(quote!( __efx_frame = __efx_frame.fill(#fill); ));
+            // margin (outer)
+            mar: self.attributes.margin,
+            mar_l: self.attributes.margin_l,
+            mar_r: self.attributes.margin_r,
+            mar_t: self.attributes.margin_t,
+            mar_b: self.attributes.margin_b,
         }
-        if let Some(im) = self.attributes.padding_ts() {
-            ts.extend(quote!( __efx_frame = __efx_frame.inner_margin(#im); ));
-        }
-        if let Some(om) = self.attributes.margin_ts() {
-            ts.extend(quote!( __efx_frame = __efx_frame.outer_margin(#om); ));
-        }
-        if let Some(st) = stroke_tokens(
-            self.attributes.stroke_width,
-            self.attributes.stroke_color.clone(),
-        ) {
-            ts.extend(quote!( __efx_frame = __efx_frame.stroke(#st); ));
-        }
-
-        ts
+        .emit()
     }
 
     fn render<UI: ToTokens>(&self, ui: &UI) -> TokenStream {
         let id = match &self.attributes.id {
             Some(s) if !s.is_empty() => s,
-            _ => {
-                let msg = "efx: <TopPanel> requires non-empty `id` attribute";
-                return quote! { compile_error!(#msg); };
-            }
+            _ => return quote! { compile_error!("efx: <TopPanel> requires non-empty `id`"); },
         };
-
         let children = render_children_stmt(&quote!(ui), &self.element.children);
         let frame_ts = self.content(ui);
 
         let mut panel_ts =
             quote!( let mut __efx_panel = egui::TopBottomPanel::top(#id).frame(__efx_frame); );
-        if let Some(b) = self.attributes.resizable {
-            panel_ts.extend(quote!( __efx_panel = __efx_panel.resizable(#b); ));
-        }
-        if let Some(v) = self.attributes.default_height {
-            panel_ts.extend(quote!( __efx_panel = __efx_panel.default_height(#v as f32); ));
-        }
-        if let Some(v) = self.attributes.min_height {
-            panel_ts.extend(quote!( __efx_panel = __efx_panel.min_height(#v as f32); ));
-        }
-        if let Some(v) = self.attributes.max_height {
-            panel_ts.extend(quote!( __efx_panel = __efx_panel.max_height(#v as f32); ));
-        }
+        panel_ts.extend(emit_size_methods(
+            Dim::Height,
+            &SizeOpts {
+                resizable: self.attributes.resizable,
+                default: self.attributes.default_height,
+                min: self.attributes.min_height,
+                max: self.attributes.max_height,
+            },
+        ));
 
         quote! {{
             #frame_ts
@@ -128,27 +115,6 @@ struct Attributes {
     margin_t: Option<f32>,
     #[attr(name = "margin-bottom")]
     margin_b: Option<f32>,
-}
-
-impl Attributes {
-    fn padding_ts(&self) -> Option<TokenStream> {
-        margin_tokens(
-            self.padding,
-            self.padding_l,
-            self.padding_r,
-            self.padding_t,
-            self.padding_b,
-        )
-    }
-    fn margin_ts(&self) -> Option<TokenStream> {
-        margin_tokens(
-            self.margin,
-            self.margin_l,
-            self.margin_r,
-            self.margin_t,
-            self.margin_b,
-        )
-    }
 }
 
 impl TagAttributes for Attributes {

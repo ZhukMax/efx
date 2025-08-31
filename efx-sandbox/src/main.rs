@@ -86,6 +86,29 @@ impl eframe::App for App {
                   </Column>
                 </SidePanel>
             "##);
+
+            let _ = efx!(ui, r##"
+                <TopPanel id="appbar" default-height="36" fill="#15151A" stroke-width="1" stroke-color="#262A33">
+                  <Row gap="8" padding="6">
+                    <Label bold="true">EFx App</Label>
+                    <Separator/>
+                    <Button frame="false">File</Button>
+                    <Button frame="false">Edit</Button>
+                    <Button frame="false">View</Button>
+                  </Row>
+                </TopPanel>
+            "##);
+
+            let _ = efx!(ui, r##"
+                <BottomPanel id="console" default-height="200" resizable="true" fill="#0F1116">
+                  <ScrollArea axis="vertical" max-height="180" id="console-scroll">
+                    <Column gap="4" padding="6">
+                      <Label monospace="true">[12:00:01] Ready.</Label>
+                      <Label monospace="true">[12:00:02] Build succeeded.</Label>
+                    </Column>
+                  </ScrollArea>
+                </BottomPanel>
+            "##);
         });
     }
 }
