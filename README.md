@@ -21,7 +21,7 @@ You can embed arbitrary Rust expressions inside braces (`{...}`).
 Requires `egui` (the project currently uses `egui 0.32`). Add to `Cargo.toml`:
 ```toml
 [dependencies]
-efx = "0.4"
+efx = "0.5"
 egui = "0.32" # or egui-based framework
 ```
 
@@ -78,7 +78,6 @@ At compile time the macro parses your snippet; at runtime it shows readable diag
 
 ### Current limitations
 
-* **Best with one-line snippets.** Line breaks inside content may not parse.
 * **Case-sensitive tag names.**
 * Interpolated expressions must implement `Display`.
 
@@ -105,7 +104,7 @@ This plan is incremental and **non-breaking**; new features are opt-in. Prioriti
 
 EFx renders into any runtime that provides `&mut egui::Ui`. We officially build examples for the following targets:
 
-**Tier-1 (official in 0.5: examples + CI builds)**
+**Tier-1**
 
 * `eframe` (native + wasm)
 * `bevy_egui` (native)
@@ -124,7 +123,7 @@ EFx renders into any runtime that provides `&mut egui::Ui`. We officially build 
 ```toml
 # Cargo.toml
 [dependencies]
-efx    = "0.4"
+efx    = "0.5"
 eframe = "0.32"
 ```
 
@@ -142,7 +141,7 @@ egui::CentralPanel::default().show(ctx, |ui| {
 ```toml
 # Cargo.toml
 [dependencies]
-efx       = "0.4"
+efx       = "0.5"
 bevy      = "0.16"
 bevy_egui = "0.36"  # re-exports `egui`
 ```
@@ -163,7 +162,7 @@ bevy_egui::egui::Window::new("EFx").show(egui_ctx.ctx_mut(), |ui| {
 ```toml
 # Cargo.toml
 [dependencies]
-efx        = "0.4"
+efx        = "0.5"
 egui       = "0.32"
 egui-winit = "0.32"
 egui-wgpu  = "0.32"

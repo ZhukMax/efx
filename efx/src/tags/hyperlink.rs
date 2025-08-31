@@ -1,10 +1,10 @@
 use crate::tags::{Tag, TagAttributes};
+use crate::utils::attr::*;
+use crate::utils::buffer::build_buffer_from_children;
 use efx_attrnames::AttrNames;
 use efx_core::Element;
 use proc_macro2::TokenStream;
 use quote::{ToTokens, quote};
-use crate::utils::attr::*;
-use crate::utils::buffer::build_buffer_from_children;
 
 /// <Hyperlink url="..." [open_external=bool] [color=...] [underline=bool] [tooltip=...]>text?</Hyperlink>
 pub struct Hyperlink {
@@ -24,7 +24,7 @@ impl Tag for Hyperlink {
         })
     }
 
-    fn content<UI: ToTokens>(&self, ui: &UI) -> TokenStream {
+    fn content<UI: ToTokens>(&self, _ui: &UI) -> TokenStream {
         let url = &self.attributes.url.clone();
         let (buf_init, buf_build) = build_buffer_from_children(&self.element.children);
 

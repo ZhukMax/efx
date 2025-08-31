@@ -1,7 +1,7 @@
-use std::collections::BTreeMap;
+use efx_core::Element;
 use proc_macro2::TokenStream;
 use quote::quote;
-use efx_core::Element;
+use std::collections::BTreeMap;
 
 use crate::attr_adapters as A;
 

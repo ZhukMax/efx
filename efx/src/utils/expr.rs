@@ -1,6 +1,6 @@
-use std::collections::BTreeMap;
 use proc_macro2::TokenStream;
 use quote::quote;
+use std::collections::BTreeMap;
 
 /// Required expression attribute: parses into syn::Expr.
 /// Returns `compile_error!` if the attribute is missing, empty, or not parsable.

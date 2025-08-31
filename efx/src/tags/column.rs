@@ -4,8 +4,8 @@ use quote::{ToTokens, quote};
 
 use crate::render::render_nodes_as_stmts;
 use crate::tags::{Block, TagAttributes};
-use efx_attrnames::AttrNames;
 use crate::utils::attr::*;
+use efx_attrnames::AttrNames;
 
 pub struct Column {
     attributes: Attributes,

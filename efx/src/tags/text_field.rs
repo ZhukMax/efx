@@ -1,15 +1,14 @@
 use crate::tags::{Tag, TagAttributes};
+use crate::utils::attr::*;
+use crate::utils::expr::expr_req;
 use efx_attrnames::AttrNames;
 use efx_core::Element;
 use proc_macro2::TokenStream;
 use quote::{ToTokens, quote};
 use syn::Expr;
-use crate::utils::attr::*;
-use crate::utils::expr::expr_req;
 
 pub struct TextField {
     attributes: Attributes,
-    element: Element,
 }
 
 impl Tag for TextField {
@@ -17,14 +16,18 @@ impl Tag for TextField {
     where
         Self: Sized,
     {
+        // Disallow children (<TextField>...</TextField>) is a widget, not a container
+        if !el.children.is_empty() {
+            return Err(quote! {
+                compile_error!("efx: <TextField/> must be self-closing without children");
+            });
+        }
+
         let attributes = Attributes::new(el)?;
-        Ok(Self {
-            attributes,
-            element: el.clone(),
-        })
+        Ok(Self { attributes })
     }
 
-    fn content<UI: ToTokens>(&self, ui: &UI) -> TokenStream {
+    fn content<UI: ToTokens>(&self, _ui: &UI) -> TokenStream {
         let value = self.attributes.value.clone();
 
         let base = if matches!(self.attributes.multiline, Some(true)) {
@@ -51,11 +54,6 @@ impl Tag for TextField {
     }
 
     fn render<UI: ToTokens>(&self, ui: &UI) -> TokenStream {
-        // Disallow children (<TextField>...</TextField>) is a widget, not a container
-        if !self.element.children.is_empty() {
-            return quote! { compile_error!("efx: <TextField> must be self-closing and have no children"); };
-        }
-
         let build = self.content(ui);
 
         quote! {{

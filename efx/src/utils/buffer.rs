@@ -1,10 +1,8 @@
-use quote::quote;
 use efx_core::Node;
 use proc_macro2::TokenStream;
+use quote::quote;
 
-pub fn build_buffer_from_children(
-    children: &[Node],
-) -> (TokenStream, TokenStream) {
+pub fn build_buffer_from_children(children: &[Node]) -> (TokenStream, TokenStream) {
     use efx_core::Node::*;
     let init = quote! { let mut __efx_buf = ::std::string::String::new(); };
     let mut build = TokenStream::new();

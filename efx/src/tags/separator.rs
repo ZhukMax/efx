@@ -1,13 +1,12 @@
 use crate::tags::{Block, TagAttributes};
+use crate::utils::attr::*;
 use efx_attrnames::AttrNames;
 use efx_core::Element;
 use proc_macro2::TokenStream;
 use quote::{ToTokens, quote};
-use crate::utils::attr::*;
 
 pub struct Separator {
     attributes: Attributes,
-    element: Element,
 }
 
 impl Block for Separator {
@@ -23,10 +22,7 @@ impl Block for Separator {
         }
 
         let attributes = Attributes::new(el)?;
-        Ok(Self {
-            attributes,
-            element: el.clone(),
-        })
+        Ok(Self { attributes })
     }
 
     fn content<UI: ToTokens>(&self, ui: &UI) -> TokenStream {

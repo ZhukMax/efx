@@ -1,10 +1,10 @@
 use crate::tags::{Tag, TagAttributes};
+use crate::utils::attr::*;
+use crate::utils::render::render_children_stmt;
 use efx_attrnames::AttrNames;
 use efx_core::Element;
 use proc_macro2::TokenStream;
 use quote::{ToTokens, quote};
-use crate::utils::attr::*;
-use crate::utils::render::render_children_stmt;
 
 pub struct CentralPanel {
     attributes: Attributes,
@@ -23,7 +23,7 @@ impl Tag for CentralPanel {
         })
     }
 
-    fn content<UI: ToTokens>(&self, ui: &UI) -> TokenStream {
+    fn content<UI: ToTokens>(&self, _ui: &UI) -> TokenStream {
         // Assembling an expression for Frame
         let mut frame_build = TokenStream::new();
 
