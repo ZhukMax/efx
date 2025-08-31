@@ -1,8 +1,9 @@
 ## Changelog
 
-#### 0.6 (conceivably)
+#### 0.6
 - New Tags: Heading, Image, Grid
 - Added Panel Tags: Window, SidePanel
+- Added examples & tests
 
 #### 0.5
 - Attribute rendering (efx-core)

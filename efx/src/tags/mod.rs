@@ -1,6 +1,7 @@
 pub mod button;
 pub mod central_panel;
 pub mod column;
+pub mod heading;
 pub mod hyperlink;
 pub mod label;
 pub mod row;
@@ -13,6 +14,7 @@ pub use button::Button;
 pub use central_panel::CentralPanel;
 pub use column::Column;
 use efx_core::Element;
+pub use heading::Heading;
 pub use hyperlink::Hyperlink;
 pub use label::Label;
 use proc_macro2::TokenStream;

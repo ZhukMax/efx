@@ -44,6 +44,8 @@ impl Ui {
     #[inline]
     pub fn label<T>(&mut self, _text: T) {}
     #[inline]
+    pub fn heading<T>(&mut self, _text: T) {}
+    #[inline]
     pub fn button<T>(&mut self, _text: T) -> Resp {
         Resp
     }

@@ -21,7 +21,7 @@ You can embed arbitrary Rust expressions inside braces (`{...}`).
 Requires `egui` (the project currently uses `egui 0.32`). Add to `Cargo.toml`:
 ```toml
 [dependencies]
-efx = "0.5"
+efx = "0.6"
 egui = "0.32" # or egui-based framework
 ```
 
@@ -123,7 +123,7 @@ EFx renders into any runtime that provides `&mut egui::Ui`. We officially build 
 ```toml
 # Cargo.toml
 [dependencies]
-efx    = "0.5"
+efx    = "0.6"
 eframe = "0.32"
 ```
 
@@ -141,7 +141,7 @@ egui::CentralPanel::default().show(ctx, |ui| {
 ```toml
 # Cargo.toml
 [dependencies]
-efx       = "0.5"
+efx       = "0.6"
 bevy      = "0.16"
 bevy_egui = "0.36"  # re-exports `egui`
 ```
@@ -162,7 +162,7 @@ bevy_egui::egui::Window::new("EFx").show(egui_ctx.ctx_mut(), |ui| {
 ```toml
 # Cargo.toml
 [dependencies]
-efx        = "0.5"
+efx        = "0.6"
 egui       = "0.32"
 egui-winit = "0.32"
 egui-wgpu  = "0.32"

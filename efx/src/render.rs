@@ -37,6 +37,7 @@ pub(crate) fn render_node_stmt<UI: ToTokens>(ui: &UI, node: &Node) -> TokenStrea
 
 fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> TokenStream {
     match el.name.as_str() {
+        "Heading" => render_tag::<Heading>(ui, el),
         "CentralPanel" => render_tag::<CentralPanel>(ui, el),
         "ScrollArea" => render_tag::<ScrollArea>(ui, el),
         "Row" => render_tag::<Row>(ui, el),
