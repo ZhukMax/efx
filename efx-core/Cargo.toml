@@ -13,4 +13,8 @@ categories = [
     "template-engine"
 ]
 
+[features]
+doc-prelude = ["egui"]
+
 [dependencies]
+egui = { version = "0.32", default-features = false, optional = true }

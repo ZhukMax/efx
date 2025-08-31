@@ -1,0 +1,7 @@
+error: efx: <Label> unknown attribute `foo`
+  --> tests/ui/label_unknown_attr.rs:10:5
+   |
+10 |     efx!(ui, r#"<Label foo="bar">X</Label>"#);
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: this error originates in the macro `efx` (in Nightly builds, run with -Z macro-backtrace for more info)

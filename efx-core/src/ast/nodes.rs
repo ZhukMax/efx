@@ -1,4 +1,4 @@
-use crate::parser::span_range::SpanRange;
+use crate::ast::span_range::SpanRange;
 
 /// AST Mini-XML Nodes
 #[derive(Debug, Clone)]

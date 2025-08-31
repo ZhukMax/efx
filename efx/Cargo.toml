@@ -32,9 +32,11 @@ proc-macro = true
 syn = { version = "2.0", features = ["full"] }
 quote = "1.0"
 proc-macro2 = "1.0"
-efx-core = "1.0"
+efx-core = { version = "1.0", path = "../efx-core" }
+efx-attrnames = { path = "../efx-attrnames" }
 
 [dev-dependencies]
+efx-core = { path = "../efx-core", features = ["doc-prelude"] }
 trybuild = "1.0"
 # For the eframe example
 eframe = "0.32"

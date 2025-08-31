@@ -1,0 +1,7 @@
+error: efx: <Column> unknown attribute `foo`
+ --> tests/ui/column_unknown_attr.rs:6:5
+  |
+6 |     efx!(ui, r#"<Column foo="bar"><Label>A</Label></Column>"#);
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: this error originates in the macro `efx` (in Nightly builds, run with -Z macro-backtrace for more info)

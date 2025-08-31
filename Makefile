@@ -6,6 +6,9 @@ CLIPPY_TARGETS = --all-targets
 fmt: ## Checking formatting
 	@cargo fmt --all -- --check
 
+format: ## Fixing formatting
+	@cargo fmt --all
+
 lint:
 	@cargo clippy $(WORKSPACE_FLAGS) $(CLIPPY_TARGETS) -- -D warnings
 
@@ -27,6 +30,12 @@ minor: ## Publish new minor version
 	@make check
 	@cargo release minor -p efx
 	@cargo publish -p efx
+
+minor-core: ## Publish new efx-core minor version
+	@cargo test -p efx-core
+	@cargo fmt --all
+	@cargo release minor -p efx-core
+	@cargo publish -p efx-core
 
 dump: ## Make dump of project
 	@find ./ -type f \( -name "*.rs" -o -name "*.toml"  -o -name "*.md" \) \

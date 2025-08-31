@@ -10,7 +10,9 @@ struct DummyResponse {
     clicked: bool,
 }
 impl DummyResponse {
-    fn clicked(&self) -> bool { self.clicked }
+    fn clicked(&self) -> bool {
+        self.clicked
+    }
 }
 
 impl RecUi {
@@ -45,7 +47,10 @@ impl RecUi {
 #[test]
 fn label_and_layouts_render() {
     let mut ui = RecUi::default();
-    efx!(ui, "<Column><Label>Hello {1+1}</Label><Separator/><Row><Label>Row</Label></Row></Column>");
+    efx!(
+        ui,
+        "<Column><Label>Hello {1+1}</Label><Separator/><Row><Label>Row</Label></Row></Column>"
+    );
 
     assert!(ui.ops.contains(&"label:Hello 2".to_string()));
     assert!(ui.ops.contains(&"separator".to_string()));

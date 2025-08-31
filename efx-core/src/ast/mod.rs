@@ -1,13 +1,13 @@
-pub use crate::parser::error::ParseError;
-pub use crate::parser::nodes::{Node, Element, Text, Interpolation, Attr};
-pub use crate::parser::parser::Parser;
+pub use crate::ast::error::ParseError;
+pub use crate::ast::nodes::{Attr, Element, Interpolation, Node, Text};
+pub use crate::ast::parser::Parser;
 
 pub mod error;
-mod span_range;
-pub mod nodes;
-mod tok;
 mod lexer;
+pub mod nodes;
 pub mod parser;
+mod span_range;
+mod tok;
 
 /// Top-level utility: parse DSL source string into AST
 pub fn parse_str(src: &str) -> PResult<Vec<Node>> {

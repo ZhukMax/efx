@@ -13,16 +13,16 @@ struct State {
     clicks: usize,
 }
 
+#[derive(Default)]
 struct App {
     state: State,
-}
-impl Default for App {
-    fn default() -> Self { Self { state: State::default() } }
 }
 impl eframe::App for App {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
-            efx!(ui, r#"
+            efx!(
+                ui,
+                r#"
                 <Column>
                     <Label>EFx demo</Label>
                     <Row>
@@ -31,7 +31,8 @@ impl eframe::App for App {
                     </Row>
                     <Separator/>
                 </Column>
-            "#);
+            "#
+            );
 
             ui.horizontal(|ui| {
                 ui.label("Your name:");
@@ -56,23 +57,29 @@ fn main() -> eframe::Result<()> {
     )
 }
 
-
 #[cfg(target_arch = "wasm32")]
 fn main() {
     use wasm_bindgen::JsCast;
     use wasm_bindgen_futures::spawn_local;
-    use web_sys::{window, HtmlCanvasElement};
+    use web_sys::{HtmlCanvasElement, window};
 
-    let canvas: HtmlCanvasElement = window().unwrap()
-        .document().unwrap()
+    let canvas: HtmlCanvasElement = window()
+        .unwrap()
+        .document()
+        .unwrap()
         .get_element_by_id("the_canvas_id")
         .expect("Missing <canvas id=\"the_canvas_id\"> in HTML")
-        .dyn_into().unwrap();
+        .dyn_into()
+        .unwrap();
 
     let web_options = eframe::WebOptions::default();
     spawn_local(async move {
         eframe::WebRunner::new()
-            .start(canvas, web_options, Box::new(|_cc| Ok(Box::<App>::default())))
+            .start(
+                canvas,
+                web_options,
+                Box::new(|_cc| Ok(Box::<App>::default())),
+            )
             .await
             .expect("failed to start eframe WebRunner");
     });

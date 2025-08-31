@@ -6,9 +6,10 @@ efx — declarative UI template engine in Rust
 ## Minimal example
 
 ```rust
-use efx::efx;
+use efx_core::doc_prelude::*;
+use efx::*;
 
-efx!(ui, r#"
+efx!(Ui::default(), r#"
     <Column>
         <Label>Hello</Label>
         <Separator/>
@@ -16,10 +17,10 @@ efx!(ui, r#"
     </Column>
 "#);
 ```
-**Key Features 0.4**
+**Key Features 0.5**
 - Tags: `Column`, `Row`, `Label`, `Separator`, `Button`.
 - Insert expressions: `{expr}` within text.
 - Escaping: `{{` → `{`, `}}` → `}`.
-- Tag attributes are **parsed**, API for use in the renderer will be expanded.
+- Tag attributes are **parsed**.
 
 For more information, see the sections below: **Supported Tags** and **Syntax Guide**.
