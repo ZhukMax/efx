@@ -100,8 +100,8 @@ impl eframe::App for App {
             "##);
 
             let _ = efx!(ui, r##"
-                <BottomPanel id="console" default-height="200" resizable="true" fill="#0F1116">
-                  <ScrollArea axis="vertical" max-height="180" id="console-scroll">
+                <BottomPanel id="bottom-panel-test" default-height="200" resizable="true" fill="#0F1116">
+                  <ScrollArea axis="vertical" max-height="180" id="console-scroll-test-1">
                     <Column gap="4" padding="6">
                       <Label monospace="true">[12:00:01] Ready.</Label>
                       <Label monospace="true">[12:00:02] Build succeeded.</Label>
@@ -113,8 +113,8 @@ impl eframe::App for App {
             // Resize
             let _ = efx!(ui, r##"
                 <CentralPanel fill="#101014">
-                  <Resize id="console" default-height="200" min-height="120" clip="true">
-                    <ScrollArea axis="vertical" max_height="9999" id="console-scroll">
+                  <Resize id="resize-test" default-height="200" min-height="120">
+                    <ScrollArea axis="vertical" max-height="9999" id="console-scroll-test-2">
                       <Column gap="6" padding="6">
                         <Label monospace="true">[12:00:01] Ready.</Label>
                         <Label monospace="true">[12:00:02] Build succeeded.</Label>

@@ -34,10 +34,6 @@ impl Tag for Resize {
             build.extend(quote!( __efx_resize = __efx_resize.resizable(#b); ));
         }
 
-        if let Some(b) = self.attributes.clip {
-            build.extend(quote!( __efx_resize = __efx_resize.clip(#b); ));
-        }
-
         // default-size / min-size / max-size
         if self.attributes.default_width.is_some() || self.attributes.default_height.is_some() {
             let w = self.attributes.default_width.unwrap_or(0.0);
@@ -80,7 +76,6 @@ struct Attributes {
 
     // behavior
     resizable: Option<bool>,
-    clip: Option<bool>,
 
     #[attr(name = "default-width")]
     default_width: Option<f32>,
@@ -104,7 +99,6 @@ impl TagAttributes for Attributes {
         Ok(Attributes {
             id: map.get("id").map(|s| (*s).to_string()),
             resizable: bool_opt(&map, "resizable")?,
-            clip: bool_opt(&map, "clip")?,
             default_width: f32_opt(&map, "default-width")?,
             default_height: f32_opt(&map, "default-height")?,
             min_width: f32_opt(&map, "min-width")?,

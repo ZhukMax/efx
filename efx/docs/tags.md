@@ -369,7 +369,6 @@ Useful for side views, inspectors, consoles, etc., when a full docked panel is t
 
 **Behavior**
 - `resizable="true|false"` — enable/disable user resizing (default: `true` in egui).
-- `clip="true|false"` — clip the content to the current size (optional).
 
 **Sizing**
 - `default-width="number"`, `default-height="number"` — initial size.
@@ -381,7 +380,7 @@ Useful for side views, inspectors, consoles, etc., when a full docked panel is t
 **Example**
 ```xml
 <CentralPanel fill="#101014">
-  <Resize id="console" default-height="200" min-height="120" clip="true">
+  <Resize id="console" default-height="200" min-height="120">
     <ScrollArea axis="vertical" max_height="9999" id="console-scroll">
       <Column gap="6" padding="6">
         <Label monospace="true">[12:00:01] Ready.</Label>
