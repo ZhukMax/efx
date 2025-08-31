@@ -47,8 +47,8 @@ impl Tag for Heading {
         quote! {
             #buf_init
             #buf_build
-            let __efx_rich = egui::RichText::new(__efx_buf) #mods;
-            let mut __efx_resp = #ui.heading(__efx_rich);
+            let __efx_rich = egui::RichText::new(__efx_buf).heading() #mods;
+            let mut __efx_resp = #ui.add(egui::widgets::Label::new(__efx_rich));
             #tooltip_ts
             let _ = __efx_resp;
         }

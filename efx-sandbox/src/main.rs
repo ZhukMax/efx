@@ -54,6 +54,9 @@ impl eframe::App for App {
                 ui,
                 r##"
                 <ScrollArea axis="vertical" max-height="160" always-show="true" id="demo-log">
+                  <Heading level="1">Main title</Heading>
+                  <Heading level="2" color="#66CCFF">Section</Heading>
+                  <Heading level="3" size="14" tooltip="Subheading">Small note</Heading>
                   <Column gap="6">
                     <Label monospace="true">You typed: {self.input.clone()}</Label>
                     <Row gap="8">
