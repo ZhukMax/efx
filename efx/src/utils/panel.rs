@@ -1,4 +1,7 @@
+use crate::tags::TagAttributes;
 use crate::utils::attr::*;
+use efx_attrnames::AttrNames;
+use efx_core::Element;
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
 
@@ -32,6 +35,29 @@ pub struct FrameStyle {
 }
 
 impl FrameStyle {
+    pub fn new(attributes: Attributes) -> Self {
+        FrameStyle {
+            frame_on: attributes.frame,
+            fill: attributes.fill.clone(),
+            stroke_w: attributes.stroke_width,
+            stroke_color: attributes.stroke_color.clone(),
+
+            // padding (inner)
+            pad: attributes.padding,
+            pad_l: attributes.padding_l,
+            pad_r: attributes.padding_r,
+            pad_t: attributes.padding_t,
+            pad_b: attributes.padding_b,
+
+            // margin (outer)
+            mar: attributes.margin,
+            mar_l: attributes.margin_l,
+            mar_r: attributes.margin_r,
+            mar_t: attributes.margin_t,
+            mar_b: attributes.margin_b,
+        }
+    }
+
     /// Generate tokens with `let mut __efx_frame = ...;` construction and all modifiers.
     pub fn emit(&self) -> TokenStream {
         let mut ts = TokenStream::new();
@@ -58,6 +84,84 @@ impl FrameStyle {
         }
 
         ts
+    }
+}
+
+#[derive(Clone, Debug, AttrNames)]
+pub struct Attributes {
+    /// required: egui Id salt
+    pub(crate) id: Option<String>,
+
+    // frame + styling
+    pub(crate) frame: Option<bool>,
+    pub(crate) fill: Option<TokenStream>,
+    #[attr(name = "stroke-width")]
+    pub(crate) stroke_width: Option<f32>,
+    #[attr(name = "stroke-color")]
+    pub(crate) stroke_color: Option<TokenStream>,
+
+    // sizing
+    #[attr(name = "default-height")]
+    pub(crate) default_height: Option<f32>,
+    #[attr(name = "min-height")]
+    pub(crate) min_height: Option<f32>,
+    #[attr(name = "max-height")]
+    pub(crate) max_height: Option<f32>,
+    pub(crate) resizable: Option<bool>,
+
+    // padding (inner_margin)
+    pub(crate) padding: Option<f32>,
+    #[attr(name = "padding-left")]
+    pub(crate) padding_l: Option<f32>,
+    #[attr(name = "padding-right")]
+    pub(crate) padding_r: Option<f32>,
+    #[attr(name = "padding-top")]
+    pub(crate) padding_t: Option<f32>,
+    #[attr(name = "padding-bottom")]
+    pub(crate) padding_b: Option<f32>,
+
+    // margin (outer_margin)
+    pub(crate) margin: Option<f32>,
+    #[attr(name = "margin-left")]
+    pub(crate) margin_l: Option<f32>,
+    #[attr(name = "margin-right")]
+    pub(crate) margin_r: Option<f32>,
+    #[attr(name = "margin-top")]
+    pub(crate) margin_t: Option<f32>,
+    #[attr(name = "margin-bottom")]
+    pub(crate) margin_b: Option<f32>,
+}
+
+impl TagAttributes for Attributes {
+    fn new(el: &Element) -> Result<Self, TokenStream> {
+        let map = attr_map(el, Attributes::ATTR_NAMES, el.name.clone().as_str())?;
+        Ok(Attributes {
+            id: map.get("id").map(|s| (*s).to_string()),
+
+            frame: bool_opt(&map, "frame")?,
+            fill: color_tokens_opt(&map, "fill")?,
+            stroke_width: f32_opt(&map, "stroke-width")?,
+            stroke_color: color_tokens_opt(&map, "stroke-color")?,
+
+            default_height: f32_opt(&map, "default-height")?,
+            min_height: f32_opt(&map, "min-height")?,
+            max_height: f32_opt(&map, "max-height")?,
+            resizable: bool_opt(&map, "resizable")?,
+
+            // padding (inner_margin)
+            padding: f32_opt(&map, "padding")?,
+            padding_l: f32_opt(&map, "padding-left")?,
+            padding_r: f32_opt(&map, "padding-right")?,
+            padding_t: f32_opt(&map, "padding-top")?,
+            padding_b: f32_opt(&map, "padding-bottom")?,
+
+            // margin (outer_margin)
+            margin: f32_opt(&map, "margin")?,
+            margin_l: f32_opt(&map, "margin-left")?,
+            margin_r: f32_opt(&map, "margin-right")?,
+            margin_t: f32_opt(&map, "margin-top")?,
+            margin_b: f32_opt(&map, "margin-bottom")?,
+        })
     }
 }
 

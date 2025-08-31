@@ -140,8 +140,8 @@ impl TagAttributes for Attributes {
     fn new(el: &Element) -> Result<Self, TokenStream> {
         let map = attr_map(el, Attributes::ATTR_NAMES, "SidePanel")?;
         Ok(Attributes {
-            side: map.get("side").map(|s| (*s).to_string()),
             id: map.get("id").map(|s| (*s).to_string()),
+            side: map.get("side").map(|s| (*s).to_string()),
 
             frame: bool_opt(&map, "frame")?,
             fill: color_tokens_opt(&map, "fill")?,
@@ -153,12 +153,14 @@ impl TagAttributes for Attributes {
             max_width: f32_opt(&map, "max-width")?,
             resizable: bool_opt(&map, "resizable")?,
 
+            // padding (inner_margin)
             padding: f32_opt(&map, "padding")?,
             padding_l: f32_opt(&map, "padding-left")?,
             padding_r: f32_opt(&map, "padding-right")?,
             padding_t: f32_opt(&map, "padding-top")?,
             padding_b: f32_opt(&map, "padding-bottom")?,
 
+            // margin (outer_margin)
             margin: f32_opt(&map, "margin")?,
             margin_l: f32_opt(&map, "margin-left")?,
             margin_r: f32_opt(&map, "margin-right")?,
