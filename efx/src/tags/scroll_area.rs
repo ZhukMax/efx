@@ -28,22 +28,34 @@ impl Tag for ScrollArea {
         let mut build = quote!( let mut __efx_sa = #axis; );
 
         if let Some(b) = self.attributes.always_show {
-            build.extend(quote!( __efx_sa = __efx_sa.always_show_scroll(#b); ));
+            if b {
+                build.extend(quote!(
+                    __efx_sa = __efx_sa.scroll_bar_visibility(
+                        egui::containers::scroll_area::ScrollBarVisibility::AlwaysVisible
+                    );
+                ));
+            } else {
+                build.extend(quote!(
+                    __efx_sa = __efx_sa.scroll_bar_visibility(
+                        egui::containers::scroll_area::ScrollBarVisibility::VisibleWhenNeeded
+                    );
+                ));
+            }
         }
         if let Some(b) = self.attributes.bottom {
-            build.extend(quote!( __efx_sa = __efx_sa.stick_to_bottom(#b);   ));
+            build.extend(quote!( __efx_sa = __efx_sa.stick_to_bottom(#b); ));
         }
         if let Some(b) = self.attributes.right {
-            build.extend(quote!( __efx_sa = __efx_sa.stick_to_right(#b);    ));
+            build.extend(quote!( __efx_sa = __efx_sa.stick_to_right(#b); ));
         }
         if let Some(h) = self.attributes.max_height {
-            build.extend(quote!( __efx_sa = __efx_sa.max_height(#h as _);   ));
+            build.extend(quote!( __efx_sa = __efx_sa.max_height(#h as _); ));
         }
         if let Some(w) = self.attributes.max_width {
-            build.extend(quote!( __efx_sa = __efx_sa.max_width(#w as _);    ));
+            build.extend(quote!( __efx_sa = __efx_sa.max_width(#w as _); ));
         }
         if let Some(id) = self.attributes.id.clone() {
-            build.extend(quote!( __efx_sa = __efx_sa.id_source(#id);        ));
+            build.extend(quote!( __efx_sa = __efx_sa.id_salt(#id); ));
         }
 
         build
