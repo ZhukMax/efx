@@ -7,8 +7,11 @@ pub mod label;
 pub mod row;
 pub mod scroll_area;
 pub mod separator;
+pub mod side_panel;
 pub mod text_field;
+pub mod top_panel;
 pub mod window;
+pub mod bottom_panel;
 
 pub use button::Button;
 pub use central_panel::CentralPanel;
@@ -22,7 +25,10 @@ use quote::{ToTokens, quote};
 pub use row::Row;
 pub use scroll_area::ScrollArea;
 pub use separator::Separator;
+pub use side_panel::SidePanel;
+pub use top_panel::TopPanel;
 pub use text_field::TextField;
+pub use bottom_panel::BottomPanel;
 
 pub trait Tag: Sized {
     /// Constructor from Element (parses attributes and captures children inside self).

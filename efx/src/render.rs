@@ -39,6 +39,9 @@ fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> TokenStream {
     match el.name.as_str() {
         "Heading" => render_tag::<Heading>(ui, el),
         "CentralPanel" => render_tag::<CentralPanel>(ui, el),
+        "SidePanel" => render_tag::<SidePanel>(ui, el),
+        "TopPanel" => render_tag::<TopPanel>(ui, el),
+        "BottomPanel" => render_tag::<BottomPanel>(ui, el),
         "ScrollArea" => render_tag::<ScrollArea>(ui, el),
         "Row" => render_tag::<Row>(ui, el),
         "Column" => render_tag::<Column>(ui, el),

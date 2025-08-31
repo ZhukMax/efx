@@ -73,6 +73,19 @@ impl eframe::App for App {
                 </ScrollArea>
             "##
             );
+
+            // SidePanel with other tags
+            let _ = efx!(ui, r##"
+                <SidePanel side="left" id="nav" default-width="240" min-width="160" resizable="true" fill="#15151A">
+                  <Column gap="8" padding="8">
+                    <Label size="16" bold="true">Navigation</Label>
+                    <Separator/>
+                    <Button frame="false">Home</Button>
+                    <Button frame="false">Projects</Button>
+                    <Button frame="false">Settings</Button>
+                  </Column>
+                </SidePanel>
+            "##);
         });
     }
 }

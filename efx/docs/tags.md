@@ -200,6 +200,109 @@ efx!(Ui::default(), r##"
 "##);
 ```
 
+### `<SidePanel>`
+
+Docked panel attached to the left or right edge of the window.  
+Typically used for navigation, tool palettes, or context inspectors.
+
+**Children:** rendered inside the panel.
+
+**Required attributes**
+- `side="left|right"` — which edge to dock to.
+- `id="string"` — egui `Id` salt to keep layout state (width, resize state).
+
+**Frame & styling**
+- `frame="true|false"` — enable/disable the default frame (default: `true`).
+- `fill="#RRGGBB[AA]"` — background color.
+- `stroke-width="number"` — border width, in points.
+- `stroke-color="#RRGGBB[AA]"` — border color.
+- `padding`, `padding-left|right|top|bottom` — inner margin (content padding).
+- `margin`, `margin-left|right|top|bottom` — outer margin.
+
+**Sizing & behavior**
+- `default-width="number"` — initial width.
+- `min-width="number"` — lower width bound.
+- `max-width="number"` — upper width bound.
+- `resizable="true|false"` — whether the user can drag to resize (default: `true`).
+
+**Example**
+```xml
+<SidePanel side="left" id="nav" default-width="240" min-width="160" resizable="true" fill="#15151A">
+  <Column gap="8" padding="8">
+    <Label size="16" bold="true">Navigation</Label>
+    <Separator/>
+    <Button frame="false">Home</Button>
+    <Button frame="false">Projects</Button>
+    <Button frame="false">Settings</Button>
+  </Column>
+</SidePanel>
+```
+
+### `<TopPanel>`
+
+A docked panel attached to the top edge of the window.  
+Useful for app bars, toolbars, status strips, or context headers.
+
+**Children:** rendered inside the panel.
+
+**Required attributes**
+- `id="string"` — egui `Id` salt to persist panel state.
+
+**Frame & styling**
+- `frame="true|false"` — enable/disable default frame (default: `true`).
+- `fill="#RRGGBB[AA]"` — background color.
+- `stroke-width="number"` — border width (points).
+- `stroke-color="#RRGGBB[AA]"` — border color.
+- `padding`, `padding-left|right|top|bottom` — inner margin.
+- `margin`, `margin-left|right|top|bottom` — outer margin.
+
+**Sizing & behavior**
+- `default-height="number"` — initial height.
+- `min-height="number"` — minimum height.
+- `max-height="number"` — maximum height.
+- `resizable="true|false"` — allow user resize (default: `true`).
+
+**Example**
+```xml
+<TopPanel id="appbar" default-height="36" fill="#15151A" stroke-width="1" stroke-color="#262A33">
+  <Row gap="8" padding="6">
+    <Label bold="true">EFx App</Label>
+    <Separator/>
+    <Button frame="false">File</Button>
+    <Button frame="false">Edit</Button>
+    <Button frame="false">View</Button>
+  </Row>
+</TopPanel>
+```
+
+### `<BottomPanel>`
+
+A docked panel attached to the bottom edge of the window.
+Great for logs, consoles, timelines, or status bars.
+
+**Children**: rendered inside the panel.
+
+**Required attributes**
+- `id="string"` — egui Id salt.
+
+**Frame & styling**
+- `frame="true|false"`, `fill`, `stroke-width`, `stroke-color`, `padding*` / `margin*` — same as `<TopPanel>`.
+
+**Sizing & behavior**
+- `default-height`, `min-height`, `max-height`, `resizable` — same as <TopPanel>.
+
+**Example**
+```xml
+<BottomPanel id="console" default-height="200" resizable="true" fill="#0F1116">
+  <ScrollArea axis="vertical" max_height="180" id="console-scroll">
+    <Column gap="4" padding="6">
+      <Label monospace="true">[12:00:01] Ready.</Label>
+      <Label monospace="true">[12:00:02] Build succeeded.</Label>
+    </Column>
+  </ScrollArea>
+</BottomPanel>
+```
+
 ### `ScrollArea`
 
 Scrollable container backed by `egui::ScrollArea`. Wraps its children and provides vertical/horizontal/both scrolling.

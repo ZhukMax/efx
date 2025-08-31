@@ -2,8 +2,9 @@
 
 #### 0.6
 - New Tags: Heading, Image, Grid
-- Added Panel Tags: Window, SidePanel
-- Added examples & tests
+- Added Panel Tags: Window, SidePanel, TopPanel, BottomPanel
+- Sandbox
+- Examples & tests
 
 #### 0.5
 - Attribute rendering (efx-core)
