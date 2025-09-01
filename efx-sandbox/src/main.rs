@@ -10,25 +10,54 @@ fn main() -> eframe::Result<()> {
     )
 }
 
-#[derive(Default)]
 struct App {
     counter: i32,
     input: String,
+    show_settings: bool,
+}
+
+impl Default for App {
+    fn default() -> Self {
+        Self {
+            counter: 0,
+            input: String::new(),
+            show_settings: true,
+        }
+    }
 }
 
 impl eframe::App for App {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
-            // Header
-            let _ = efx!(
-                ui,
-                r#"
-                <Column gap="8">
-                    <Label size="20" bold="true">EFx sandbox</Label>
-                    <Separator/>
-                </Column>
-            "#
-            );
+            ui.scope(|ui| {
+                // Window + Column
+                efx!(
+                    ui,
+                    r##"
+                    <Window
+                        id="settings"
+                        title="Settings"
+                        open="self.show_settings"
+                        movable="true"
+                        resizable="true"
+                        default-width="360"
+                        default-height="240"
+                        anchor-h="right"
+                        anchor-v="top"
+                        anchor-x="-12"
+                        anchor-y="12"
+                        fill="#14161B"
+                        stroke-width="1"
+                        stroke-color="#262A33"
+                    >
+                        <Column gap="8">
+                            <Label size="20" bold="true">EFx sandbox</Label>
+                            <Separator/>
+                        </Column>
+                    </Window>
+                "##
+                );
+            });
 
             // Increment/decrement buttons - catch Response
             ui.horizontal(|ui| {

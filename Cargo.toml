@@ -1,4 +1,6 @@
 [workspace]
 members = ["efx", "efx-core", "efx-attrnames", "efx-sandbox"]
 resolver = "2"
+
+[workspace.package]
 rust-version = "1.85"

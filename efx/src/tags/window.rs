@@ -1,12 +1,13 @@
 use crate::tags::{Tag, TagAttributes};
 use crate::utils::attr::*;
+use crate::utils::expr::expr_opt;
 use crate::utils::panel::*;
 use crate::utils::render::render_children_stmt;
 use efx_attrnames::AttrNames;
 use efx_core::Element;
 use proc_macro2::TokenStream;
 use quote::{ToTokens, quote};
-use crate::utils::expr::expr_opt;
+use syn::Expr;
 
 pub struct Window {
     attributes: Attributes,
@@ -123,24 +124,38 @@ impl Tag for Window {
 
         // anchor (Align2 + offset)
         if self.attributes.anchor_h.is_some() || self.attributes.anchor_v.is_some() {
-            let h = self.attributes.anchor_h.clone().unwrap_or_else(|| "center".to_string());
-            let v = self.attributes.anchor_v.clone().unwrap_or_else(|| "center".to_string());
+            let h = self
+                .attributes
+                .anchor_h
+                .clone()
+                .unwrap_or_else(|| "center".to_string());
+            let v = self
+                .attributes
+                .anchor_v
+                .clone()
+                .unwrap_or_else(|| "center".to_string());
 
             let h_align = match h.as_str() {
-                "left" => quote!( egui::Align::Min ),
-                "center" => quote!( egui::Align::Center ),
-                "right" => quote!( egui::Align::Max ),
+                "left" => quote!(egui::Align::Min),
+                "center" => quote!(egui::Align::Center),
+                "right" => quote!(egui::Align::Max),
                 other => {
-                    let msg = format!("efx: <Window> `anchor-h` expected left|center|right, got `{}`", other);
+                    let msg = format!(
+                        "efx: <Window> `anchor-h` expected left|center|right, got `{}`",
+                        other
+                    );
                     return quote! { compile_error!(#msg); };
                 }
             };
             let v_align = match v.as_str() {
-                "top"    => quote!( egui::Align::Min ),
-                "center" => quote!( egui::Align::Center ),
-                "bottom" => quote!( egui::Align::Max ),
+                "top" => quote!(egui::Align::Min),
+                "center" => quote!(egui::Align::Center),
+                "bottom" => quote!(egui::Align::Max),
                 other => {
-                    let msg = format!("efx: <Window> `anchor-v` expected top|center|bottom, got `{}`", other);
+                    let msg = format!(
+                        "efx: <Window> `anchor-v` expected top|center|bottom, got `{}`",
+                        other
+                    );
                     return quote! { compile_error!(#msg); };
                 }
             };
@@ -149,11 +164,16 @@ impl Tag for Window {
             let ay = self.attributes.anchor_y.unwrap_or(0.0);
 
             win.extend(quote!(
-                __efx_window = __efx_window.anchor(egui::Align2(#h_align, #v_align), egui::vec2(#ax as f32, #ay as f32));
+                __efx_window = __efx_window.anchor(egui::Align2([#h_align, #v_align]), egui::vec2(#ax as f32, #ay as f32));
             ));
         }
 
         let open_bind = if let Some(expr) = &self.attributes.open_expr {
+            if !is_assignable_expr(expr) {
+                return quote! {
+                    compile_error!("efx: <Window> `open` must be an assignable boolean lvalue (e.g. {self.show_window})");
+                };
+            }
             quote! {
                 let mut __efx_open = (#expr);
                 __efx_window = __efx_window.open(&mut __efx_open);
@@ -167,7 +187,15 @@ impl Tag for Window {
             #frame_ts
             #win
             #open_bind
-            __efx_window.show(&#ui.ctx(), |ui| { #children });
+            let __efx_ctx = #ui.ctx().clone();
+            // Explicitly limit the lifetime of the result of show(...)
+            {
+                let __efx_tmp = __efx_window.show(&__efx_ctx, |ui| { #children });
+                let _ = __efx_tmp;
+            }
+
+            // Nothing comes back out
+            ()
         }}
     }
 }
@@ -191,7 +219,7 @@ struct Attributes {
 
     // opening state binding (expression)
     #[attr(name = "open")]
-    open_expr: Option<TokenStream>,
+    open_expr: Option<Expr>,
 
     // geometry: positions
     #[attr(name = "default-x")]

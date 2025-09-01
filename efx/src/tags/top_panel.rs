@@ -46,7 +46,12 @@ impl Tag for TopPanel {
         quote! {{
             #frame_ts
             #panel_ts
-            __efx_panel.show(&#ui.ctx(), |ui| { #children });
+            let __efx_ctx = #ui.ctx().clone();
+            {
+                let __efx_tmp = __efx_panel.show(&__efx_ctx, |ui| { #children });
+                let _ = __efx_tmp;
+            }
+            ()
         }}
     }
 }

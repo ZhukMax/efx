@@ -28,9 +28,14 @@ impl Tag for CentralPanel {
 
         quote! {{
             #frame_ts
-            egui::CentralPanel::default()
-                .frame(__efx_frame)
-                .show(&#ui.ctx(), |ui| { #children });
+            let __efx_ctx = #ui.ctx().clone();
+            {
+                let __efx_tmp = egui::CentralPanel::default()
+                    .frame(__efx_frame)
+                    .show(&__efx_ctx, |ui| { #children });
+                let _ = __efx_tmp;
+            }
+            ()
         }}
     }
 }
