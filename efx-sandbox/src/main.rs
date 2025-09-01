@@ -1,4 +1,4 @@
-use eframe::{egui, NativeOptions};
+use eframe::{NativeOptions, egui};
 use efx::efx;
 
 fn main() -> eframe::Result<()> {
@@ -20,20 +20,27 @@ impl eframe::App for App {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
             // Header
-            let _ = efx!(ui, r#"
+            let _ = efx!(
+                ui,
+                r#"
                 <Column gap="8">
                     <Label size="20" bold="true">EFx sandbox</Label>
                     <Separator/>
                 </Column>
-            "#);
+            "#
+            );
 
             // Increment/decrement buttons - catch Response
             ui.horizontal(|ui| {
                 let inc = efx!(ui, r#"<Button tooltip="Increment">+1</Button>"#);
-                if inc.clicked() { self.counter += 1; }
+                if inc.clicked() {
+                    self.counter += 1;
+                }
 
                 let dec = efx!(ui, r#"<Button tooltip="Decrement">-1</Button>"#);
-                if dec.clicked() { self.counter -= 1; }
+                if dec.clicked() {
+                    self.counter -= 1;
+                }
             });
 
             // Dynamic text via {expr}
@@ -43,7 +50,9 @@ impl eframe::App for App {
             let _ = efx!(ui, r#"<TextField value="self.input" hint="type here…"/>"#);
 
             // Scrolling + different tags
-            let _ = efx!(ui, r##"
+            let _ = efx!(
+                ui,
+                r##"
                 <ScrollArea axis="vertical" max-height="160" always-show="true" id="demo-log">
                   <Column gap="6">
                     <Label monospace="true">You typed: {self.input.clone()}</Label>
@@ -59,7 +68,8 @@ impl eframe::App for App {
                     </Row>
                   </Column>
                 </ScrollArea>
-            "##);
+            "##
+            );
         });
     }
 }
