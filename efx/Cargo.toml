@@ -2,7 +2,7 @@
 name = "efx"
 description = "Rust XML templating engine for building egui UIs with procedural macros"
 authors = ["Max Zhuk <mail@zhukmax.com>"]
-version = "0.5.0"
+version = "0.4.2"
 edition = "2024"
 rust-version = "1.85"
 license = "MIT OR Apache-2.0"
@@ -33,7 +33,7 @@ syn = { version = "2.0", features = ["full"] }
 quote = "1.0"
 proc-macro2 = "1.0"
 efx-core = { version = "1.1", path = "../efx-core" }
-efx-attrnames = { path = "../efx-attrnames" }
+efx-attrnames = { version = "0.1", path = "../efx-attrnames" }
 
 [dev-dependencies]
 efx-core = { path = "../efx-core", features = ["doc-prelude"] }
