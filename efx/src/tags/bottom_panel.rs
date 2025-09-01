@@ -25,9 +25,7 @@ impl Tag for BottomPanel {
     fn render<UI: ToTokens>(&self, ui: &UI) -> TokenStream {
         let id = match &self.attributes.id {
             Some(s) if !s.is_empty() => s,
-            _ => {
-                return quote! { compile_error!("efx: <BottomPanel> requires non-empty `id` attribute"); };
-            }
+            _ => return quote! { compile_error!("efx: <BottomPanel> requires non-empty `id`"); },
         };
 
         let children = render_children_stmt(&quote!(ui), &self.element.children);

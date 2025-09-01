@@ -27,6 +27,7 @@ impl Tag for TopPanel {
             Some(s) if !s.is_empty() => s,
             _ => return quote! { compile_error!("efx: <TopPanel> requires non-empty `id`"); },
         };
+
         let children = render_children_stmt(&quote!(ui), &self.element.children);
         let frame_ts = self.content(ui);
 

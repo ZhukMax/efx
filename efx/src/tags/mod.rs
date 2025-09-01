@@ -31,6 +31,7 @@ pub use separator::Separator;
 pub use side_panel::SidePanel;
 pub use text_field::TextField;
 pub use top_panel::TopPanel;
+pub use window::Window;
 
 pub trait Tag: Sized {
     /// Constructor from Element (parses attributes and captures children inside self).
