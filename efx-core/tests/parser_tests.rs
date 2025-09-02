@@ -1,4 +1,4 @@
-use efx_core::{Node, Text, parse_str};
+use efx_core::{parse_str, Node, Text};
 
 #[test]
 fn text_only() {

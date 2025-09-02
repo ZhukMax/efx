@@ -3,5 +3,5 @@ members = ["efx", "efx-core", "efx-attrnames", "efx-sandbox"]
 resolver = "2"
 
 [workspace.package]
-edition = "2024"
-rust-version = "1.85"
+edition = "2021"
+rust-version = "1.75"

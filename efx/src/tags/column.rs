@@ -1,6 +1,6 @@
 use efx_core::Element;
 use proc_macro2::TokenStream;
-use quote::{ToTokens, quote};
+use quote::{quote, ToTokens};
 
 use crate::render::render_nodes_as_stmts;
 use crate::tags::{Block, TagAttributes};

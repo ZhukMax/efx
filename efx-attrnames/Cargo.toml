@@ -1,7 +1,8 @@
 [package]
 name = "efx-attrnames"
 version = "1.0.0"
-edition = "2024"
+edition = "2021"
+rust-version = "1.75"
 license = "MIT OR Apache-2.0"
 description = "Proc-macro derive to generate ATTR_NAMES (and optional ATTR_INFO) for attribute structs in EFx ecosystem"
 repository = "https://github.com/ZhukMax/efx"

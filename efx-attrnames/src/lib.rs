@@ -4,7 +4,7 @@ use proc_macro::TokenStream;
 use proc_macro2::Span;
 use quote::quote;
 use std::collections::HashSet;
-use syn::{Data, DeriveInput, Fields, LitStr, Result as SynResult, parse_macro_input};
+use syn::{parse_macro_input, Data, DeriveInput, Fields, LitStr, Result as SynResult};
 
 /// Derive to generate `ATTR_NAMES` constant (and optionally `ATTR_INFO`) for attribute structures.
 /// Supports:

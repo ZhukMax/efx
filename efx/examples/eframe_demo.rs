@@ -61,7 +61,7 @@ fn main() -> eframe::Result<()> {
 fn main() {
     use wasm_bindgen::JsCast;
     use wasm_bindgen_futures::spawn_local;
-    use web_sys::{HtmlCanvasElement, window};
+    use web_sys::{window, HtmlCanvasElement};
 
     let canvas: HtmlCanvasElement = window()
         .unwrap()

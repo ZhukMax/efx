@@ -16,7 +16,7 @@ use efx_core::Element;
 pub use hyperlink::Hyperlink;
 pub use label::Label;
 use proc_macro2::TokenStream;
-use quote::{ToTokens, quote};
+use quote::{quote, ToTokens};
 pub use row::Row;
 pub use scroll_area::ScrollArea;
 pub use separator::Separator;
