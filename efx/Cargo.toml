@@ -28,15 +28,25 @@ maintenance = { status = "actively-developed" }
 [lib]
 proc-macro = true
 
+[features]
+default = []
+attrnames-info = []
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = [
+    'cfg(feature, values("attrnames-info"))',
+] }
+
 [dependencies]
 syn = { version = "2.0", features = ["full"] }
 quote = "1.0"
 proc-macro2 = "1.0"
 efx-core = { version = "1.1", path = "../efx-core" }
-efx-attrnames = { version = "0.1", path = "../efx-attrnames" }
+efx-attrnames = { version = "1", path = "../efx-attrnames" }
 
 [dev-dependencies]
 efx-core = { path = "../efx-core", features = ["doc-prelude"] }
+efx-attrnames = { path = "../efx-attrnames" }
 trybuild = "1.0"
 # For the eframe example
 eframe = "0.32"

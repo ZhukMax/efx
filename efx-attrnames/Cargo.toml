@@ -1,10 +1,12 @@
 [package]
 name = "efx-attrnames"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2024"
-publish = false
-rust-version = "1.85"
 license = "MIT OR Apache-2.0"
+description = "Proc-macro derive to generate ATTR_NAMES (and optional ATTR_INFO) for attribute structs in EFx ecosystem"
+repository = "https://github.com/ZhukMax/efx"
+keywords = ["gui", "proc-macro", "templating"]
+categories = ["development-tools::procedural-macro-helpers"]
 
 [lib]
 proc-macro = true
@@ -12,3 +14,7 @@ proc-macro = true
 [dependencies]
 quote = "1.0"
 syn = { version = "2.0", features = ["full"] }
+proc-macro2 = "1"
+
+[features]
+default = []
