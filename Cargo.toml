@@ -5,3 +5,12 @@ resolver = "2"
 [workspace.package]
 edition = "2021"
 rust-version = "1.75"
+
+[workspace.dependencies]
+efx-core = "1"
+efx-attrnames = { path = "efx-attrnames" }
+#efx-attrnames = "1"
+
+[patch.crates-io]
+efx-core = { path = "efx-core" }
+efx-attrnames = { path = "efx-attrnames" }

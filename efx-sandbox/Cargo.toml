@@ -7,5 +7,4 @@ publish = false
 
 [dependencies]
 eframe = "0.32"
-efx       = { path = "../efx" }
-efx-core  = { path = "../efx-core" }
+efx = { path = "../efx" }

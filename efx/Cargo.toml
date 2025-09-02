@@ -41,12 +41,12 @@ unexpected_cfgs = { level = "warn", check-cfg = [
 syn = { version = "2.0", features = ["full"] }
 quote = "1.0"
 proc-macro2 = "1.0"
-efx-core = { version = "1.1", path = "../efx-core" }
-efx-attrnames = { version = "1", path = "../efx-attrnames" }
+efx-core = { workspace = true }
+efx-attrnames = { workspace = true }
 
 [dev-dependencies]
-efx-core = { path = "../efx-core", features = ["doc-prelude"] }
-efx-attrnames = { path = "../efx-attrnames" }
+efx-core = { workspace = true, features = ["doc-prelude"] }
+efx-attrnames = { workspace = true }
 trybuild = "1.0"
 # For the eframe example
 eframe = "0.32"
