@@ -37,9 +37,7 @@ efx!(Ui::default(), r#"
 
 **Where it lives**
 
-```
-/efx-sandbox
-```
+`/efx-sandbox`
 
 This crate is part of the workspace and is **not published**.
 

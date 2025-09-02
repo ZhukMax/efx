@@ -63,7 +63,7 @@ impl Tag for TextField {
     }
 }
 
-#[derive(Clone, Debug, AttrNames)]
+#[derive(Clone, AttrNames)]
 struct Attributes {
     value: Expr,
     hint: Option<String>,
