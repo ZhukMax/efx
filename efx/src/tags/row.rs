@@ -4,7 +4,7 @@ use crate::utils::attr::*;
 use efx_attrnames::AttrNames;
 use efx_core::Element;
 use proc_macro2::TokenStream;
-use quote::{ToTokens, quote};
+use quote::{quote, ToTokens};
 
 pub struct Row {
     attributes: Attributes,

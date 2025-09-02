@@ -4,7 +4,7 @@ use crate::utils::expr::expr_req;
 use efx_attrnames::AttrNames;
 use efx_core::Element;
 use proc_macro2::TokenStream;
-use quote::{ToTokens, quote};
+use quote::{quote, ToTokens};
 use syn::Expr;
 
 pub struct TextField {
@@ -63,7 +63,7 @@ impl Tag for TextField {
     }
 }
 
-#[derive(Clone, Debug, AttrNames)]
+#[derive(Clone, AttrNames)]
 struct Attributes {
     value: Expr,
     hint: Option<String>,

@@ -1,7 +1,7 @@
 use crate::tags::*;
 use efx_core::{Element, Node};
 use proc_macro2::TokenStream;
-use quote::{ToTokens, quote};
+use quote::{quote, ToTokens};
 
 pub(crate) fn render_nodes_as_stmts<UI: ToTokens>(ui: &UI, nodes: &[Node]) -> TokenStream {
     let mut out = TokenStream::new();
