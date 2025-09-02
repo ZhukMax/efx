@@ -1,4 +1,4 @@
-use eframe::{NativeOptions, egui};
+use eframe::{egui, NativeOptions};
 use efx::efx;
 
 fn main() -> eframe::Result<()> {

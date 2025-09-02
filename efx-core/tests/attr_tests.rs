@@ -1,4 +1,4 @@
-use efx_core::attr::{Rgba, parse_bool, parse_color_rgba, parse_enum, parse_f32};
+use efx_core::attr::{parse_bool, parse_color_rgba, parse_enum, parse_f32, Rgba};
 
 fn rgba(r: u8, g: u8, b: u8, a: u8) -> Rgba {
     Rgba { r, g, b, a }

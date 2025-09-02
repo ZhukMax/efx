@@ -3,8 +3,8 @@ name = "efx"
 description = "Rust XML templating engine for building egui UIs with procedural macros"
 authors = ["Max Zhuk <mail@zhukmax.com>"]
 version = "0.5.0"
-edition = "2024"
-rust-version = "1.85"
+edition = "2021"
+rust-version = "1.75"
 license = "MIT OR Apache-2.0"
 readme = "../README.md"
 repository = "https://github.com/ZhukMax/efx"
@@ -28,15 +28,25 @@ maintenance = { status = "actively-developed" }
 [lib]
 proc-macro = true
 
+[features]
+default = []
+attrnames-info = []
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = [
+    'cfg(feature, values("attrnames-info"))',
+] }
+
 [dependencies]
 syn = { version = "2.0", features = ["full"] }
 quote = "1.0"
 proc-macro2 = "1.0"
-efx-core = { version = "1.1", path = "../efx-core" }
-efx-attrnames = { version = "0.1", path = "../efx-attrnames" }
+efx-core = { workspace = true }
+efx-attrnames = { workspace = true }
 
 [dev-dependencies]
-efx-core = { path = "../efx-core", features = ["doc-prelude"] }
+efx-core = { workspace = true, features = ["doc-prelude"] }
+efx-attrnames = { workspace = true }
 trybuild = "1.0"
 # For the eframe example
 eframe = "0.32"

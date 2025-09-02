@@ -1,6 +1,6 @@
 use efx_core::Node;
 use proc_macro2::TokenStream;
-use quote::{ToTokens, quote};
+use quote::{quote, ToTokens};
 
 pub fn render_children_stmt<UI: ToTokens>(ui_ident: &UI, children: &[Node]) -> TokenStream {
     let mut out = TokenStream::new();
