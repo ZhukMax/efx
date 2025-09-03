@@ -3,77 +3,6 @@
 > Starting with 0.5 some tags support attributes.
 > Unknown attributes result in `compile_error!`.
 
-### `<Window>`
-
-An independent floating window (overlay) with optional frame and persistent state.
-
-**Children:** rendered inside the window.
-
-**Required attributes**
-- `title="string"` — window title.
-
-**Optional**
-- `id="string"` — egui `Id` to persist window state (position/size). If omitted, egui derives an id from the title.
-
-**Behavior**
-- `open="{expr_bool}"` — binds to a boolean state; user closing the window writes back to the expression.
-- `movable="true|false"` — allow dragging.
-- `resizable="true|false"` — allow resizing.
-- `collapsible="true|false"` — allow collapsing to title bar.
-- `title-bar="true|false"` — show/hide title bar.
-- `enabled="true|false"` — disable all contents when false.
-- `constrain="true|false"` — constrain to viewport.
-- `auto-sized="true"` — size to fit content initially.
-
-**Positioning**
-- `default-x="number"`, `default-y="number"` — initial position.
-- `pos-x="number"`, `pos-y="number"` — force current position each frame.
-- `anchor-h="left|center|right"`, `anchor-v="top|center|bottom"`, `anchor-x="number"`, `anchor-y="number"` — anchor to a screen corner/edge with an offset.
-
-**Sizing**
-- `default-width`, `default-height` — initial size.
-- `min-width`, `min-height` — lower bounds.
-- `max-width`, `max-height` — upper bounds.
-
-**Frame & styling**
-- `frame="true|false"` — enable/disable default frame (default: `true`).
-- `fill="#RRGGBB[AA]"` — background color.
-- `stroke-width="number"` — border width.
-- `stroke-color="#RRGGBB[AA]"` — border color.
-- `padding`, `padding-left|right|top|bottom` — inner margin.
-- `margin`, `margin-left|right|top|bottom` — outer margin.
-
-**Example**
-```xml
-<Window
-        id="settings"
-        title="Settings"
-        open="{self.show_settings}"
-        movable="true"
-        resizable="true"
-        default-width="360"
-        default-height="240"
-        anchor-h="right"
-        anchor-v="top"
-        anchor-x="-12"
-        anchor-y="12"
-        fill="#14161B"
-        stroke-width="1"
-        stroke-color="#262A33"
->
-  <Column gap="8" padding="8">
-    <Label bold="true">Preferences</Label>
-    <Separator/>
-    <Row gap="8">
-      <Label>Theme</Label>
-      <Button min_width="120">System</Button>
-      <Button min_width="120">Dark</Button>
-      <Button min_width="120">Light</Button>
-    </Row>
-  </Column>
-</Window>
-```
-
 ### `Column`
 Vertical container. Generates `ui.vertical(|ui| { ... })`.
 
@@ -110,132 +39,6 @@ efx!(Ui::default(), r#"<Row gap="8" padding="4" align="center"><Label>A</Label><
 
 efx!(Ui::default(), r#"<Row wrap="true"><Label>Item1</Label><Label>Item2</Label><Label>Item3</Label></Row>"#);
 
-```
-
-### `Label`
-Text widget. Only text and interpolations (`{expr}`) in child nodes are allowed.
-
-**Attributes**
-
-- `color="name|#RRGGBB[AA]"` — text color.
-- `size="N"` — font size (f32).
-- `bold="true|false"`.
-- `italic="true|false"`.
-- `underline="true|false"`.
-- `strike="true|false"`.
-- `monospace="true|false"`.
-- `wrap="true|false"` — enable line wrapping.
-
-```rust
-use efx_core::doc_prelude::*;
-use efx::*;
-
-efx!(Ui::default(), r##"<Label color="#66CCFF" size="16" bold="true">Hello user</Label>"##);
-```
-
-### `Separator`
-Self-closing divider. No children allowed (otherwise `compile_error!`).
-
-**Attributes**
-
-- `space="N"` — uniform spacing before & after (f32).
-- `space_before="N"` — spacing above.
-- `space_after="N"` — spacing below.
-
-```rust
-use efx_core::doc_prelude::*;
-use efx::*;
-
-efx!(Ui::default(), r#"<Separator space="12"/>"#);
-efx!(Ui::default(), r#"<Separator space_before="8" space_after="4"/>"#);
-```
-
-```rust,compile_fail
-use efx_core::doc_prelude::*;
-use efx::*;
-
-/// compile_fail
-efx!(Ui::default(), "<Separator>child</Separator>");
-```
-
-### `Button`
-Button is the only tag that returns a response value (`Resp`) at the root of an expression.
-
-**Attributes**
-
-- `fill="color`" — background fill color.
-- `rounding="N"` — rounding radius (f32).
-- `min_width="N", min_height="N"` — minimum size.
-- `frame="true|false"` — draw background/border.
-- `enabled="true|false"` — disable/enable button.
-- `tooltip="text"` — hover tooltip.
-
-```rust
-use efx_core::doc_prelude::*;
-use efx::*;
-
-let resp: Resp = efx!(Ui::default(), r#"<Button rounding="8" enabled="false" tooltip="Soon">Run</Button>"#);
-assert!(!resp.clicked());
-```
-
-### `Hyperlink`
-Clickable link widget. Generates `ui.hyperlink(url)` or `ui.hyperlink_to(label, url)`.
-
-**Attributes**
-
-- `url="..."` — destination address (string, required).
-- `open_external="true|false"` — open link in system browser (default true).
-- `color="name|#RRGGBB[AA]"` — link text color.
-- `underline="true|false"` — underline link text (default true).
-- `tooltip="text"` — hover tooltip.
-
-Cross-platform usage
-
-- **Web:** renders as standard `<a>` link.
-- **Desktop (eframe, bevy_egui):** opens system browser via `ui.hyperlink(...)`.
-- **Game/tool overlays:** convenient way to link to docs, repos, or help.
-- **Offline apps:** with custom URL schemes (e.g. `help://topic`) may open in-app help instead of browser.
-
-```rust
-use efx_core::doc_prelude::*;
-use efx::*;
-
-efx!(Ui::default(), r##"
-    <Column>
-        <Hyperlink url="https://efxui.com" color="#66CCFF" tooltip="Project site"/>
-        <Hyperlink url="help://about" open_external="false">About</Hyperlink>
-    </Column>
-"##);
-```
-
-### `TextField`
-Single-line or multi-line text input. Generates `egui::TextEdit` and inserts it via `ui.add(...)`. Must be self-closing (no children).
-
-**Attributes**
-
-- `value="<expr>"` — **required**. Rust lvalue expression of type `String`, e.g. `state.name`. The generator takes `&mut (<expr>)` automatically.
-- `hint="text"` — placeholder text shown when empty.
-- `password="true|false"` — mask characters (applies to single-line; ignored with `multiline="true"`).
-- `width="N"` — desired width in points (f32).
-- `multiline="true|false"` — multi-line editor (`TextEdit::multiline`).
-
-```rust
-use efx_core::doc_prelude::*;
-use efx::*;
-
-#[derive(Default)]
-struct State { name: String }
-
-let mut state = State::default();
-
-// Single-line with placeholder and width
-efx!(Ui::default(), r#"<TextField value="state.name" hint="Your name" width="220"/>"#);
-
-// Password field (single-line)
-efx!(Ui::default(), r#"<TextField value="state.name" password="true"/>"#);
-
-// Multiline editor
-efx!(Ui::default(), r#"<TextField value="state.name" multiline="true" width="320"/>"#);
 ```
 
 ### `CentralPanel`
@@ -426,6 +229,203 @@ efx!(Ui::default(), r#"
     </Column>
   </ScrollArea>
 "#);
+```
+
+### `<Window>`
+
+An independent floating window (overlay) with optional frame and persistent state.
+
+**Children:** rendered inside the window.
+
+**Required attributes**
+- `title="string"` — window title.
+
+**Optional**
+- `id="string"` — egui `Id` to persist window state (position/size). If omitted, egui derives an id from the title.
+
+**Behavior**
+- `open="{expr_bool}"` — binds to a boolean state; user closing the window writes back to the expression.
+- `movable="true|false"` — allow dragging.
+- `resizable="true|false"` — allow resizing.
+- `collapsible="true|false"` — allow collapsing to title bar.
+- `title-bar="true|false"` — show/hide title bar.
+- `enabled="true|false"` — disable all contents when false.
+- `constrain="true|false"` — constrain to viewport.
+- `auto-sized="true"` — size to fit content initially.
+
+**Positioning**
+- `default-x="number"`, `default-y="number"` — initial position.
+- `pos-x="number"`, `pos-y="number"` — force current position each frame.
+- `anchor-h="left|center|right"`, `anchor-v="top|center|bottom"`, `anchor-x="number"`, `anchor-y="number"` — anchor to a screen corner/edge with an offset.
+
+**Sizing**
+- `default-width`, `default-height` — initial size.
+- `min-width`, `min-height` — lower bounds.
+- `max-width`, `max-height` — upper bounds.
+
+**Frame & styling**
+- `frame="true|false"` — enable/disable default frame (default: `true`).
+- `fill="#RRGGBB[AA]"` — background color.
+- `stroke-width="number"` — border width.
+- `stroke-color="#RRGGBB[AA]"` — border color.
+- `padding`, `padding-left|right|top|bottom` — inner margin.
+- `margin`, `margin-left|right|top|bottom` — outer margin.
+
+**Example**
+```xml
+<Window
+        id="settings"
+        title="Settings"
+        open="{self.show_settings}"
+        movable="true"
+        resizable="true"
+        default-width="360"
+        default-height="240"
+        anchor-h="right"
+        anchor-v="top"
+        anchor-x="-12"
+        anchor-y="12"
+        fill="#14161B"
+        stroke-width="1"
+        stroke-color="#262A33"
+>
+  <Column gap="8" padding="8">
+    <Label bold="true">Preferences</Label>
+    <Separator/>
+    <Row gap="8">
+      <Label>Theme</Label>
+      <Button min_width="120">System</Button>
+      <Button min_width="120">Dark</Button>
+      <Button min_width="120">Light</Button>
+    </Row>
+  </Column>
+</Window>
+```
+
+### `Label`
+Text widget. Only text and interpolations (`{expr}`) in child nodes are allowed.
+
+**Attributes**
+
+- `color="name|#RRGGBB[AA]"` — text color.
+- `size="N"` — font size (f32).
+- `bold="true|false"`.
+- `italic="true|false"`.
+- `underline="true|false"`.
+- `strike="true|false"`.
+- `monospace="true|false"`.
+- `wrap="true|false"` — enable line wrapping.
+
+```rust
+use efx_core::doc_prelude::*;
+use efx::*;
+
+efx!(Ui::default(), r##"<Label color="#66CCFF" size="16" bold="true">Hello user</Label>"##);
+```
+
+### `Separator`
+Self-closing divider. No children allowed (otherwise `compile_error!`).
+
+**Attributes**
+
+- `space="N"` — uniform spacing before & after (f32).
+- `space_before="N"` — spacing above.
+- `space_after="N"` — spacing below.
+
+```rust
+use efx_core::doc_prelude::*;
+use efx::*;
+
+efx!(Ui::default(), r#"<Separator space="12"/>"#);
+efx!(Ui::default(), r#"<Separator space_before="8" space_after="4"/>"#);
+```
+
+```rust,compile_fail
+use efx_core::doc_prelude::*;
+use efx::*;
+
+/// compile_fail
+efx!(Ui::default(), "<Separator>child</Separator>");
+```
+
+### `Button`
+Button is the only tag that returns a response value (`Resp`) at the root of an expression.
+
+**Attributes**
+
+- `fill="color`" — background fill color.
+- `rounding="N"` — rounding radius (f32).
+- `min_width="N", min_height="N"` — minimum size.
+- `frame="true|false"` — draw background/border.
+- `enabled="true|false"` — disable/enable button.
+- `tooltip="text"` — hover tooltip.
+
+```rust
+use efx_core::doc_prelude::*;
+use efx::*;
+
+let resp: Resp = efx!(Ui::default(), r#"<Button rounding="8" enabled="false" tooltip="Soon">Run</Button>"#);
+assert!(!resp.clicked());
+```
+
+### `Hyperlink`
+Clickable link widget. Generates `ui.hyperlink(url)` or `ui.hyperlink_to(label, url)`.
+
+**Attributes**
+
+- `url="..."` — destination address (string, required).
+- `open_external="true|false"` — open link in system browser (default true).
+- `color="name|#RRGGBB[AA]"` — link text color.
+- `underline="true|false"` — underline link text (default true).
+- `tooltip="text"` — hover tooltip.
+
+Cross-platform usage
+
+- **Web:** renders as standard `<a>` link.
+- **Desktop (eframe, bevy_egui):** opens system browser via `ui.hyperlink(...)`.
+- **Game/tool overlays:** convenient way to link to docs, repos, or help.
+- **Offline apps:** with custom URL schemes (e.g. `help://topic`) may open in-app help instead of browser.
+
+```rust
+use efx_core::doc_prelude::*;
+use efx::*;
+
+efx!(Ui::default(), r##"
+    <Column>
+        <Hyperlink url="https://efxui.com" color="#66CCFF" tooltip="Project site"/>
+        <Hyperlink url="help://about" open_external="false">About</Hyperlink>
+    </Column>
+"##);
+```
+
+### `TextField`
+Single-line or multi-line text input. Generates `egui::TextEdit` and inserts it via `ui.add(...)`. Must be self-closing (no children).
+
+**Attributes**
+
+- `value="<expr>"` — **required**. Rust lvalue expression of type `String`, e.g. `state.name`. The generator takes `&mut (<expr>)` automatically.
+- `hint="text"` — placeholder text shown when empty.
+- `password="true|false"` — mask characters (applies to single-line; ignored with `multiline="true"`).
+- `width="N"` — desired width in points (f32).
+- `multiline="true|false"` — multi-line editor (`TextEdit::multiline`).
+
+```rust
+use efx_core::doc_prelude::*;
+use efx::*;
+
+#[derive(Default)]
+struct State { name: String }
+
+let mut state = State::default();
+
+// Single-line with placeholder and width
+efx!(Ui::default(), r#"<TextField value="state.name" hint="Your name" width="220"/>"#);
+
+// Password field (single-line)
+efx!(Ui::default(), r#"<TextField value="state.name" password="true"/>"#);
+
+// Multiline editor
+efx!(Ui::default(), r#"<TextField value="state.name" multiline="true" width="320"/>"#);
 ```
 
 ### `<Resize>`

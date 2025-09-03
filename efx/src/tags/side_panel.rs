@@ -1,11 +1,11 @@
 use crate::tags::{Tag, TagAttributes};
 use crate::utils::attr::*;
-use crate::utils::panel::{Dim, FrameStyle, SizeOpts, emit_size_methods};
+use crate::utils::panel::{emit_size_methods, Dim, FrameStyle, SizeOpts};
 use crate::utils::render::render_children_stmt;
 use efx_attrnames::AttrNames;
 use efx_core::Element;
 use proc_macro2::TokenStream;
-use quote::{ToTokens, quote};
+use quote::{quote, ToTokens};
 
 pub struct SidePanel {
     attributes: Attributes,

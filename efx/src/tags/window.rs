@@ -6,7 +6,7 @@ use crate::utils::render::render_children_stmt;
 use efx_attrnames::AttrNames;
 use efx_core::Element;
 use proc_macro2::TokenStream;
-use quote::{ToTokens, quote};
+use quote::{quote, ToTokens};
 use syn::Expr;
 
 pub struct Window {
@@ -48,22 +48,20 @@ impl Tag for Window {
     }
 
     fn render<UI: ToTokens>(&self, ui: &UI) -> TokenStream {
-        let title = match &self.attributes.title {
-            Some(s) if !s.is_empty() => s,
-            _ => {
-                return quote! { compile_error!("efx: <Window> requires non-empty `title` attribute"); };
-            }
-        };
-
         let children = render_children_stmt(&quote!(ui), &self.element.children);
         let frame_ts = self.content(ui);
 
-        let mut win =
-            quote!( let mut __efx_window = egui::Window::new(#title).frame(__efx_frame); );
+        let title_ts = if let Some(t) = &self.attributes.title {
+            quote!( #t )
+        } else {
+            quote!("")
+        };
 
-        // id
+        let mut win = TokenStream::new();
         if let Some(id) = &self.attributes.id {
-            win.extend(quote!( __efx_window = __efx_window.id(egui::Id::new(#id)); ));
+            win.extend(quote! {
+                __efx_window = __efx_window.id(egui::Id::new(#id));
+            });
         }
 
         // behavior
@@ -71,7 +69,7 @@ impl Tag for Window {
             win.extend(quote!( __efx_window = __efx_window.movable(#b); ));
         }
         if let Some(b) = self.attributes.resizable {
-            win.extend(quote!( __efx_window = __efx_window.resizable(#b); ));
+            win.extend(quote! { __efx_window = __efx_window.resizable(#b); });
         }
         if let Some(b) = self.attributes.collapsible {
             win.extend(quote!( __efx_window = __efx_window.collapsible(#b); ));
@@ -168,32 +166,36 @@ impl Tag for Window {
             ));
         }
 
-        let open_bind = if let Some(expr) = &self.attributes.open_expr {
-            if !is_assignable_expr(expr) {
-                return quote! {
-                    compile_error!("efx: <Window> `open` must be an assignable boolean lvalue (e.g. {self.show_window})");
-                };
-            }
-            quote! {
-                let mut __efx_open = (#expr);
-                __efx_window = __efx_window.open(&mut __efx_open);
-                #expr = __efx_open;
-            }
-        } else {
-            quote!()
-        };
+        let (open_prefix, open_bind, open_writeback) =
+            if let Some(expr) = &self.attributes.open_expr {
+                (
+                    quote!( let mut __efx_open = (#expr); ),
+                    quote!( __efx_window = __efx_window.open(&mut __efx_open); ),
+                    quote!( #expr = __efx_open; ),
+                )
+            } else {
+                (quote!(), quote!(), quote!())
+            };
 
         quote! {{
             #frame_ts
-            #win
-            #open_bind
-            let __efx_ctx = #ui.ctx().clone();
-            // Explicitly limit the lifetime of the result of show(...)
+
+            #open_prefix
             {
-                let __efx_tmp = __efx_window.show(&__efx_ctx, |ui| { #children });
-                let _ = __efx_tmp;
+                let mut __efx_window = egui::Window::new(#title_ts);
+
+                #win
+
+                #open_bind
+
+                let __efx_ctx = #ui.ctx().clone();
+                {
+                    let __efx_tmp = __efx_window.show(&__efx_ctx, |ui| { #children });
+                    let _ = __efx_tmp; // drop
+                }
             }
 
+            #open_writeback
             // Nothing comes back out
             ()
         }}

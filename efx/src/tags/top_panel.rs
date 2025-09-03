@@ -3,7 +3,7 @@ use crate::utils::panel::*;
 use crate::utils::render::render_children_stmt;
 use efx_core::Element;
 use proc_macro2::TokenStream;
-use quote::{ToTokens, quote};
+use quote::{quote, ToTokens};
 
 pub struct TopPanel {
     attributes: Attributes,

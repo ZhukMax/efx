@@ -4,7 +4,7 @@ use crate::utils::buffer::build_buffer_from_children;
 use efx_attrnames::AttrNames;
 use efx_core::Element;
 use proc_macro2::{Span, TokenStream};
-use quote::{ToTokens, quote};
+use quote::{quote, ToTokens};
 use syn::LitStr;
 
 pub struct Heading {

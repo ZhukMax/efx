@@ -23,7 +23,7 @@ pub use heading::Heading;
 pub use hyperlink::Hyperlink;
 pub use label::Label;
 use proc_macro2::TokenStream;
-use quote::{ToTokens, quote};
+use quote::{quote, ToTokens};
 pub use resize::Resize;
 pub use row::Row;
 pub use scroll_area::ScrollArea;
