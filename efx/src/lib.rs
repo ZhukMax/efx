@@ -6,6 +6,7 @@
 
 mod attr_adapters;
 mod input;
+mod interfaces;
 mod render;
 mod tags;
 mod utils;

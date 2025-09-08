@@ -1,4 +1,4 @@
-use crate::tags::{Tag, TagAttributes};
+use crate::interfaces::*;
 use crate::utils::attr::*;
 use crate::utils::panel::{emit_size_methods, Dim, FrameStyle, SizeOpts};
 use crate::utils::render::render_children_stmt;

@@ -113,19 +113,5 @@ impl eframe::App for App {
             </CentralPanel>
         "##
         );
-
-        // egui::CentralPanel::default().show(ctx, |ui| {
-        //     ui.horizontal(|ui| {
-        //         let inc = efx!(ui, r#"<Button tooltip="Increment">+1</Button>"#);
-        //         if inc.clicked() { self.counter += 1; }
-        //
-        //         let dec = efx!(ui, r#"<Button tooltip="Decrement">-1</Button>"#);
-        //         if dec.clicked() { self.counter -= 1; }
-        //     });
-        //
-        //     // Текст
-        //     let _ = efx!(ui, r#"<Label>Counter: {self.counter}</Label>"#);
-        //
-        // });
     }
 }

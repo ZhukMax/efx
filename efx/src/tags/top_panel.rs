@@ -1,4 +1,4 @@
-use crate::tags::{Tag, TagAttributes};
+use crate::interfaces::*;
 use crate::utils::panel::*;
 use crate::utils::render::render_children_stmt;
 use efx_core::Element;

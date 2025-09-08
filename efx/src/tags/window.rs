@@ -1,4 +1,4 @@
-use crate::tags::{Tag, TagAttributes};
+use crate::interfaces::*;
 use crate::utils::attr::*;
 use crate::utils::expr::expr_opt;
 use crate::utils::panel::*;

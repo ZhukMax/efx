@@ -46,5 +46,101 @@
       "<Separator/>"
     ],
     "description": "EFx Separator"
+  },
+  "Image (texture)": {
+    "prefix": "Image",
+    "body": [
+      "<Image texture=\"$1\" width=\"$2\" height=\"$3\" rounding=\"$4\" clickable=\"$5\" tooltip=\"$6\"/>"
+    ],
+    "description": "EFx Image from texture/handle"
+  },
+  "Image (src)": {
+    "prefix": "ImageSrc",
+    "body": [
+      "<Image src=\"$1\" max-width=\"$2\" maintain-aspect=\"$3\" id=\"$4\"/>"
+    ],
+    "description": "EFx Image from URI/path"
+  },
+  "Resize": {
+    "prefix": "Resize",
+    "body": [
+      "<Resize id=\"$1\" default-height=\"$2\" min-height=\"$3\" max-height=\"$4\">",
+      "  $0",
+      "</Resize>"
+    ],
+    "description": "EFx Resize container"
+  },
+  "TextField": {
+    "prefix": "TextField",
+    "body": [
+      "<TextField value=\"$1\" hint=\"$2\"/>"
+    ],
+    "description": "EFx TextField"
+  },
+  "TextField (password)": {
+    "prefix": "Password",
+    "body": [
+      "<TextField value=\"$1\" hint=\"$2\" password=\"true\"/>"
+    ],
+    "description": "EFx TextField as password"
+  },
+  "Hyperlink": {
+    "prefix": "Hyperlink",
+    "body": [
+      "<Hyperlink url=\"$1\" open_external=\"$2\" color=\"$3\" tooltip=\"$4\">$0</Hyperlink>"
+    ],
+    "description": "EFx Hyperlink with text"
+  },
+  "Hyperlink (self-closing)": {
+    "prefix": "HyperlinkSelf",
+    "body": [
+      "<Hyperlink url=\"$1\" open_external=\"$2\" color=\"$3\" tooltip=\"$4\"/>"
+    ],
+    "description": "EFx Hyperlink (no inner text)"
+  },
+  "ScrollArea": {
+    "prefix": "ScrollArea",
+    "body": [
+      "<ScrollArea axis=\"$1\" max-height=\"$2\" always-show=\"$3\" id=\"$4\">",
+      "  $0",
+      "</ScrollArea>"
+    ],
+    "description": "EFx ScrollArea (vertical|horizontal|both)"
+  },
+  "TopPanel": {
+    "prefix": "TopPanel",
+    "body": [
+      "<TopPanel id=\"$1\" default-height=\"$2\" resizable=\"$3\" fill=\"$4\" stroke-width=\"$5\" stroke-color=\"$6\">",
+      "  $0",
+      "</TopPanel>"
+    ],
+    "description": "EFx TopPanel"
+  },
+  "BottomPanel": {
+    "prefix": "BottomPanel",
+    "body": [
+      "<BottomPanel id=\"$1\" default-height=\"$2\" resizable=\"$3\" fill=\"$4\" stroke-width=\"$5\" stroke-color=\"$6\">",
+      "  $0",
+      "</BottomPanel>"
+    ],
+    "description": "EFx BottomPanel"
+  },
+  "SidePanel": {
+    "prefix": "SidePanel",
+    "body": [
+      "<SidePanel side=\"$1\" id=\"$2\" default-width=\"$3\" min-width=\"$4\" resizable=\"$5\" fill=\"$6\" stroke-width=\"$7\" stroke-color=\"$8\">",
+      "  $0",
+      "</SidePanel>"
+    ],
+    "description": "EFx SidePanel (side=left|right)"
+  },
+  "CentralPanel": {
+    "prefix": "CentralPanel",
+    "body": [
+      "<CentralPanel fill=\"$1\" padding=\"$2\" stroke-width=\"$3\" stroke-color=\"$4\">",
+      "  $0",
+      "</CentralPanel>"
+    ],
+    "description": "EFx CentralPanel"
   }
 }

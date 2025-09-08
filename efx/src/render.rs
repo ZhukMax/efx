@@ -1,3 +1,4 @@
+use crate::interfaces::*;
 use crate::tags::*;
 use efx_core::{Element, Node};
 use proc_macro2::TokenStream;

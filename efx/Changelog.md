@@ -1,8 +1,9 @@
 ## Changelog
 
 #### 0.6
-- New Tags: Heading, Image, Grid, Table, Tabs
-- Added Panel Tags: Window, SidePanel, TopPanel, BottomPanel, Panel
+- New Tags: Heading, Image, **Grid, Table, Tabs**
+- Added Panel Tags: Window, SidePanel, TopPanel, BottomPanel, **Panel**
+- **Event attributes**
 - Sandbox
 - Examples & tests
 
