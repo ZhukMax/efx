@@ -47,6 +47,7 @@ pub(crate) fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> TokenS
         "Row" => render_tag::<Row>(ui, el),
         "Column" => render_tag::<Column>(ui, el),
         "Resize" => render_tag::<Resize>(ui, el),
+        "Image" => render_tag::<Image>(ui, el),
         "Label" => render_tag::<Label>(ui, el),
         "Button" => {
             let btn_expr = render_tag::<Button>(ui, el);

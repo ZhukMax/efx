@@ -1,8 +1,8 @@
 ## Changelog
 
 #### 0.6
-- New Tags: Heading, Image, Grid
-- Added Panel Tags: Window, SidePanel, TopPanel, BottomPanel
+- New Tags: Heading, Image, Grid, Table, Tabs
+- Added Panel Tags: Window, SidePanel, TopPanel, BottomPanel, Panel
 - Sandbox
 - Examples & tests
 
