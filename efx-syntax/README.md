@@ -18,7 +18,7 @@ Build VSIX:
 # Inside the package folder
 vsce package   # or: npx @vscode/vsce package
 ```
-Will create a file like `efx-syntax-0.5.0.vsix`, which can be installed via the palette.
+Will create a file like `efx-syntax-0.6.0.vsix`, which can be installed via the palette.
 
 ### JetBrains / RustRover
 1. Settings → Editor → **TextMate Bundles** → `+` → select the root folder of the package (where `syntaxes/efx.tmLanguage.json` is located).
