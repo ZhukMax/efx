@@ -1,0 +1,50 @@
+{
+  "Window": {
+    "prefix": "Window",
+    "body": [
+      "<Window id=\"$1\" title=\"$2\" open=\"$3\" movable=\"$4\" resizable=\"$5\" default-width=\"$6\" default-height=\"$7\">",
+      "  $0",
+      "</Window>"
+    ],
+    "description": "EFx Window"
+  },
+  "Label": {
+    "prefix": "Label",
+    "body": [
+      "<Label size=\"$1\" bold=\"$2\">$0</Label>"
+    ],
+    "description": "EFx Label"
+  },
+  "Button": {
+    "prefix": "Button",
+    "body": [
+      "<Button rounding=\"$1\" enabled=\"$2\" tooltip=\"$3\">$0</Button>"
+    ],
+    "description": "EFx Button"
+  },
+  "Row": {
+    "prefix": "Row",
+    "body": [
+      "<Row gap=\"$1\">",
+      "  $0",
+      "</Row>"
+    ],
+    "description": "EFx Row"
+  },
+  "Column": {
+    "prefix": "Column",
+    "body": [
+      "<Column gap=\"$1\">",
+      "  $0",
+      "</Column>"
+    ],
+    "description": "EFx Column"
+  },
+  "Separator": {
+    "prefix": "Separator",
+    "body": [
+      "<Separator/>"
+    ],
+    "description": "EFx Separator"
+  }
+}

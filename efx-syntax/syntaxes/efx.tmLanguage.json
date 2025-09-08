@@ -1,0 +1,95 @@
+{
+  "scopeName": "text.efx",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#tags"
+    },
+    {
+      "include": "#entities"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.block.efx",
+          "begin": "<!--",
+          "end": "-->"
+        }
+      ]
+    },
+    "tags": {
+      "patterns": [
+        {
+          "name": "meta.tag.efx",
+          "begin": "(</?)([A-Z][A-Za-z0-9_]*)",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.definition.tag.begin.efx"
+            },
+            "2": {
+              "name": "entity.name.tag.efx"
+            }
+          },
+          "end": "(/?>)",
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.definition.tag.end.efx"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#attributes"
+            }
+          ]
+        }
+      ]
+    },
+    "attributes": {
+      "patterns": [
+        {
+          "name": "entity.other.attribute-name.efx",
+          "match": "\\b([a-zA-Z_][a-zA-Z0-9_-]*)\\b(?=\\s*=)"
+        },
+        {
+          "name": "keyword.operator.assignment.efx",
+          "match": "="
+        },
+        {
+          "name": "string.quoted.double.efx",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "variable.other.member.efx",
+              "match": "\\b(self|ctx)(\\.[A-Za-z_][A-Za-z0-9_]*)+\\b"
+            },
+            {
+              "name": "constant.language.boolean.efx",
+              "match": "\\b(true|false)\\b"
+            },
+            {
+              "name": "constant.numeric.efx",
+              "match": "\\b[0-9]+(\\.[0-9]+)?\\b"
+            },
+            {
+              "name": "constant.other.color.hex.efx",
+              "match": "#[0-9A-Fa-f]{3,8}\\b"
+            }
+          ]
+        }
+      ]
+    },
+    "entities": {
+      "patterns": [
+        {
+          "name": "constant.character.entity.efx",
+          "match": "&[A-Za-z0-9]+;"
+        }
+      ]
+    }
+  }
+}
