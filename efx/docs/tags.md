@@ -43,6 +43,36 @@ efx!(Ui::default(), r#"<Row wrap="true"><Label>Item1</Label><Label>Item2</Label>
 
 ---
 
+## `<Panel>`
+
+A lightweight frame container to group content with background, padding and stroke. Unlike `Top/Bottom/Side/CentralPanel`, this tag is not a context-root and can be placed anywhere in the UI.
+
+**Syntax**
+```xml
+<Panel fill="#15151A" padding="8" stroke-width="1" stroke-color="#262A33" id="card-1">
+  <Column gap="6">
+    <Label bold="true">Card title</Label>
+    <Label size="12" color="#AAAAAA">Some description</Label>
+  </Column>
+</Panel>
+```
+
+### Attributes
+
+| Name                                        | Type   | Description                                              |
+|---------------------------------------------|--------|----------------------------------------------------------|
+| `frame`                                     | bool   | `false` → `Frame::none()`, otherwise `Frame::default()`. |
+| `fill`                                      | color  | Background color.                                        |
+| `stroke-width`                              | f32    | Border width.                                            |
+| `stroke-color`                              | color  | Border color.                                            |
+| `padding` / `padding-left/right/top/bottom` | f32    | Inner margin.                                            |
+| `margin` / `margin-left/right/top/bottom`   | f32    | Outer margin.                                            |
+| `id`                                        | string | Stable `push_id` seed for the panel.                     |
+
+> Returns () (container). Children are rendered inside the frame.
+
+---
+
 ### `CentralPanel`
 
 Main content area that fills all remaining space. Wraps children in `egui::CentralPanel` and applies an optional `Frame`.

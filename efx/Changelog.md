@@ -2,10 +2,13 @@
 
 #### 0.6
 - New Tags: Heading, Image, **Grid, Table, Tabs**
-- Added Panel Tags: Window, SidePanel, TopPanel, BottomPanel, **Panel**
+- Added Panel Tags: Window, SidePanel, TopPanel, BottomPanel, Panel
 - **Event attributes**
+- `#[efx_component]` + `#[efx_slot]`
+- **Events: `onClick`, `onHover` sugar**
 - Sandbox
-- Examples & tests
+- More examples & tests
+- **CI: GitHub Actions matrix builds — eframe (native+wasm), bevy (native), winit+wgpu (native)**
 
 #### 0.5
 - Attribute rendering (efx-core)

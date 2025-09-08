@@ -40,6 +40,7 @@ pub(crate) fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> TokenS
     match el.name.as_str() {
         "Window" => render_tag::<Window>(ui, el),
         "Heading" => render_tag::<Heading>(ui, el),
+        "Panel" => render_tag::<Panel>(ui, el),
         "CentralPanel" => render_tag::<CentralPanel>(ui, el),
         "SidePanel" => render_tag::<SidePanel>(ui, el),
         "TopPanel" => render_tag::<TopPanel>(ui, el),

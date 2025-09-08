@@ -142,5 +142,14 @@
       "</CentralPanel>"
     ],
     "description": "EFx CentralPanel"
+  },
+  "Panel": {
+    "prefix": "Panel",
+    "body": [
+      "<Panel fill=\"$1\" padding=\"$2\" stroke-width=\"$3\" stroke-color=\"$4\" id=\"$5\">",
+      "  $0",
+      "</Panel>"
+    ],
+    "description": "EFx Panel (generic frame container)"
   }
 }
