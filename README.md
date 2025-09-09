@@ -1,10 +1,10 @@
 ![EFX — Rust templating for egui/eframe](efx/docs/efx_cover.png)
 
 # EFx
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
-[![Crates.io](https://img.shields.io/crates/v/efx.svg)](https://crates.io/crates/efx)
+[![Crates.io](https://img.shields.io/crates/v/efx.svg?color=green)](https://crates.io/crates/efx)
 ![Crates.io Version](https://img.shields.io/crates/v/efx-core?label=efx-core)
-[![MSRV](https://img.shields.io/badge/rustc-1.85%2B-blue.svg)](#)
+![Crates.io Version](https://img.shields.io/crates/v/efx-attrnames?label=efx-attrnames&color=red)
+[![MSRV](https://img.shields.io/badge/rustc-1.75%2B-blue.svg?logo=rust)](#)
 [![Docs.rs](https://docs.rs/efx/badge.svg)](https://docs.rs/efx)
 [![License](https://img.shields.io/crates/l/efx)](https://github.com/ZhukMax/efx/blob/main/LICENSE)
 ![Crates.io Total Downloads](https://img.shields.io/crates/d/efx)
@@ -88,7 +88,7 @@ At compile time the macro parses your snippet; at runtime it shows readable diag
 **TL;DR.** EFx is a minimalist XML DSL on top of `egui` that compiles to plain `ui.*` calls.
 The next three releases focus on expressiveness and first-class examples across popular `egui` runtimes:
 
-* **0.5 — Attributes & core tags:** type-checked attributes, `Heading`, `Hyperlink`, `Image`, `TextField`, `Grid`, plus `Window/CentralPanel/SidePanel`. Diagnostics & examples.
+* **0.5 — Attributes & core tags:** type-checked attributes, `Heading`, `Hyperlink`, `TextField`, plus `Window/CentralPanel/SidePanel`. Diagnostics & examples.
 * **0.6 — Components & events:** reusable components/slots, event sugar (`onClick`, etc.), classes/presets, Bevy examples.
 * **0.7 — Themes & layouts:** lightweight style sheets, extended containers (`Tabs/Table` behind `extras`), perf & polish.
 
@@ -176,11 +176,13 @@ Use the example in `examples/winit_wgpu_min.rs` as a starting point.
 
 ### Contributing
 
+[![PRs Welcome](https://img.shields.io/badge/PullRequest-welcome-brightgreen.svg?style=flat-square)]()
+
 * Start with the roadmap RFC: [EFX-0001](efx/docs/rfcs/EFX-0001-roadmap-0.5-0.7.md).
 * You can write me with your ideas on [mail@zhukmax.com](mailto:mail@zhukmax.com).
-* Open issues are grouped by milestones **0.5 / 0.6 / 0.7**.
+* Open issues are grouped by milestones **0.6 / 0.7 / 0.8**.
 * PRs that change behavior should reference the relevant RFC section.
-* Looking for help with: Bevy example(s), raw `winit+wgpu` example, attribute codegen & compile-fail tests, `TextField` docs.
+* Looking for help with: Bevy example(s), raw `winit+wgpu` example, attribute codegen & compile-fail tests, docs.
 
 ---
 
