@@ -1,9 +1,8 @@
 ## Changelog
 
 #### 0.6
-- New Tags: Heading, Image, **Grid, Table, Tabs**
+- New Tags: Heading, Image, **Grid, Table,** Tabs
 - Added Panel Tags: Window, SidePanel, TopPanel, BottomPanel, Panel
-- **Event attributes**
 - `#[efx_component]` + `#[efx_slot]`
 - **Events: `onClick`, `onHover` sugar**
 - Sandbox

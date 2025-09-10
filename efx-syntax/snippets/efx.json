@@ -151,5 +151,25 @@
       "</Panel>"
     ],
     "description": "EFx Panel (generic frame container)"
+  },
+  "Tabs": {
+    "prefix": "Tabs",
+    "body": [
+      "<Tabs active=\"$1\" gap=\"$2\">",
+      "  <Tab id=\"$3\" title=\"$4\">",
+      "    $0",
+      "  </Tab>",
+      "</Tabs>"
+    ],
+    "description": "EFx Tabs with one Tab"
+  },
+  "Tab": {
+    "prefix": "Tab",
+    "body": [
+      "<Tab id=\"$1\" title=\"$2\">",
+      "  $0",
+      "</Tab>"
+    ],
+    "description": "EFx Tab (child for <Tabs>)"
   }
 }

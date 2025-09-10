@@ -35,7 +35,7 @@ use efx::efx; // the macro
 ### Documentation
 You can see on web page https://docs.rs/efx/latest/efx/ or in files:
 
-- [Introduction](efx/docs/intro.md)
+- [Introduction](efx/docs/intro.md) ([🇫🇷 fr](efx/docs/fr/intro.md))
 - [Tags](efx/docs/tags.md)
 - [Guide](efx/docs/guide.md)
 
