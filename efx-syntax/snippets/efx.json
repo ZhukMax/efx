@@ -198,5 +198,46 @@
       "<Td>$0</Td>"
     ],
     "description": "EFx Table cell"
+  },
+  "DataTable": {
+    "prefix": "DataTable",
+    "body": [
+      "<DataTable id=\"$1\" striped=\"$2\" resizable=\"$3\" default-resizable=\"$4\" header-height=\"$5\" row-height=\"$6\" cell-align=\"$7\" cell-padding=\"$8\">",
+      "  <Columns>",
+      "    <Column mode=\"initial\" width=\"160\" resizable=\"true\"/>",
+      "    <Column mode=\"auto\"/>",
+      "    <Column mode=\"remainder\" resizable=\"true\" clip=\"true\"/>",
+      "  </Columns>",
+      "",
+      "  <Header>",
+      "    <Td><Label bold=\"true\">$9</Label></Td>",
+      "    <Td><Label bold=\"true\">$10</Label></Td>",
+      "    <Td><Label bold=\"true\">$11</Label></Td>",
+      "  </Header>",
+      "",
+      "  <Tr>",
+      "    <Td>$0</Td>",
+      "    <Td></Td>",
+      "    <Td></Td>",
+      "  </Tr>",
+      "</DataTable>"
+    ],
+    "description": "EFx DataTable (egui_extras::TableBuilder)"
+  },
+  "DataTable Column": {
+    "prefix": "DTColumn",
+    "body": [
+      "<Column mode=\"$1\" width=\"$2\" resizable=\"$3\" clip=\"$4\"/>"
+    ],
+    "description": "EFx DataTable <Column> (auto|initial|exact|remainder)"
+  },
+  "DataTable Row": {
+    "prefix": "DTRow",
+    "body": [
+      "<Tr height=\"$1\">",
+      "  <Td>$0</Td>",
+      "</Tr>"
+    ],
+    "description": "EFx DataTable row"
   }
 }
