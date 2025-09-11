@@ -171,5 +171,32 @@
       "</Tab>"
     ],
     "description": "EFx Tab (child for <Tabs>)"
+  },
+  "Table": {
+    "prefix": "Table",
+    "body": [
+      "<Table columns=\"$1\" striped=\"$2\" spacing-x=\"$3\" spacing-y=\"$4\" cell-align=\"$5\" id=\"$6\">",
+      "  <Tr>",
+      "    <Td>$0</Td>",
+      "  </Tr>",
+      "</Table>"
+    ],
+    "description": "EFx Table (Grid-based)"
+  },
+  "Tr": {
+    "prefix": "Tr",
+    "body": [
+      "<Tr>",
+      "  <Td>$0</Td>",
+      "</Tr>"
+    ],
+    "description": "EFx Table row"
+  },
+  "Td": {
+    "prefix": "Td",
+    "body": [
+      "<Td>$0</Td>"
+    ],
+    "description": "EFx Table cell"
   }
 }

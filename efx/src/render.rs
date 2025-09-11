@@ -54,6 +54,11 @@ pub(crate) fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> TokenS
             let msg = "efx: <Tab> is only allowed as a child of <Tabs>";
             quote! { compile_error!(#msg); }
         }
+        "Table" => render_tag::<Table>(ui, el),
+        "Tr" | "Td" => {
+            let msg = "efx: <Tr>/<Td> are only allowed inside <Table>";
+            quote! { compile_error!(#msg); }
+        }
         "Image" => render_tag::<Image>(ui, el),
         "Label" => render_tag::<Label>(ui, el),
         "Button" => {

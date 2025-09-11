@@ -682,3 +682,51 @@ Tabbed container. Controlled via a string-like `active` binding that holds the i
 - `<Tab>` is only allowed as a child of `<Tabs>` and may contain any regular EFx content in its body.
 
 - Returns `()` (container).
+
+---
+
+## `<Table>`, `<Tr>`, `<Td>`
+
+Lightweight tables built on top of `egui::Grid`. Suitable for most static layouts. For resizable/feature-rich tables we plan a `<DataTable>` based on `egui_extras::TableBuilder` (future work).
+
+**Syntax**
+```xml
+<Table columns="3" striped="true" spacing-x="8" spacing-y="4" cell-align="left" cell-padding="4" id="users">
+  <Tr>
+    <Td><Label bold="true">Name</Label></Td>
+    <Td><Label bold="true">Email</Label></Td>
+    <Td><Label bold="true">Role</Label></Td>
+  </Tr>
+
+  <Tr>
+    <Td><Label>Alice</Label></Td>
+    <Td><Label>alice@example.com</Label></Td>
+    <Td><Label>Admin</Label></Td>
+  </Tr>
+</Table>
+```
+
+**Attributes – `<Table>`**
+
+| Name           | Type   | Default  | Description                                      |
+|----------------|--------|----------|--------------------------------------------------|
+| `columns`      | int    | required | Number of columns (must be ≥ 1).                 |
+| `striped`      | bool   | `false`  | Alternate row background.                        |
+| `spacing-x`    | f32    | `8`      | Horizontal spacing between columns (px).         |
+| `spacing-y`    | f32    | `4`      | Vertical spacing between rows (px).              |
+| `cell-padding` | f32    | `0`      | Padding inside each cell (px).                   |
+| `cell-align`   | enum   | `left`   | Horizontal alignment: `left`, `center`, `right`. |
+| `id`           | string | —        | Stable id for grid instance.                     |
+
+**Rules**
+
+- Only `<Tr>` children are allowed inside `<Table>`.
+- `<Tr>` may only contain `<Td>` elements.
+- `colspan` / `rowspan` are not supported in this version (a compile error is emitted if used).
+
+Returns `()` (container). Content inside `<Td>` can be any EFx widgets.
+
+**Notes**
+
+- This implementation uses `egui::Grid` to keep dependencies minimal and performance high.
+- If you need column resizing, multi-row headers, scrolling inside the table, etc., we’ll introduce a `<DataTable>` tag based on `egui_extras::TableBuilder` behind an optional feature flag in a follow-up.
