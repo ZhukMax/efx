@@ -66,6 +66,11 @@ pub(crate) fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> TokenS
             let msg = "efx: <DataTable> requires feature `extras` (enable `egui_extras`)";
             quote! { compile_error!(#msg); }
         }
+        "Grid" => render_tag::<Grid>(ui, el),
+        "GridBreak" => {
+            let msg = "efx: <GridBreak> is only allowed inside <Grid>";
+            quote! { compile_error!(#msg); }
+        }
         "Image" => render_tag::<Image>(ui, el),
         "Label" => render_tag::<Label>(ui, el),
         "Button" => {

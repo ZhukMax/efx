@@ -36,8 +36,8 @@ use efx::efx; // the macro
 You can see on web page https://docs.rs/efx/latest/efx/ or in files:
 
 - [Introduction](efx/docs/intro.md) ([🇫🇷 fr](efx/docs/fr/intro.md))
-- [Tags](efx/docs/tags.md)
-- [Guide](efx/docs/guide.md)
+- [Tags](efx/docs/tags.md) ([🇫🇷 fr](efx/docs/fr/tags.md))
+- [Guide](efx/docs/guide.md) ([🇫🇷 fr](efx/docs/fr/guide.md))
 
 ---
 
@@ -88,7 +88,6 @@ At compile time the macro parses your snippet; at runtime it shows readable diag
 **TL;DR.** EFx is a minimalist XML DSL on top of `egui` that compiles to plain `ui.*` calls.
 The next three releases focus on expressiveness and first-class examples across popular `egui` runtimes:
 
-* **0.5 — Attributes & core tags:** type-checked attributes, `Heading`, `Hyperlink`, `TextField`, plus `Window/CentralPanel/SidePanel`. Diagnostics & examples.
 * **0.6 — Components & events:** reusable components/slots, event sugar (`onClick`, etc.), classes/presets, Bevy examples.
 * **0.7 — Themes & layouts:** lightweight style sheets, extended containers (`Tabs/Table` behind `extras`), perf & polish.
 

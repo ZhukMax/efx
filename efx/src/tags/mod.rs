@@ -4,6 +4,7 @@ pub mod central_panel;
 pub mod column;
 #[cfg(feature = "extras")]
 pub mod data_table;
+pub mod grid;
 pub mod heading;
 pub mod hyperlink;
 pub mod image;
@@ -26,6 +27,7 @@ pub use central_panel::CentralPanel;
 pub use column::Column;
 #[cfg(feature = "extras")]
 pub use data_table::DataTable;
+pub use grid::Grid;
 pub use heading::Heading;
 pub use hyperlink::Hyperlink;
 pub use image::Image;

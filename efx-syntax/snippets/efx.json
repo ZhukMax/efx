@@ -239,5 +239,21 @@
       "</Tr>"
     ],
     "description": "EFx DataTable row"
+  },
+  "Grid": {
+    "prefix": "Grid",
+    "body": [
+      "<Grid columns=\"$1\" spacing-x=\"$2\" spacing-y=\"$3\" cell-align=\"$4\" cell-padding=\"$5\" striped=\"$6\" id=\"$7\">",
+      "  $0",
+      "</Grid>"
+    ],
+    "description": "EFx Grid (egui::Grid-based layout)"
+  },
+  "GridBreak": {
+    "prefix": "GridBreak",
+    "body": [
+      "<GridBreak/>"
+    ],
+    "description": "EFx Grid row break"
   }
 }

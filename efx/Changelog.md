@@ -1,13 +1,16 @@
 ## Changelog
 
-#### 0.6
-- New Tags: Heading, Image, **Grid,** Table, Tabs, DataTable
-- Added Panel Tags: Window, SidePanel, TopPanel, BottomPanel, Panel
+#### 0.7 (conceivably)
+- CI: GitHub Actions matrix builds — eframe (native+wasm), bevy (native), winit+wgpu (native)
+- Events: `onClick`, `onHover` sugar
 - `#[efx_component]` + `#[efx_slot]`
-- **Events: `onClick`, `onHover` sugar**
+
+#### 0.6
+- New Tags: Heading, Image, Grid, Table, Tabs, DataTable
+- Added Panel Tags: Window, SidePanel, TopPanel, BottomPanel, Panel
 - Sandbox
 - More examples & tests
-- **CI: GitHub Actions matrix builds — eframe (native+wasm), bevy (native), winit+wgpu (native)**
+- Updated and added translation (🇫🇷) docs
 
 #### 0.5
 - Attribute rendering (efx-core)
