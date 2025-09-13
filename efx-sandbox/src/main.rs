@@ -1,5 +1,5 @@
 use eframe::{egui, NativeOptions};
-use efx::{efx, efx_ctx};
+use efx::efx_ctx;
 
 fn main() -> eframe::Result<()> {
     let native = NativeOptions::default();
@@ -86,6 +86,12 @@ impl eframe::App for App {
                       <Label monospace="true">[12:00:01] Ready.</Label>
                       <Label monospace="true">[12:00:02] Build succeeded.</Label>
                     </Column>
+                    <Grid columns="3" spacing-x="8" spacing-y="4" cell-align="left" cell-padding="4" striped="true" id="users">
+                      <Label>A</Label>
+                      <Label>B</Label>
+                      <GridBreak/>
+                      <Button>Ok</Button>
+                    </Grid>
                   </ScrollArea>
                 </Resize>
 

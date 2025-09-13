@@ -15,7 +15,6 @@ use quote::{quote, ToTokens};
 pub struct Grid {
     attributes: Attributes,
     items: Vec<Item>,
-    element: Element,
 }
 
 impl Tag for Grid {
@@ -46,7 +45,6 @@ impl Tag for Grid {
         Ok(Self {
             attributes,
             items,
-            element: el.clone(),
         })
     }
 
