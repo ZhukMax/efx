@@ -14,7 +14,7 @@
 
 **Simplicity and Convenience — XML, 🚀 Speed ​​and 🔐 Security — Rust**
 
-**Easy like HTML, Fast like C**
+**Easy as HTML, Fast as C**
 
 You can embed arbitrary Rust expressions inside braces (`{...}`).
 
