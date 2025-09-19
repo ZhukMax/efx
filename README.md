@@ -12,6 +12,10 @@
 **EFx** — Rust 🦀 XML Template Engine for  [egui](https://github.com/emilk/egui)-based frameworks: [eframe](https://github.com/emilk/egui/tree/master/crates/eframe), [bevy_egui](https://github.com/vladbat00/bevy_egui), [egui-winit](https://crates.io/crates/egui-winit), [egui-miniquad](https://github.com/not-fl3/egui-miniquad).
 `efx!` is a proc-macro for writing tiny XML-like UI snippets in `eframe/egui`. It converts short tags into `egui` calls.
 
+**Simplicity and Convenience — XML, 🚀 Speed ​​and 🔐 Security — Rust**
+
+**Easy as HTML, Fast as C**
+
 You can embed arbitrary Rust expressions inside braces (`{...}`).
 
 ---
