@@ -12,7 +12,7 @@
 **EFx** — Rust 🦀 XML Template Engine for  [egui](https://github.com/emilk/egui)-based frameworks: [eframe](https://github.com/emilk/egui/tree/master/crates/eframe), [bevy_egui](https://github.com/vladbat00/bevy_egui), [egui-winit](https://crates.io/crates/egui-winit), [egui-miniquad](https://github.com/not-fl3/egui-miniquad).
 `efx!` is a proc-macro for writing tiny XML-like UI snippets in `eframe/egui`. It converts short tags into `egui` calls.
 
-**Simplicity and Convenience — XML, 🚀 Speed ​​and 🔐 Security — Rust**
+**Simplicity and Convenience — XML, 🚀 Speed and 🔐 Security — Rust**
 
 **Easy as HTML, Fast as C**
 
@@ -92,7 +92,6 @@ At compile time the macro parses your snippet; at runtime it shows readable diag
 **TL;DR.** EFx is a minimalist XML DSL on top of `egui` that compiles to plain `ui.*` calls.
 The next three releases focus on expressiveness and first-class examples across popular `egui` runtimes:
 
-* **0.6 — Components & events:** reusable components/slots, event sugar (`onClick`, etc.), classes/presets, Bevy examples.
 * **0.7 — Themes & layouts:** lightweight style sheets, extended containers (`Tabs/Table` behind `extras`), perf & polish.
 
 This plan is incremental and **non-breaking**; new features are opt-in. Priorities may change based on community feedback.

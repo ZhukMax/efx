@@ -215,7 +215,7 @@ impl Tag for DataTable {
                     &quote!(ui),
                     &match cell {
                         Node::Element(e) => &e.children,
-                        _ => &[],
+                        _ => &[] as &[Node],
                     },
                 );
                 cols_ts.extend(quote! {

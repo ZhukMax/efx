@@ -115,22 +115,22 @@ pub fn efx_ctx(input: TokenStream) -> TokenStream {
         .collect();
 
     let root = match roots.as_slice() {
-        // ровно один корневой элемент — OK
+        // exactly one root element - OK
         [Node::Element(el)] => el.clone(),
 
-        // пусто — ожидаем единственный корневой элемент
+        // empty - expect a single root element
         [] => {
             let msg = "efx_ctx!: expected a single root element";
             return quote! { compile_error!(#msg); }.into();
         }
 
-        // один узел, но не Element (например, текст/интерполяция) — ошибка
+        // one node but not an Element (e.g. text/interpolation) - error
         [_] => {
             let msg = "efx_ctx!: root must be an element";
             return quote! { compile_error!(#msg); }.into();
         }
 
-        // больше одного корневого узла — тоже ошибка
+        // more than one root node is also an error
         [_, ..] => {
             let msg = "efx_ctx!: expected a single root element";
             return quote! { compile_error!(#msg); }.into();
