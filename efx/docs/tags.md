@@ -603,32 +603,16 @@ or
 
 ### Examples
 
-**Texture handle/id (desktop-friendly):**
-
-```rust
-// returns egui::Response
-let resp = efx!(ui, r#"
-  <Image texture="self.logo_tex_id" width="128" height="128" rounding="8" clickable="true" tooltip="Open…"/>
-"#);
-if resp.clicked() {
-    // handle click
-}
-```
-
 **URI/path source (web / custom loader):**
 
-```rust
-let _ = efx!(ui, r#"
-  <Image src="assets/logo.png" max-width="200" maintain-aspect="true" id="logo-main"/>
-"#);
+```xml
+<Image src="assets/logo.png" max-width="200" maintain-aspect="true" id="logo-main"/>
 ```
 
 **Tint + background fill:**
 
-```rust
-let _ = efx!(ui, r#"
-  <Image texture="self.icon_tex" tint="#FFFFFFCC" bg-fill="#00000022" rounding="4"/>
-"#);
+```xml
+<Image texture="self.icon_tex" tint="#FFFFFFCC" bg-fill="#00000022" rounding="4"/>
 ```
 
 ### Notes

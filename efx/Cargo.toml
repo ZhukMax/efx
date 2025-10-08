@@ -39,7 +39,7 @@ unexpected_cfgs = { level = "warn", check-cfg = [
 ] }
 
 [dependencies]
-syn = { version = "2.0", features = ["full"] }
+syn = { version = "2.0", features = ["full", "extra-traits"] }
 quote = "1.0"
 proc-macro2 = "1.0"
 efx-core = { workspace = true }

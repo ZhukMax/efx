@@ -48,7 +48,6 @@ impl Tag for Image {
             quote!( let mut __efx_img = egui::Image::new(#expr); )
         } else if let Some(src) = &self.attributes.src {
             // src: string/uri
-            // NB: используем ImageSource::uri (есть в egui 0.32)
             quote!( let mut __efx_img = egui::Image::new(egui::ImageSource::uri(#src)); )
         } else {
             quote!( compile_error!("efx: <Image> requires either `texture` or `src`"); )
@@ -142,11 +141,11 @@ impl Tag for Image {
 
 #[derive(Clone, Debug, AttrNames)]
 struct Attributes {
-    // источник
     src: Option<String>,
+    #[attr(name = "texture")]
     texture_expr: Option<Expr>,
 
-    // размеры
+    // size
     width: Option<f32>,
     height: Option<f32>,
     #[attr(name = "max-width")]
@@ -156,13 +155,13 @@ struct Attributes {
     #[attr(name = "maintain-aspect")]
     maintain_aspect: Option<bool>,
 
-    // стили
+    // style
     tint: Option<TokenStream>,
     #[attr(name = "bg-fill")]
     bg_fill: Option<TokenStream>,
     rounding: Option<u8>,
 
-    // прочее
+    // other
     id: Option<String>,
     clickable: Option<bool>,
     tooltip: Option<String>,
