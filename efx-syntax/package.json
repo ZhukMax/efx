@@ -1,0 +1,39 @@
+{
+  "name": "efx-syntax",
+  "displayName": "EFx Syntax",
+  "description": "Syntax highlighting for EFx template files (.efx) and basic inline patterns.",
+  "version": "0.6.0",
+  "publisher": "efx",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "efx",
+        "aliases": [
+          "EFx",
+          "efx"
+        ],
+        "extensions": [
+          ".efx"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "efx",
+        "scopeName": "text.efx",
+        "path": "./syntaxes/efx.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "efx",
+        "path": "./snippets/efx.json"
+      }
+    ]
+  }
+}

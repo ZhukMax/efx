@@ -1,10 +1,10 @@
 ![EFX — Rust templating for egui/eframe](efx/docs/efx_cover.png)
 
 # EFx
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
-[![Crates.io](https://img.shields.io/crates/v/efx.svg)](https://crates.io/crates/efx)
+[![Crates.io](https://img.shields.io/crates/v/efx.svg?color=green)](https://crates.io/crates/efx)
 ![Crates.io Version](https://img.shields.io/crates/v/efx-core?label=efx-core)
-[![MSRV](https://img.shields.io/badge/rustc-1.85%2B-blue.svg)](#)
+![Crates.io Version](https://img.shields.io/crates/v/efx-attrnames?label=efx-attrnames&color=red)
+[![MSRV](https://img.shields.io/badge/rustc-1.75%2B-blue.svg?logo=rust)](#)
 [![Docs.rs](https://docs.rs/efx/badge.svg)](https://docs.rs/efx)
 [![License](https://img.shields.io/crates/l/efx)](https://github.com/ZhukMax/efx/blob/main/LICENSE)
 ![Crates.io Total Downloads](https://img.shields.io/crates/d/efx)
@@ -12,7 +12,7 @@
 **EFx** — Rust 🦀 XML Template Engine for  [egui](https://github.com/emilk/egui)-based frameworks: [eframe](https://github.com/emilk/egui/tree/master/crates/eframe), [bevy_egui](https://github.com/vladbat00/bevy_egui), [egui-winit](https://crates.io/crates/egui-winit), [egui-miniquad](https://github.com/not-fl3/egui-miniquad).
 `efx!` is a proc-macro for writing tiny XML-like UI snippets in `eframe/egui`. It converts short tags into `egui` calls.
 
-**Simplicity and Convenience — XML, 🚀 Speed ​​and 🔐 Security — Rust**
+**Simplicity and Convenience — XML, 🚀 Speed and 🔐 Security — Rust**
 
 **Easy as HTML, Fast as C**
 
@@ -25,7 +25,7 @@ You can embed arbitrary Rust expressions inside braces (`{...}`).
 Requires `egui` (the project currently uses `egui 0.32`). Add to `Cargo.toml`:
 ```toml
 [dependencies]
-efx = "0.5"
+efx = "0.6"
 egui = "0.32" # or egui-based framework
 ```
 
@@ -39,9 +39,9 @@ use efx::efx; // the macro
 ### Documentation
 You can see on web page https://docs.rs/efx/latest/efx/ or in files:
 
-- [Introduction](efx/docs/intro.md)
-- [Tags](efx/docs/tags.md)
-- [Guide](efx/docs/guide.md)
+- [Introduction](efx/docs/intro.md) ([🇫🇷 fr](efx/docs/fr/intro.md))
+- [Tags](efx/docs/tags.md) ([🇫🇷 fr](efx/docs/fr/tags.md))
+- [Guide](efx/docs/guide.md) ([🇫🇷 fr](efx/docs/fr/guide.md))
 
 ---
 
@@ -92,8 +92,6 @@ At compile time the macro parses your snippet; at runtime it shows readable diag
 **TL;DR.** EFx is a minimalist XML DSL on top of `egui` that compiles to plain `ui.*` calls.
 The next three releases focus on expressiveness and first-class examples across popular `egui` runtimes:
 
-* **0.5 — Attributes & core tags:** type-checked attributes, `Heading`, `Hyperlink`, `Image`, `TextField`, `Grid`, plus `Window/CentralPanel/SidePanel`. Diagnostics & examples.
-* **0.6 — Components & events:** reusable components/slots, event sugar (`onClick`, etc.), classes/presets, Bevy examples.
 * **0.7 — Themes & layouts:** lightweight style sheets, extended containers (`Tabs/Table` behind `extras`), perf & polish.
 
 This plan is incremental and **non-breaking**; new features are opt-in. Priorities may change based on community feedback.
@@ -127,7 +125,7 @@ EFx renders into any runtime that provides `&mut egui::Ui`. We officially build 
 ```toml
 # Cargo.toml
 [dependencies]
-efx    = "0.5"
+efx    = "0.6"
 eframe = "0.32"
 ```
 
@@ -145,7 +143,7 @@ egui::CentralPanel::default().show(ctx, |ui| {
 ```toml
 # Cargo.toml
 [dependencies]
-efx       = "0.5"
+efx       = "0.6"
 bevy      = "0.16"
 bevy_egui = "0.36"  # re-exports `egui`
 ```
@@ -166,7 +164,7 @@ bevy_egui::egui::Window::new("EFx").show(egui_ctx.ctx_mut(), |ui| {
 ```toml
 # Cargo.toml
 [dependencies]
-efx        = "0.5"
+efx        = "0.6"
 egui       = "0.32"
 egui-winit = "0.32"
 egui-wgpu  = "0.32"
@@ -180,11 +178,63 @@ Use the example in `examples/winit_wgpu_min.rs` as a starting point.
 
 ### Contributing
 
-* Start with the roadmap RFC: [EFX-0001](efx/docs/rfcs/EFX-0001-roadmap-0.5-0.7.md).
-* You can write me with your ideas on [mail@zhukmax.com](mailto:mail@zhukmax.com).
-* Open issues are grouped by milestones **0.5 / 0.6 / 0.7**.
-* PRs that change behavior should reference the relevant RFC section.
-* Looking for help with: Bevy example(s), raw `winit+wgpu` example, attribute codegen & compile-fail tests, `TextField` docs.
+[![PRs Welcome](https://img.shields.io/badge/PullRequest-welcome-brightgreen.svg?style=flat-square)]()
+
+**Thanks for considering a contribution!** Please follow this lightweight workflow:
+
+#### 1) Pick or propose an issue
+
+* **Claim an issue:** comment “I’d like to take this” (optionally add a brief plan/ETA).
+  The maintainer will assign it to you.
+* **Propose a new issue:** open a ticket with a minimal reproducible example (for bugs) or a short rationale (for features).
+  Start with the roadmap RFC: [EFX-0001](efx/docs/rfcs/EFX-0001-roadmap-0.5-0.7.md).
+
+> Tip: issues labeled `good first issue` are designed for first-time contributors.
+
+#### 2) Fork & branch
+
+* Fork the repository and create a **feature branch from `main`**:
+
+  ```bash
+  git checkout main
+  git pull
+  git checkout -b feat/short-topic
+  ```
+* Keep your branch focused on **one issue**.
+
+#### 3) Implement with tests & docs
+
+* Make the change and add tests/docs where it makes sense.
+* Local checks (examples build-only; no GUI run is required):
+
+  ```bash
+  cargo fmt --all
+  cargo clippy --all-targets -- -D warnings
+  cargo build --workspace --locked
+  cargo build -p efx --example eframe_demo --locked
+  rustup target add wasm32-unknown-unknown
+  cargo build -p efx --example eframe_demo --target wasm32-unknown-unknown --locked
+  ```
+
+#### 4) Open a Pull Request
+
+* Target the **next release branch** (e.g., `v0.6`, `v0.7`).
+  If the issue has a **milestone**, use the branch named after that milestone.
+* Link the issue (e.g., “Closes #123”) and fill the checklist below.
+
+**PR checklist**
+
+* [ ] References the related issue / RFC section when behavior changes.
+* [ ] CI is green (workspace build, examples, wasm32 build-only).
+* [ ] Tests/docs updated where applicable.
+* [ ] No unrelated changes.
+
+#### 5) Reviews & merge
+
+* Address review comments; small, focused PRs get merged faster.
+* If you go silent for **7 days**, the issue may be unassigned to keep momentum (you can re-claim it anytime).
+
+**Questions?** Reach out at [mail@zhukmax.com](mailto:mail@zhukmax.com).
 
 ---
 

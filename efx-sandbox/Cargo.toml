@@ -7,4 +7,5 @@ publish = false
 
 [dependencies]
 eframe = "0.32"
+egui = "0.32"
 efx = { path = "../efx" }

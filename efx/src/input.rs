@@ -13,3 +13,17 @@ impl syn::parse::Parse for EfxInput {
         Ok(EfxInput { ui, template })
     }
 }
+
+pub(crate) struct EfxCtxInput {
+    pub(crate) ctx: Expr,
+    pub(crate) template: LitStr,
+}
+
+impl syn::parse::Parse for EfxCtxInput {
+    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        let ctx = input.parse::<Expr>()?;
+        input.parse::<syn::Token![,]>()?;
+        let template = input.parse::<LitStr>()?;
+        Ok(EfxCtxInput { ctx, template })
+    }
+}

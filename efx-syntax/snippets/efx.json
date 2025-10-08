@@ -1,0 +1,259 @@
+{
+  "Window": {
+    "prefix": "Window",
+    "body": [
+      "<Window id=\"$1\" title=\"$2\" open=\"$3\" movable=\"$4\" resizable=\"$5\" default-width=\"$6\" default-height=\"$7\">",
+      "  $0",
+      "</Window>"
+    ],
+    "description": "EFx Window"
+  },
+  "Label": {
+    "prefix": "Label",
+    "body": [
+      "<Label size=\"$1\" bold=\"$2\">$0</Label>"
+    ],
+    "description": "EFx Label"
+  },
+  "Button": {
+    "prefix": "Button",
+    "body": [
+      "<Button rounding=\"$1\" enabled=\"$2\" tooltip=\"$3\">$0</Button>"
+    ],
+    "description": "EFx Button"
+  },
+  "Row": {
+    "prefix": "Row",
+    "body": [
+      "<Row gap=\"$1\">",
+      "  $0",
+      "</Row>"
+    ],
+    "description": "EFx Row"
+  },
+  "Column": {
+    "prefix": "Column",
+    "body": [
+      "<Column gap=\"$1\">",
+      "  $0",
+      "</Column>"
+    ],
+    "description": "EFx Column"
+  },
+  "Separator": {
+    "prefix": "Separator",
+    "body": [
+      "<Separator/>"
+    ],
+    "description": "EFx Separator"
+  },
+  "Image (texture)": {
+    "prefix": "Image",
+    "body": [
+      "<Image texture=\"$1\" width=\"$2\" height=\"$3\" rounding=\"$4\" clickable=\"$5\" tooltip=\"$6\"/>"
+    ],
+    "description": "EFx Image from texture/handle"
+  },
+  "Image (src)": {
+    "prefix": "ImageSrc",
+    "body": [
+      "<Image src=\"$1\" max-width=\"$2\" maintain-aspect=\"$3\" id=\"$4\"/>"
+    ],
+    "description": "EFx Image from URI/path"
+  },
+  "Resize": {
+    "prefix": "Resize",
+    "body": [
+      "<Resize id=\"$1\" default-height=\"$2\" min-height=\"$3\" max-height=\"$4\">",
+      "  $0",
+      "</Resize>"
+    ],
+    "description": "EFx Resize container"
+  },
+  "TextField": {
+    "prefix": "TextField",
+    "body": [
+      "<TextField value=\"$1\" hint=\"$2\"/>"
+    ],
+    "description": "EFx TextField"
+  },
+  "TextField (password)": {
+    "prefix": "Password",
+    "body": [
+      "<TextField value=\"$1\" hint=\"$2\" password=\"true\"/>"
+    ],
+    "description": "EFx TextField as password"
+  },
+  "Hyperlink": {
+    "prefix": "Hyperlink",
+    "body": [
+      "<Hyperlink url=\"$1\" open_external=\"$2\" color=\"$3\" tooltip=\"$4\">$0</Hyperlink>"
+    ],
+    "description": "EFx Hyperlink with text"
+  },
+  "Hyperlink (self-closing)": {
+    "prefix": "HyperlinkSelf",
+    "body": [
+      "<Hyperlink url=\"$1\" open_external=\"$2\" color=\"$3\" tooltip=\"$4\"/>"
+    ],
+    "description": "EFx Hyperlink (no inner text)"
+  },
+  "ScrollArea": {
+    "prefix": "ScrollArea",
+    "body": [
+      "<ScrollArea axis=\"$1\" max-height=\"$2\" always-show=\"$3\" id=\"$4\">",
+      "  $0",
+      "</ScrollArea>"
+    ],
+    "description": "EFx ScrollArea (vertical|horizontal|both)"
+  },
+  "TopPanel": {
+    "prefix": "TopPanel",
+    "body": [
+      "<TopPanel id=\"$1\" default-height=\"$2\" resizable=\"$3\" fill=\"$4\" stroke-width=\"$5\" stroke-color=\"$6\">",
+      "  $0",
+      "</TopPanel>"
+    ],
+    "description": "EFx TopPanel"
+  },
+  "BottomPanel": {
+    "prefix": "BottomPanel",
+    "body": [
+      "<BottomPanel id=\"$1\" default-height=\"$2\" resizable=\"$3\" fill=\"$4\" stroke-width=\"$5\" stroke-color=\"$6\">",
+      "  $0",
+      "</BottomPanel>"
+    ],
+    "description": "EFx BottomPanel"
+  },
+  "SidePanel": {
+    "prefix": "SidePanel",
+    "body": [
+      "<SidePanel side=\"$1\" id=\"$2\" default-width=\"$3\" min-width=\"$4\" resizable=\"$5\" fill=\"$6\" stroke-width=\"$7\" stroke-color=\"$8\">",
+      "  $0",
+      "</SidePanel>"
+    ],
+    "description": "EFx SidePanel (side=left|right)"
+  },
+  "CentralPanel": {
+    "prefix": "CentralPanel",
+    "body": [
+      "<CentralPanel fill=\"$1\" padding=\"$2\" stroke-width=\"$3\" stroke-color=\"$4\">",
+      "  $0",
+      "</CentralPanel>"
+    ],
+    "description": "EFx CentralPanel"
+  },
+  "Panel": {
+    "prefix": "Panel",
+    "body": [
+      "<Panel fill=\"$1\" padding=\"$2\" stroke-width=\"$3\" stroke-color=\"$4\" id=\"$5\">",
+      "  $0",
+      "</Panel>"
+    ],
+    "description": "EFx Panel (generic frame container)"
+  },
+  "Tabs": {
+    "prefix": "Tabs",
+    "body": [
+      "<Tabs active=\"$1\" gap=\"$2\">",
+      "  <Tab id=\"$3\" title=\"$4\">",
+      "    $0",
+      "  </Tab>",
+      "</Tabs>"
+    ],
+    "description": "EFx Tabs with one Tab"
+  },
+  "Tab": {
+    "prefix": "Tab",
+    "body": [
+      "<Tab id=\"$1\" title=\"$2\">",
+      "  $0",
+      "</Tab>"
+    ],
+    "description": "EFx Tab (child for <Tabs>)"
+  },
+  "Table": {
+    "prefix": "Table",
+    "body": [
+      "<Table columns=\"$1\" striped=\"$2\" spacing-x=\"$3\" spacing-y=\"$4\" cell-align=\"$5\" id=\"$6\">",
+      "  <Tr>",
+      "    <Td>$0</Td>",
+      "  </Tr>",
+      "</Table>"
+    ],
+    "description": "EFx Table (Grid-based)"
+  },
+  "Tr": {
+    "prefix": "Tr",
+    "body": [
+      "<Tr>",
+      "  <Td>$0</Td>",
+      "</Tr>"
+    ],
+    "description": "EFx Table row"
+  },
+  "Td": {
+    "prefix": "Td",
+    "body": [
+      "<Td>$0</Td>"
+    ],
+    "description": "EFx Table cell"
+  },
+  "DataTable": {
+    "prefix": "DataTable",
+    "body": [
+      "<DataTable id=\"$1\" striped=\"$2\" resizable=\"$3\" default-resizable=\"$4\" header-height=\"$5\" row-height=\"$6\" cell-align=\"$7\" cell-padding=\"$8\">",
+      "  <Columns>",
+      "    <Column mode=\"initial\" width=\"160\" resizable=\"true\"/>",
+      "    <Column mode=\"auto\"/>",
+      "    <Column mode=\"remainder\" resizable=\"true\" clip=\"true\"/>",
+      "  </Columns>",
+      "",
+      "  <Header>",
+      "    <Td><Label bold=\"true\">$9</Label></Td>",
+      "    <Td><Label bold=\"true\">$10</Label></Td>",
+      "    <Td><Label bold=\"true\">$11</Label></Td>",
+      "  </Header>",
+      "",
+      "  <Tr>",
+      "    <Td>$0</Td>",
+      "    <Td></Td>",
+      "    <Td></Td>",
+      "  </Tr>",
+      "</DataTable>"
+    ],
+    "description": "EFx DataTable (egui_extras::TableBuilder)"
+  },
+  "DataTable Column": {
+    "prefix": "DTColumn",
+    "body": [
+      "<Column mode=\"$1\" width=\"$2\" resizable=\"$3\" clip=\"$4\"/>"
+    ],
+    "description": "EFx DataTable <Column> (auto|initial|exact|remainder)"
+  },
+  "DataTable Row": {
+    "prefix": "DTRow",
+    "body": [
+      "<Tr height=\"$1\">",
+      "  <Td>$0</Td>",
+      "</Tr>"
+    ],
+    "description": "EFx DataTable row"
+  },
+  "Grid": {
+    "prefix": "Grid",
+    "body": [
+      "<Grid columns=\"$1\" spacing-x=\"$2\" spacing-y=\"$3\" cell-align=\"$4\" cell-padding=\"$5\" striped=\"$6\" id=\"$7\">",
+      "  $0",
+      "</Grid>"
+    ],
+    "description": "EFx Grid (egui::Grid-based layout)"
+  },
+  "GridBreak": {
+    "prefix": "GridBreak",
+    "body": [
+      "<GridBreak/>"
+    ],
+    "description": "EFx Grid row break"
+  }
+}

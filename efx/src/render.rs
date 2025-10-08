@@ -1,3 +1,4 @@
+use crate::interfaces::*;
 use crate::tags::*;
 use efx_core::{Element, Node};
 use proc_macro2::TokenStream;
@@ -35,12 +36,42 @@ pub(crate) fn render_node_stmt<UI: ToTokens>(ui: &UI, node: &Node) -> TokenStrea
     }
 }
 
-fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> TokenStream {
+pub(crate) fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> TokenStream {
     match el.name.as_str() {
+        "Window" => render_tag::<Window>(ui, el),
+        "Heading" => render_tag::<Heading>(ui, el),
+        "Panel" => render_tag::<Panel>(ui, el),
         "CentralPanel" => render_tag::<CentralPanel>(ui, el),
+        "SidePanel" => render_tag::<SidePanel>(ui, el),
+        "TopPanel" => render_tag::<TopPanel>(ui, el),
+        "BottomPanel" => render_tag::<BottomPanel>(ui, el),
         "ScrollArea" => render_tag::<ScrollArea>(ui, el),
         "Row" => render_tag::<Row>(ui, el),
         "Column" => render_tag::<Column>(ui, el),
+        "Resize" => render_tag::<Resize>(ui, el),
+        "Tabs" => render_tag::<Tabs>(ui, el),
+        "Tab" => {
+            let msg = "efx: <Tab> is only allowed as a child of <Tabs>";
+            quote! { compile_error!(#msg); }
+        }
+        "Table" => render_tag::<Table>(ui, el),
+        "Tr" | "Td" => {
+            let msg = "efx: <Tr>/<Td> are only allowed inside <Table>";
+            quote! { compile_error!(#msg); }
+        }
+        #[cfg(feature = "extras")]
+        "DataTable" => render_tag::<DataTable>(ui, el),
+        #[cfg(not(feature = "extras"))]
+        "DataTable" => {
+            let msg = "efx: <DataTable> requires feature `extras` (enable `egui_extras`)";
+            quote! { compile_error!(#msg); }
+        }
+        "Grid" => render_tag::<Grid>(ui, el),
+        "GridBreak" => {
+            let msg = "efx: <GridBreak> is only allowed inside <Grid>";
+            quote! { compile_error!(#msg); }
+        }
+        "Image" => render_tag::<Image>(ui, el),
         "Label" => render_tag::<Label>(ui, el),
         "Button" => {
             let btn_expr = render_tag::<Button>(ui, el);

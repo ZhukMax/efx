@@ -31,6 +31,7 @@ proc-macro = true
 [features]
 default = []
 attrnames-info = []
+extras = ["dep:egui_extras"]
 
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = [
@@ -43,6 +44,8 @@ quote = "1.0"
 proc-macro2 = "1.0"
 efx-core = { workspace = true }
 efx-attrnames = { workspace = true }
+egui = "0.32"
+egui_extras = { version = "0.32", optional = true }
 
 [dev-dependencies]
 efx-core = { workspace = true, features = ["doc-prelude"] }
@@ -50,8 +53,6 @@ efx-attrnames = { workspace = true }
 trybuild = "1.0"
 # For the eframe example
 eframe = "0.32"
-# For the raw egui skeleton
-egui = "0.32"
 # For the bevy_egui example
 bevy = { version = "0.16", default-features = false, features = [
     "bevy_winit",

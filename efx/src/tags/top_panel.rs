@@ -5,12 +5,12 @@ use efx_core::Element;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 
-pub struct CentralPanel {
+pub struct TopPanel {
     attributes: Attributes,
     element: Element,
 }
 
-impl Tag for CentralPanel {
+impl Tag for TopPanel {
     fn from_element(el: &Element) -> Result<Self, TokenStream> {
         Ok(Self {
             attributes: Attributes::new(el)?,
@@ -23,16 +23,32 @@ impl Tag for CentralPanel {
     }
 
     fn render<UI: ToTokens>(&self, ui: &UI) -> TokenStream {
+        let id = match &self.attributes.id {
+            Some(s) if !s.is_empty() => s,
+            _ => return quote! { compile_error!("efx: <TopPanel> requires non-empty `id`"); },
+        };
+
         let children = render_children_stmt(&quote!(ui), &self.element.children);
         let frame_ts = self.content(ui);
 
+        let mut panel_ts =
+            quote!( let mut __efx_panel = egui::TopBottomPanel::top(#id).frame(__efx_frame); );
+        panel_ts.extend(emit_size_methods(
+            Dim::Height,
+            &SizeOpts {
+                resizable: self.attributes.resizable,
+                default: self.attributes.default_height,
+                min: self.attributes.min_height,
+                max: self.attributes.max_height,
+            },
+        ));
+
         quote! {{
             #frame_ts
+            #panel_ts
             let __efx_ctx = #ui.ctx().clone();
             {
-                let __efx_tmp = egui::CentralPanel::default()
-                    .frame(__efx_frame)
-                    .show(&__efx_ctx, |ui| { #children });
+                let __efx_tmp = __efx_panel.show(&__efx_ctx, |ui| { #children });
                 let _ = __efx_tmp;
             }
             ()
