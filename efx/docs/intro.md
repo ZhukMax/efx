@@ -17,8 +17,15 @@ efx!(Ui::default(), r#"
     </Column>
 "#);
 ```
-**Key Features 0.5**
-- Tags: `Column`, `Row`, `Label`, `Separator`, `Button`.
+**Key Features 0.7**
+- Tags: 
+  - `Column`
+  - `Row`
+  - `Label`
+  - `Separator`
+  - `Button`
+  - `Window`
+  - `Grid` and `GridBreak`
 - Insert expressions: `{expr}` within text.
 - Escaping: `{{` → `{`, `}}` → `}`.
 - Tag attributes are **parsed**.

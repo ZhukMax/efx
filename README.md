@@ -125,7 +125,7 @@ EFx renders into any runtime that provides `&mut egui::Ui`. We officially build 
 ```toml
 # Cargo.toml
 [dependencies]
-efx    = "0.6"
+efx    = "0.7"
 eframe = "0.32"
 ```
 
@@ -143,7 +143,7 @@ egui::CentralPanel::default().show(ctx, |ui| {
 ```toml
 # Cargo.toml
 [dependencies]
-efx       = "0.6"
+efx       = "0.7"
 bevy      = "0.16"
 bevy_egui = "0.36"  # re-exports `egui`
 ```
@@ -164,7 +164,7 @@ bevy_egui::egui::Window::new("EFx").show(egui_ctx.ctx_mut(), |ui| {
 ```toml
 # Cargo.toml
 [dependencies]
-efx        = "0.6"
+efx        = "0.7"
 egui       = "0.32"
 egui-winit = "0.32"
 egui-wgpu  = "0.32"
