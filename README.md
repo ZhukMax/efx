@@ -1,4 +1,4 @@
-![EFX — Rust templating for egui/eframe](https://github.com/ZhukMax/efx/raw/main/efx/docs/efx_cover.png)
+![EFX — Rust templating for egui/eframe](https://raw.githubusercontent.com/ZhukMax/efx/main/efx/docs/efx_cover.png)
 
 # EFx
 [![Crates.io](https://img.shields.io/crates/v/efx.svg?color=green)](https://crates.io/crates/efx)
