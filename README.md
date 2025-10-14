@@ -1,4 +1,4 @@
-![EFX — Rust templating for egui/eframe](efx/docs/efx_cover.png)
+![EFX — Rust templating for egui/eframe](https://raw.githubusercontent.com/ZhukMax/efx/main/efx/docs/efx_cover.png)
 
 # EFx
 [![Crates.io](https://img.shields.io/crates/v/efx.svg?color=green)](https://crates.io/crates/efx)
@@ -37,7 +37,7 @@ use efx::efx; // the macro
 ---
 
 ### Documentation
-You can see on web page https://docs.rs/efx/latest/efx/ or in files:
+You can see on web page https://docs.rs/efx or in files:
 
 - [Introduction](efx/docs/intro.md) ([🇫🇷 fr](efx/docs/fr/intro.md))
 - [Tags](efx/docs/tags.md) ([🇫🇷 fr](efx/docs/fr/tags.md))
@@ -176,65 +176,13 @@ Use the example in `examples/winit_wgpu_min.rs` as a starting point.
 
 ---
 
-### Contributing
+### 🤝 Contributing
 
-[![PRs Welcome](https://img.shields.io/badge/PullRequest-welcome-brightgreen.svg?style=flat-square)]()
-
-**Thanks for considering a contribution!** Please follow this lightweight workflow:
-
-#### 1) Pick or propose an issue
-
-* **Claim an issue:** comment “I’d like to take this” (optionally add a brief plan/ETA).
-  The maintainer will assign it to you.
-* **Propose a new issue:** open a ticket with a minimal reproducible example (for bugs) or a short rationale (for features).
-  Start with the roadmap RFC: [EFX-0001](efx/docs/rfcs/EFX-0001-roadmap-0.5-0.7.md).
-
-> Tip: issues labeled `good first issue` are designed for first-time contributors.
-
-#### 2) Fork & branch
-
-* Fork the repository and create a **feature branch from `main`**:
-
-  ```bash
-  git checkout main
-  git pull
-  git checkout -b feat/short-topic
-  ```
-* Keep your branch focused on **one issue**.
-
-#### 3) Implement with tests & docs
-
-* Make the change and add tests/docs where it makes sense.
-* Local checks (examples build-only; no GUI run is required):
-
-  ```bash
-  cargo fmt --all
-  cargo clippy --all-targets -- -D warnings
-  cargo build --workspace --locked
-  cargo build -p efx --example eframe_demo --locked
-  rustup target add wasm32-unknown-unknown
-  cargo build -p efx --example eframe_demo --target wasm32-unknown-unknown --locked
-  ```
-
-#### 4) Open a Pull Request
-
-* Target the **next release branch** (e.g., `v0.6`, `v0.7`).
-  If the issue has a **milestone**, use the branch named after that milestone.
-* Link the issue (e.g., “Closes #123”) and fill the checklist below.
-
-**PR checklist**
-
-* [ ] References the related issue / RFC section when behavior changes.
-* [ ] CI is green (workspace build, examples, wasm32 build-only).
-* [ ] Tests/docs updated where applicable.
-* [ ] No unrelated changes.
-
-#### 5) Reviews & merge
-
-* Address review comments; small, focused PRs get merged faster.
-* If you go silent for **7 days**, the issue may be unassigned to keep momentum (you can re-claim it anytime).
-
-**Questions?** Reach out at [mail@zhukmax.com](mailto:mail@zhukmax.com).
+We welcome contributions from the community!  
+Please read our [Contributing Guide](./CONTRIBUTING.md) for details on:
+- branching and PR rules,
+- issue creation and discussion process,
+- coding conventions and CI requirements.
 
 ---
 
