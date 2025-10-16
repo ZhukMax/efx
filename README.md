@@ -1,6 +1,8 @@
 ![EFX — Rust templating for egui/eframe](https://raw.githubusercontent.com/ZhukMax/efx/main/efx/docs/efx_cover.png)
 
 # EFx
+**🧑‍💻 Easy as HTML, 🚀 Fast as C, 🔐 Safe cause Rust**
+
 [![Crates.io](https://img.shields.io/crates/v/efx.svg?color=green)](https://crates.io/crates/efx)
 ![Crates.io Version](https://img.shields.io/crates/v/efx-core?label=efx-core)
 ![Crates.io Version](https://img.shields.io/crates/v/efx-attrnames?label=efx-attrnames&color=red)
@@ -12,21 +14,23 @@
 **EFx** — Rust 🦀 XML Template Engine for  [egui](https://github.com/emilk/egui)-based frameworks: [eframe](https://github.com/emilk/egui/tree/master/crates/eframe), [bevy_egui](https://github.com/vladbat00/bevy_egui), [egui-winit](https://crates.io/crates/egui-winit), [egui-miniquad](https://github.com/not-fl3/egui-miniquad).
 `efx!` is a proc-macro for writing tiny XML-like UI snippets in `eframe/egui`. It converts short tags into `egui` calls.
 
-**Simplicity and Convenience — XML, 🚀 Speed and 🔐 Security — Rust**
+**What EFx is great for**
 
-**Easy as HTML, Fast as C**
-
-You can embed arbitrary Rust expressions inside braces (`{...}`).
+* 🖥️ **Desktop applications** — configuration panels, launchers, developer tools, dashboards.
+* 🎮 **Game development** — in-game menus, HUDs, editors, and overlays using `bevy_egui`.
+* 🌐 **WebAssembly apps** — single-page Rust apps that render via `eframe` in `<canvas>`.
+* 🧰 **Internal tools** — property editors, inspectors, debug panels, and other utility UIs.
+* 🔬 **Visualization** — scientific dashboards, data explorers, and control interfaces for simulations.
 
 ---
 
 ### Install & import
 
-Requires `egui` (the project currently uses `egui 0.32`). Add to `Cargo.toml`:
+Requires `egui` (the project currently uses `egui 0.33`). Add to `Cargo.toml`:
 ```toml
 [dependencies]
-efx = "0.6"
-egui = "0.32" # or egui-based framework
+efx = "0.7"
+egui = "0.33" # or egui-based framework
 ```
 
 Inside this repo just import the macro:
@@ -90,15 +94,8 @@ At compile time the macro parses your snippet; at runtime it shows readable diag
 ### Roadmap & RFCs
 
 **TL;DR.** EFx is a minimalist XML DSL on top of `egui` that compiles to plain `ui.*` calls.
-The next three releases focus on expressiveness and first-class examples across popular `egui` runtimes:
 
-* **0.7 — Themes & layouts:** lightweight style sheets, extended containers (`Tabs/Table` behind `extras`), perf & polish.
-
-This plan is incremental and **non-breaking**; new features are opt-in. Priorities may change based on community feedback.
-
-👉 **Full RFC:** [EFX-0001 — Roadmap 0.5–0.7](efx/docs/rfcs/EFX-0001-roadmap-0.5-0.7.md)
-
-👉 **RFC index:** [RFC/README.md](efx/docs/rfcs/README.md)
+**RFC index:** [RFC/README.md](efx/docs/rfcs/README.md)
 
 ---
 
@@ -126,7 +123,7 @@ EFx renders into any runtime that provides `&mut egui::Ui`. We officially build 
 # Cargo.toml
 [dependencies]
 efx    = "0.7"
-eframe = "0.32"
+eframe = "0.33"
 ```
 
 ```rust
@@ -165,7 +162,7 @@ bevy_egui::egui::Window::new("EFx").show(egui_ctx.ctx_mut(), |ui| {
 # Cargo.toml
 [dependencies]
 efx        = "0.7"
-egui       = "0.32"
+egui       = "0.33"
 egui-winit = "0.32"
 egui-wgpu  = "0.32"
 winit      = "0.30"
