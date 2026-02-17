@@ -83,10 +83,7 @@ struct Attributes {
 
 impl TagAttributes for Attributes {
     fn new(el: &Element) -> Result<Self, TokenStream> {
-        let map = match attr_map(el, Self::ATTR_NAMES, "Column") {
-            Ok(m) => m,
-            Err(err) => return Err(err),
-        };
+        let map = attr_map(el, Self::ATTR_NAMES, "Column")?;
 
         Ok(Attributes {
             gap: f32_opt(&map, "gap").unwrap_or(None),

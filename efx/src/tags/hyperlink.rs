@@ -100,7 +100,7 @@ struct Attributes {
 }
 
 impl Attributes {
-    pub(crate) fn has_style_or_behavior(self: Self) -> bool {
+    pub(crate) fn has_style_or_behavior(self) -> bool {
         self.open_external.is_some()
             || self.underline.is_some()
             || self.color_ts.is_some()

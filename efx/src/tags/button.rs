@@ -46,11 +46,11 @@ impl Tag for Button {
             );
         }
 
-        if let Some(b) = self.attributes.frame.clone() {
+        if let Some(b) = self.attributes.frame {
             btn_build.extend(quote!( __efx_btn = __efx_btn.frame(#b); ));
         }
 
-        let add_btn = match self.attributes.enabled.clone() {
+        let add_btn = match self.attributes.enabled {
             Some(false) => quote!( let mut __efx_resp = #ui.add_enabled(false, __efx_btn); ),
             _ => quote!( let mut __efx_resp = #ui.add(__efx_btn); ),
         };
@@ -117,10 +117,7 @@ impl Attributes {
 
 impl TagAttributes for Attributes {
     fn new(el: &Element) -> Result<Self, TokenStream> {
-        let map = match attr_map(el, Attributes::ATTR_NAMES, "Button") {
-            Ok(m) => m,
-            Err(err) => return Err(err),
-        };
+        let map = attr_map(el, Attributes::ATTR_NAMES, "Button")?;
 
         Ok(Attributes {
             fill: color_tokens_opt(&map, "fill")?,

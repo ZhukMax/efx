@@ -42,10 +42,7 @@ impl Tag for Grid {
             }
         }
 
-        Ok(Self {
-            attributes,
-            items,
-        })
+        Ok(Self { attributes, items })
     }
 
     fn content<UI: ToTokens>(&self, ui: &UI) -> TokenStream {
@@ -152,10 +149,7 @@ struct Attributes {
 
 impl TagAttributes for Attributes {
     fn new(el: &Element) -> Result<Self, TokenStream> {
-        let map = match attr_map(el, Attributes::ATTR_NAMES, "Grid") {
-            Ok(m) => m,
-            Err(err) => return Err(err),
-        };
+        let map = attr_map(el, Attributes::ATTR_NAMES, "Grid")?;
 
         let columns = match map.get("columns") {
             Some(s) => match s.parse::<usize>() {

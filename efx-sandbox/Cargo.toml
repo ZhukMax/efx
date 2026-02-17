@@ -6,6 +6,6 @@ rust-version = "1.75"
 publish = false
 
 [dependencies]
-eframe = "0.32"
-egui = "0.32"
+eframe = "0.33.3"
+egui = "0.33.3"
 efx = { path = "../efx" }

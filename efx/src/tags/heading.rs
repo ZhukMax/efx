@@ -103,7 +103,7 @@ impl TagAttributes for Attributes {
 
         let level = u8_opt(&map, "level")?;
         if let Some(lv) = level {
-            if lv < 1 || lv > 6 {
+            if !(1..=6).contains(&lv) {
                 return Err(quote! { compile_error!("efx: <Heading> `level` must be in 1..=6"); });
             }
         }

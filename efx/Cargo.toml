@@ -2,7 +2,7 @@
 name = "efx"
 description = "Rust XML templating engine for building egui UIs with procedural macros"
 authors = ["Max Zhuk <mail@zhukmax.com>"]
-version = "0.6.1"
+version = "0.7.0"
 edition = "2021"
 rust-version = "1.75"
 license = "MIT OR Apache-2.0"
@@ -54,14 +54,14 @@ trybuild = "1.0"
 # For the eframe example
 eframe = "0.33.0"
 # For the bevy_egui example
-bevy = { version = "0.17.2", default-features = false, features = [
+bevy = { version = "0.18.0", default-features = false, features = [
     "bevy_winit",
     "bevy_render",
     "bevy_ui",
     "png",
     "x11"
 ] }
-bevy_egui = { version = "0.38.0", default-features = false }
+bevy_egui = { version = "0.39.1", default-features = false }
 # for wasm entrypoint
 wasm-bindgen = "0.2"
 wasm-bindgen-futures = "0.4"
