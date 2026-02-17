@@ -110,10 +110,7 @@ impl Attributes {
 
 impl TagAttributes for Attributes {
     fn new(el: &Element) -> Result<Self, TokenStream> {
-        let map = match attr_map(el, Attributes::ATTR_NAMES, "Hyperlink") {
-            Ok(m) => m,
-            Err(err) => return Err(err),
-        };
+        let map = attr_map(el, Attributes::ATTR_NAMES, "Hyperlink")?;
 
         let url = match map.get("url") {
             Some(u) if !u.is_empty() => (*u).to_string(),

@@ -101,8 +101,8 @@ impl Tag for Table {
             }
 
             // If there are fewer cells in a row, we add empty spaces to columns
-            if seen < ncols as usize {
-                let missing = ncols as usize - seen;
+            if seen < ncols {
+                let missing = ncols - seen;
                 let fillers = (0..missing).map(|_| {
                     quote! {
                         // empty cell
@@ -217,10 +217,7 @@ struct Attributes {
 
 impl TagAttributes for Attributes {
     fn new(el: &Element) -> Result<Self, TokenStream> {
-        let map = match attr_map(el, Attributes::ATTR_NAMES, "Table") {
-            Ok(m) => m,
-            Err(err) => return Err(err),
-        };
+        let map = attr_map(el, Attributes::ATTR_NAMES, "Table")?;
 
         // columns — required, integer, >0
         let columns = match map.get("columns") {

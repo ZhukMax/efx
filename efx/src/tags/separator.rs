@@ -68,10 +68,7 @@ struct Attributes {
 
 impl TagAttributes for Attributes {
     fn new(el: &Element) -> Result<Self, TokenStream> {
-        let map = match attr_map(el, Self::ATTR_NAMES, "Separator") {
-            Ok(m) => m,
-            Err(err) => return Err(err),
-        };
+        let map = attr_map(el, Self::ATTR_NAMES, "Separator")?;
 
         Ok(Attributes {
             space: f32_opt(&map, "space")?,

@@ -3,7 +3,6 @@ use efx_core::Element;
 use proc_macro2::TokenStream;
 use quote::quote;
 use std::collections::BTreeMap;
-use syn::Expr;
 
 #[inline]
 pub fn attr_map<'a>(
@@ -16,7 +15,7 @@ pub fn attr_map<'a>(
 
     for a in &el.attrs {
         let name = a.name.as_str();
-        if !known.iter().any(|k| *k == name) {
+        if !known.contains(&name) {
             let msg = format!("efx: <{}> unknown attribute `{}`", tag, name);
             return Err(quote! { compile_error!(#msg); });
         }
@@ -114,16 +113,4 @@ pub fn stroke_tokens(width: Option<f32>, color: Option<TokenStream>) -> Option<T
     let c = color.unwrap_or_else(|| quote!(egui::Color32::BLACK));
 
     Some(quote!( egui::Stroke { width: #w as _, color: #c } ))
-}
-
-pub fn is_assignable_expr(e: &Expr) -> bool {
-    use syn::{
-        Expr::{Field, Index, Paren, Path},
-        ExprParen,
-    };
-    match e {
-        Path(_) | Field(_) | Index(_) => true,
-        Paren(ExprParen { expr, .. }) => is_assignable_expr(expr),
-        _ => false,
-    }
 }

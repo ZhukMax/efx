@@ -89,10 +89,7 @@ struct Attributes {
 
 impl TagAttributes for Attributes {
     fn new(el: &Element) -> Result<Self, TokenStream> {
-        let map = match attr_map(el, Attributes::ATTR_NAMES, "Button") {
-            Ok(m) => m,
-            Err(err) => return Err(err),
-        };
+        let map = attr_map(el, Attributes::ATTR_NAMES, "Button")?;
 
         let axis_src = map.get("axis").copied().unwrap_or("vertical");
         let axis_ctor = match axis_src {

@@ -119,10 +119,7 @@ struct Attributes {
 
 impl TagAttributes for Attributes {
     fn new(el: &Element) -> Result<Self, TokenStream> {
-        let map = match attr_map(el, Self::ATTR_NAMES, "Label") {
-            Ok(m) => m,
-            Err(err) => return Err(err),
-        };
+        let map = attr_map(el, Self::ATTR_NAMES, "Label")?;
 
         Ok(Attributes {
             color: color_tokens_opt(&map, "color")?,

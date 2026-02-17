@@ -91,10 +91,7 @@ struct Attributes {
 
 impl TagAttributes for Attributes {
     fn new(el: &Element) -> Result<Self, TokenStream> {
-        let map = match attr_map(el, Attributes::ATTR_NAMES, "Row") {
-            Ok(m) => m,
-            Err(err) => return Err(err),
-        };
+        let map = attr_map(el, Attributes::ATTR_NAMES, "Row")?;
 
         let wrap = bool_or(&map, "wrap", false)?;
 

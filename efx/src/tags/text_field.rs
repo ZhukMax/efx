@@ -41,12 +41,14 @@ impl Tag for TextField {
         if let Some(h) = self.attributes.hint.clone() {
             build.extend(quote!( __efx_te = __efx_te.hint_text(#h); ));
         }
-        if let Some(pw) = self.attributes.password.clone() {
+
+        if let Some(pw) = self.attributes.password {
             if pw {
                 build.extend(quote!( __efx_te = __efx_te.password(true); ));
             }
         }
-        if let Some(w) = self.attributes.width.clone() {
+
+        if let Some(w) = self.attributes.width {
             build.extend(quote!( __efx_te = __efx_te.desired_width(#w as f32); ));
         }
 
@@ -74,16 +76,10 @@ struct Attributes {
 
 impl TagAttributes for Attributes {
     fn new(el: &Element) -> Result<Self, TokenStream> {
-        let map = match attr_map(el, Attributes::ATTR_NAMES, "TextField") {
-            Ok(m) => m,
-            Err(err) => return Err(err),
-        };
+        let map = attr_map(el, Attributes::ATTR_NAMES, "TextField")?;
 
         // value — required (Rust expression without curly braces)
-        let value_expr = match expr_req(&map, "value", "TextField") {
-            Ok(e) => e,
-            Err(err) => return Err(err),
-        };
+        let value_expr = expr_req(&map, "value", "TextField")?;
 
         Ok(Attributes {
             value: value_expr,

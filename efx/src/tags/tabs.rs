@@ -168,10 +168,7 @@ struct TabItem {
 impl TabItem {
     fn from_element(el: &Element) -> Result<Self, TokenStream> {
         const KNOWN: &[&str] = &["id", "title", "enabled"];
-        let map = match attr_map(el, KNOWN, "Tab") {
-            Ok(m) => m,
-            Err(err) => return Err(err),
-        };
+        let map = attr_map(el, KNOWN, "Tab")?;
 
         let id = match map.get("id") {
             Some(s) if !s.is_empty() => (*s).to_string(),
@@ -210,10 +207,7 @@ struct Attributes {
 
 impl TagAttributes for Attributes {
     fn new(el: &Element) -> Result<Self, TokenStream> {
-        let map = match attr_map(el, Attributes::ATTR_NAMES, "Tabs") {
-            Ok(m) => m,
-            Err(err) => return Err(err),
-        };
+        let map = attr_map(el, Attributes::ATTR_NAMES, "Tabs")?;
 
         Ok(Self {
             active_expr: expr_opt(&map, "active")?,

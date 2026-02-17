@@ -96,10 +96,7 @@ struct Attributes {
 
 impl TagAttributes for Attributes {
     fn new(el: &Element) -> Result<Self, TokenStream> {
-        let map = match attr_map(el, Self::ATTR_NAMES, "Heading") {
-            Ok(m) => m,
-            Err(err) => return Err(err),
-        };
+        let map = attr_map(el, Self::ATTR_NAMES, "Heading")?;
 
         let level = u8_opt(&map, "level")?;
         if let Some(lv) = level {
