@@ -14,3 +14,108 @@ Your primary goal is to generate clean, compile-safe, and idiomatic GUI code usi
   - To render literal braces in text, escape them by doubling: `{{` and `}}`.
 - **Case Sensitivity:** EFx tag names are strictly case-sensitive. Always ensure exact capitalization (e.g., use `<Label>`, never `<label>`).
 
+## 3. Syntax & Tag Mapping
+When converting standard UI concepts or HTML-like requests to EFx, strictly use the following mappings.
+EFx allows multiple elements at the root level.
+
+### Layouts & Structure
+- **Vertical Stack / `<div>`:** `<Column>`
+- **Horizontal Stack / Flex Row:** `<Row>`
+- **Divider / `<hr>`:** `<Separator/>` (Self-closing)
+- **Grid Layout:** `<Grid>` and `<GridBreak>`
+- **Scrollable Area:** `<ScrollArea>` (e.g., `<ScrollArea axis="vertical">`)
+- **Window:** `<Window>`
+
+### Widgets & Controls
+- **Text / `<span>`:** `<Label>`
+- **Button / `<button>`:** `<Button>`
+- **Text Input / `<input>`:** `<TextField>`
+- **Link / `<a>`:** `<Hyperlink>`
+
+## 4. Attributes & Data Binding
+EFx uses XML-like attributes (`name="value"`). Follow these strict formatting rules:
+
+- **Naming Convention:** ALWAYS use `snake_case` for attribute names (e.g., `max_height`, `always_show`, `stroke_width`). Do not use camelCase.
+- **Color Format:** Colors must be strictly in 6 or 8 hex digits (`#RRGGBB` or `#RRGGBBAA`). Short formats (`#RGB`) are NOT supported.
+- **Values & Variables:**
+  - Static boolean/number: `bold="true"`, `gap="8"`, `size="20"`
+  - String literals: `tooltip="Increment"`, `hint="type here..."`
+  - Variable binding (e.g., in inputs): Use the variable path as a string literal, e.g., `<TextField value="self.input" />`.
+- **Expression Interpolation (`{expr}`):**
+  - Use `{...}` ONLY inside textual tags like `<Label>` or `<Button>`.
+  - Example: `<Label>Counter: {self.counter}</Label>`
+
+## 5. Anti-Patterns (What NOT to do)
+To avoid `compile_error!` from the EFx macro, NEVER do the following:
+1. **Never invent attributes:** Only use attributes explicitly defined for a tag. Unknown attributes will break compilation.
+2. **Never use `#RGB` colors:** Always expand to `#RRGGBB`.
+3. **Never place `{expr}` outside textual tags:** Interpolation is only valid as inner text (e.g., `<Label>{expr}</Label>`), not as standalone structural elements or inside attribute strings.
+4. **Never forget self-closing slashes:** Elements without children must be self-closing (e.g., `<Separator/>`, `<TextField ... />`).
+5. **Never nest invalid children:** Respect tag boundaries (e.g., `<Separator/>` cannot have children).
+
+
+## 6. Golden Examples (Few-Shot Prompts)
+
+### Example 1: Interactive Elements & State Handling
+**User Intent:** "Create a column with a title and a save button. Handle the button click."
+**Correct EFx Implementation:**
+Notice that `<Button>` is placed at the root of its own `efx!` macro call to capture the `Resp` object, while layout uses a separate call.
+
+```rust
+// Layout macro
+efx!(ui, r#"
+  <Column gap="10" padding="6" align="center">
+    <Label size="18">Settings</Label>
+    <Separator/>
+  </Column>
+"#);
+
+// Button macro (returns Resp)
+let save_btn = efx!(ui, r#"<Button rounding="8" tooltip="Save changes" fill="#00FF00">Save</Button>"#);
+
+if save_btn.clicked() {
+    // handle click
+}
+
+```
+
+### Example 2: Complex Grid Layout
+
+**User Intent:** "Create a 2-column striped grid displaying user info. Use a grid break for the next row."
+**Correct EFx Implementation:**
+Notice the use of `<GridBreak/>` to explicitly start new rows and the strict formatting of grid attributes.
+
+```rust
+efx!(ui, r#"
+  <Grid columns="2" spacing-x="8" spacing-y="4" cell-align="left" cell-padding="4" striped="true" id="user_info_grid">
+    <Label>Name:</Label>
+    <Label>{user.name}</Label>
+    
+    <GridBreak/>
+    
+    <Label>Role:</Label>
+    <Label>{user.role}</Label>
+    
+    <GridBreak/>
+    
+    <Label>Status:</Label>
+    <Button frame="false" enabled="false">{user.status}</Button>
+  </Grid>
+"#);
+
+```
+
+### Example 3: Interpolation within text
+
+**User Intent:** "Show a label with the current score and a dynamically sized subtitle."
+**Correct EFx Implementation:**
+
+```rust
+efx!(ui, r#"
+  <Column gap="4" align="left">
+    <Label>Current Score: {state.score}</Label>
+    <Label size="12">Next level in {state.next_level_threshold - state.score} points</Label>
+  </Column>
+"#);
+
+```
