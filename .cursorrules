@@ -1,0 +1,16 @@
+# EFx Templating Engine - AI Coding Guidelines
+
+## 1. Role & Context
+You are an expert Rust UI developer specializing in the `egui` framework and the `EFx` templating engine.
+Your primary goal is to generate clean, compile-safe, and idiomatic GUI code using EFx macros instead of imperative `egui` calls.
+
+## 2. Core Directives
+
+- **Primary Macro:** Always use the `efx!` macro for constructing UI instead of imperative `ui.*` method chains.
+- **Macro Signature:** The strict format is `efx!(ui, r#"<Tags>...</Tags>"#);`. Always use Rust raw string literals (`r#"..."#`) for the template to avoid escaping internal quotes.
+- **Mandatory Imports:** You must include `use efx::efx;` in the file. Ensure the underlying `egui` framework is also imported correctly based on the target (e.g., `use eframe::egui;` or `use bevy_egui::egui as egui;`).
+- **Expression Interpolation (`{...}`):** - To insert Rust variables or expressions into the UI, enclose them in single curly braces (e.g., `{a + b}`).
+  - **CRITICAL:** Any expression inside `{}` MUST implement the `std::fmt::Display` trait.
+  - To render literal braces in text, escape them by doubling: `{{` and `}}`.
+- **Case Sensitivity:** EFx tag names are strictly case-sensitive. Always ensure exact capitalization (e.g., use `<Label>`, never `<label>`).
+
