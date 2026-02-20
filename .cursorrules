@@ -119,3 +119,57 @@ efx!(ui, r#"
 "#);
 
 ```
+
+## 7. Tag Reference Directory (Complete)
+
+Below is the exhaustive list of currently supported EFx tags and their attributes.
+**Rule:** NEVER use attributes that are not listed here. ALWAYS use `snake_case` for attribute names.
+
+### Typography & Text
+- **`<Label>`**: Standard text widget. *Children:* Text and `{expr}` only.
+  - *Attributes:* `color` (#RRGGBB[AA]), `size` (f32), `bold`, `italic`, `underline`, `strike`, `monospace`, `wrap` (all bool).
+- **`<Heading>`**: Text heading (h1-h6). *Children:* Text and `{expr}` only.
+  - *Attributes:* `level` (1..6, default: 1), `size` (f32), `color` (#RRGGBB[AA]), `tooltip` (string).
+- **`<Hyperlink>`**: Clickable link. *Children:* Text and `{expr}` only.
+  - *Attributes:* `url` (string, REQUIRED), `open_external` (bool), `color` (#RRGGBB[AA]), `underline` (bool), `tooltip` (string).
+
+### Layout & Containers
+- **`<Column>`**: Vertical stack.
+  - *Attributes:* `align` (left|center|right), `gap` (f32), `padding` (f32).
+- **`<Row>`**: Horizontal stack.
+  - *Attributes:* `align` (top|center|bottom), `gap` (f32), `wrap` (bool), `padding` (f32).
+- **`<Separator/>`**: Self-closing divider. NO CHILDREN ALLOWED.
+  - *Attributes:* `space`, `space_before`, `space_after` (f32).
+- **`<ScrollArea>`**: Scrollable container.
+  - *Attributes:* `axis` (vertical|horizontal|both), `always-show` (bool), `max-height`, `max-width` (f32), `id` (string), `bottom`, `right` (bool).
+- **`<Resize>`**: User-resizable container.
+  - *Attributes:* `id` (string, REQUIRED), `resizable` (bool), `default-width`, `default-height`, `min-width`, `min-height`, `max-width`, `max-height` (f32).
+- **`<Grid>`** & **`<GridBreak/>`**: Row-major layout. Text nodes NOT allowed at root.
+  - *Attributes (<Grid>):* `columns` (int, REQUIRED), `striped` (bool), `spacing-x`, `spacing-y`, `cell-padding` (f32), `cell-align` (left|center|right), `id` (string).
+- **`<Table>`**, **`<Tr>`**, **`<Td>`**: Lightweight static table. Structure MUST be `<Table>` -> `<Tr>` -> `<Td>`.
+  - *Attributes (<Table>):* `columns` (int, REQUIRED), `striped` (bool), `spacing-x`, `spacing-y`, `cell-padding` (f32), `cell-align` (left|center|right), `id` (string). (Note: colspan/rowspan NOT supported).
+
+### Panels & Windows
+- **`<Panel>`**: Lightweight frame container.
+  - *Attributes:* `frame` (bool), `fill` (#RRGGBB[AA]), `stroke-width` (f32), `stroke-color` (#RRGGBB[AA]), `padding*`, `margin*` (f32), `id` (string).
+- **`<TopPanel>` / `<BottomPanel>`**: Docked window panels.
+  - *Attributes:* `id` (string, REQUIRED), `default-height`, `min-height`, `max-height` (f32), `resizable` (bool). Plus all styling attributes from `<Panel>`.
+- **`<Window>`**: Independent floating window.
+  - *Attributes:* `title` (string, REQUIRED), `id` (string), `open` ({expr_bool} binding), `movable`, `resizable`, `collapsible`, `title-bar`, `enabled`, `constrain`, `auto-sized` (bool), `default-x/y`, `pos-x/y`, `anchor-x/y`, `default-width/height`, `min-width/height`, `max-width/height` (f32), `anchor-h` (left|center|right), `anchor-v` (top|center|bottom), plus frame/styling attributes like `<Panel>`.
+
+### Navigation & State Containers
+- **`<Tabs>`** & **`<Tab>`**: Tabbed container. Structure MUST be `<Tabs>` -> `<Tab>`.
+  - *Attributes (<Tabs>):* `active` (expr, REQUIRED. e.g. `active="self.current_tab"`), `gap` (f32).
+  - *Attributes (<Tab>):* `id` (string), `title` (string, defaults to id), `enabled` (bool).
+
+### Controls & Interactive
+- **`<Button>`**: Clickable button. RETURNS `Resp` at root level.
+  - *Children:* Text and `{expr}` only.
+  - *Attributes:* `fill` (#RRGGBB[AA]), `rounding`, `min_width`, `min_height` (f32), `frame`, `enabled` (bool), `tooltip` (string).
+- **`<TextField/>`**: Text input. Self-closing. NO CHILDREN ALLOWED.
+  - *Attributes:* `value` (expr string lvalue, REQUIRED. e.g. `value="state.name"`), `hint` (string), `password`, `multiline` (bool), `width` (f32).
+
+### Media
+- **`<Image>`**: Renders a texture or bitmap. Self-closing.
+  - *Attributes (Source - Mutually Exclusive):* `texture` (Rust expr) OR `src` (string path/URI).
+  - *Attributes:* `width`, `height`, `max-width`, `max-height`, `rounding` (f32), `maintain-aspect`, `clickable` (bool), `tint`, `bg-fill` (#RRGGBB[AA]), `id`, `tooltip` (string).
