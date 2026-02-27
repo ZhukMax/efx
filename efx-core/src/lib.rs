@@ -1,5 +1,6 @@
 pub mod ast;
 pub mod attr;
+pub mod component;
 
 #[cfg(feature = "doc-prelude")]
 pub mod doc_prelude;

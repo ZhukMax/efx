@@ -83,14 +83,10 @@ use efx_core::{parse_str, Node};
 pub fn efx(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as EfxInput);
     let ui = input.ui;
-    let template = input.template.value();
 
-    let ast = match parse_str(&template) {
-        Ok(nodes) => nodes,
-        Err(err) => {
-            let msg = format!("efx parse error: {}", err);
-            return quote! { compile_error!(#msg); }.into();
-        }
+    let ast = match get_ast(input.template.value()) {
+        Ok(ast) => ast,
+        Err(msg) => return msg,
     };
 
     let expanded = if ast.len() == 1 {
@@ -124,18 +120,13 @@ pub fn efx(input: TokenStream) -> TokenStream {
 #[proc_macro]
 pub fn efx_ctx(input: TokenStream) -> TokenStream {
     use crate::input::EfxCtxInput;
-    use efx_core::{parse_str, Node};
 
-    let args = syn::parse_macro_input!(input as EfxCtxInput);
+    let args = parse_macro_input!(input as EfxCtxInput);
     let ctx_expr = args.ctx;
-    let template = args.template.value();
 
-    let ast = match parse_str(&template) {
-        Ok(nodes) => nodes,
-        Err(err) => {
-            let msg = format!("efx parse error: {}", err);
-            return quote! { compile_error!(#msg); }.into();
-        }
+    let ast = match get_ast(args.template.value()) {
+        Ok(ast) => ast,
+        Err(msg) => return msg,
     };
 
     let roots: Vec<Node> = ast
@@ -203,4 +194,39 @@ pub fn efx_ctx(input: TokenStream) -> TokenStream {
         ()
     }}
     .into()
+}
+
+fn get_ast(template_ref: String) -> Result<Vec<Node>, TokenStream> {
+    let template_content = match load_template(&template_ref) {
+        Ok(content) => content,
+        Err(msg) => return Err(quote! { compile_error!(#msg); }.into()),
+    };
+
+    match parse_str(&template_content) {
+        Ok(nodes) => Ok(nodes),
+        Err(err) => {
+            let msg = format!("efx parse error: {}", err);
+            Err(quote! { compile_error!(#msg); }.into())
+        }
+    }
+}
+
+fn load_template(original_str: &str) -> Result<String, String> {
+    let trimmed = original_str.trim();
+
+    if trimmed.starts_with('<') {
+        Ok(original_str.to_string())
+    } else {
+        match efx_core::component::resolve_path(trimmed) {
+            Some(path) => std::fs::read_to_string(&path)
+                .map_err(|e| format!("EFx: Found file {:?} but failed to read: {}", path, e)),
+            None => {
+                let root = std::env::var("CARGO_MANIFEST_DIR").unwrap_or_default();
+                Err(format!(
+                    "EFx: Template '{}' not found. Searched in {}/src/ui/ and recursive subdirectories.",
+                    trimmed, root
+                ))
+            }
+        }
+    }
 }
