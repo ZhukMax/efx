@@ -211,7 +211,7 @@ fn get_ast(template_ref: String) -> Result<Vec<Node>, TokenStream> {
     }
 }
 
-fn load_template(original_str: &str) -> Result<String, String> {
+pub(crate) fn load_template(original_str: &str) -> Result<String, String> {
     let trimmed = original_str.trim();
 
     if trimmed.starts_with('<') {

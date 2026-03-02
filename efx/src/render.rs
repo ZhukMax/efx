@@ -84,8 +84,24 @@ pub(crate) fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> TokenS
         }
         "TextField" => render_tag::<TextField>(ui, el),
         other => {
-            let msg = format!("efx: unknown tag <{}>", other);
-            quote! { compile_error!(#msg); }
+            match crate::load_template(other) {
+                Ok(content) => {
+                    match efx_core::parse_str(&content) {
+                        Ok(nodes) => {
+                            // Recursion
+                            render_nodes_as_stmts(ui, &nodes)
+                        }
+                        Err(e) => {
+                            let msg = format!("efx: error parsing component <{}>: {}", other, e);
+                            quote! { compile_error!(#msg); }
+                        }
+                    }
+                }
+                Err(_) => {
+                    let msg = format!("efx: unknown tag or component <{}>", other);
+                    quote! { compile_error!(#msg); }
+                }
+            }
         }
     }
 }
