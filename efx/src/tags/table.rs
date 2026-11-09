@@ -17,7 +17,6 @@ use quote::{quote, ToTokens};
 pub struct Table {
     attributes: Attributes,
     rows: Vec<Row>,
-    element: Element,
 }
 
 impl Tag for Table {
@@ -52,11 +51,7 @@ impl Tag for Table {
             return Err(quote! { compile_error!(#msg); });
         }
 
-        Ok(Self {
-            attributes,
-            rows,
-            element: el.clone(),
-        })
+        Ok(Self { attributes, rows })
     }
 
     fn content<UI: ToTokens>(&self, ui: &UI) -> TokenStream {

@@ -65,6 +65,7 @@ impl eframe::App for App {
                   <Heading level="3" size="14" tooltip="Subheading">Small note</Heading>
                   <Column gap="6">
                     <Label monospace="true">You typed: {self.input.clone()}</Label>
+                    <Label monospace="true">Counter: {self.counter}</Label>
                     <Row gap="8">
                       <Hyperlink url="https://efxui.com" tooltip="Project site"/>
                       <Hyperlink url="help:about" open_external="false">About</Hyperlink>

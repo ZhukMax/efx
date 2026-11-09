@@ -27,7 +27,6 @@ pub struct DataTable {
     columns: Vec<ColDef>,
     header_cells: Option<Vec<Node>>,
     rows: Vec<Row>,
-    element: Element,
 }
 
 impl Tag for DataTable {
@@ -142,7 +141,6 @@ impl Tag for DataTable {
             columns,
             header_cells,
             rows,
-            element: el.clone(),
         })
     }
 
@@ -213,7 +211,7 @@ impl Tag for DataTable {
             for cell in cells {
                 let body = render_children_stmt(
                     &quote!(ui),
-                    &match cell {
+                    match cell {
                         Node::Element(e) => &e.children,
                         _ => &[] as &[Node],
                     },
@@ -281,7 +279,7 @@ impl Tag for DataTable {
             #body_ts
         }};
 
-        let out = if let Some(id) = &self.attributes.id {
+        if let Some(id) = &self.attributes.id {
             quote! {{
                 let ui = #ui;
                 ui.push_id(#id, |ui| { #table_block });
@@ -291,9 +289,7 @@ impl Tag for DataTable {
                 let ui = #ui;
                 #table_block
             }}
-        };
-
-        out.into()
+        }
     }
 
     fn render<UI: ToTokens>(&self, ui: &UI) -> TokenStream {
@@ -310,10 +306,7 @@ struct Row {
 impl Row {
     fn from_element(el: &Element) -> Result<Self, TokenStream> {
         const KNOWN: &[&str] = &["height"];
-        let map = match attr_map(el, KNOWN, "Tr") {
-            Ok(m) => m,
-            Err(err) => return Err(err),
-        };
+        let map = attr_map(el, KNOWN, "Tr")?;
 
         let mut cells = Vec::<Cell>::new();
         for ch in &el.children {
@@ -389,10 +382,7 @@ struct Attributes {
 
 impl TagAttributes for Attributes {
     fn new(el: &Element) -> Result<Self, TokenStream> {
-        let map = match attr_map(el, Attributes::ATTR_NAMES, "DataTable") {
-            Ok(m) => m,
-            Err(err) => return Err(err),
-        };
+        let map = attr_map(el, Attributes::ATTR_NAMES, "DataTable")?;
 
         Ok(Self {
             id: map.get("id").map(|s| (*s).to_string()),
@@ -426,10 +416,7 @@ enum ColMode {
 impl ColDef {
     fn from_element(el: &Element, inherit_resizable: Option<bool>) -> Result<Self, TokenStream> {
         const KNOWN: &[&str] = &["mode", "width", "resizable", "clip"];
-        let map = match attr_map(el, KNOWN, "Column") {
-            Ok(m) => m,
-            Err(err) => return Err(err),
-        };
+        let map = attr_map(el, KNOWN, "Column")?;
 
         let mode = match map.get("mode").map(|s| (*s).to_string()) {
             Some(m) => match m.as_str() {

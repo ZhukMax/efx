@@ -1,5 +1,5 @@
-use std::{env, fs};
 use std::path::{Path, PathBuf};
+use std::{env, fs};
 
 pub fn resolve_path(name: &str) -> Option<PathBuf> {
     let explicit_extension = name.ends_with(".efx");
@@ -16,11 +16,15 @@ pub fn resolve_path(name: &str) -> Option<PathBuf> {
     }
 
     for root in search_roots {
-        if !root.exists() { continue; }
+        if !root.exists() {
+            continue;
+        }
 
         if explicit_extension {
             let path = root.join(name);
-            if path.exists() { return Some(path); }
+            if path.exists() {
+                return Some(path);
+            }
         } else {
             if let Some(path) = find_recursive(&root, name) {
                 return Some(path);
@@ -32,23 +36,27 @@ pub fn resolve_path(name: &str) -> Option<PathBuf> {
 }
 
 fn find_recursive(dir: &Path, name: &str) -> Option<PathBuf> {
-    if !dir.is_dir() { return None; }
+    if !dir.is_dir() {
+        return None;
+    }
 
     let exact = dir.join(format!("{}.efx", name));
-    if exact.exists() { return Some(exact); }
+    if exact.exists() {
+        return Some(exact);
+    }
 
     let snake = to_snake_case(name);
     let snake_path = dir.join(format!("{}.efx", snake));
-    if snake_path.exists() { return Some(snake_path); }
+    if snake_path.exists() {
+        return Some(snake_path);
+    }
 
     if let Ok(entries) = fs::read_dir(dir) {
         for entry in entries.flatten() {
             let path = entry.path();
-            if path.is_dir() {
-                if !name.contains('/') && !name.contains('\\') {
-                    if let Some(found) = find_recursive(&path, name) {
-                        return Some(found);
-                    }
+            if path.is_dir() && !name.contains('/') && !name.contains('\\') {
+                if let Some(found) = find_recursive(&path, name) {
+                    return Some(found);
                 }
             }
         }
@@ -61,7 +69,9 @@ fn to_snake_case(s: &str) -> String {
     let mut result = String::new();
     for (i, c) in s.char_indices() {
         if c.is_uppercase() {
-            if i > 0 { result.push('_'); }
+            if i > 0 {
+                result.push('_');
+            }
             result.push(c.to_ascii_lowercase());
         } else {
             result.push(c);

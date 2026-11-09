@@ -89,7 +89,6 @@ impl Tag for SidePanel {
                 let __efx_tmp = __efx_panel.show(&__efx_ctx, |ui| { #children });
                 let _ = __efx_tmp;
             }
-            ()
         }}
     }
 }

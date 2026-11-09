@@ -9,7 +9,6 @@ use syn::Expr;
 
 pub struct Image {
     attributes: Attributes,
-    element: Element,
 }
 
 impl Tag for Image {
@@ -34,10 +33,7 @@ impl Tag for Image {
             return Err(quote! { compile_error!(#msg); });
         }
 
-        Ok(Self {
-            attributes,
-            element: el.clone(),
-        })
+        Ok(Self { attributes })
     }
 
     fn content<UI: ToTokens>(&self, ui: &UI) -> TokenStream {
@@ -107,7 +103,7 @@ impl Tag for Image {
             builder.extend(quote! {
                 #[allow(deprecated)]
                 {
-                    __efx_img = __efx_img.rounding(egui::Rounding::same(#r as _));
+                    __efx_img = __efx_img.corner_radius(egui::CornerRadius::same(#r as _));
                 }
             });
         }

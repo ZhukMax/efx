@@ -1,0 +1,7 @@
+error: efx_ctx!: root <Label> is not context-root. Use efx!(ui, ...) instead.
+ --> tests/ui/ctx_non_root.rs:6:5
+  |
+6 |     efx_ctx!(ctx, r#"<Label>not a context root</Label>"#);
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: this error originates in the macro `efx_ctx` (in Nightly builds, run with -Z macro-backtrace for more info)
