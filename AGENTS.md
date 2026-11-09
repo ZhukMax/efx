@@ -83,11 +83,8 @@ State of the gate on 2026-11-09 (local rustc/clippy 1.99.1):
   (and therefore `make patch`) is red on `main` today. `v0.7` fixes the style issues.
 - `v0.7` as pushed: `efx-sandbox` **does not compile** (`efx_ctx!` → "expected `,`", see §7)
   and trybuild case `tests/ui/unknown_tag.rs` mismatches. Both fixed on branch
-  `fix/efx-ctx-input` (not merged yet): with it, `cargo test --all-targets --all-features`
-  passes, fmt is clean, sandbox builds. Still red there: `cargo clippy --all-targets
-  --all-features -- -D warnings` — 9 errors (unused `element` fields in `image.rs`, `table.rs`,
-  `tabs.rs`, `data_table.rs`; `question_mark` / `useless_conversion` / `needless_borrow` in
-  `data_table.rs`), so the v0.7 `clippy.yml` workflow fails.
+  `fix/efx-ctx-input` (PR #43, not merged yet): with it, tests, clippy (`-D warnings`, with and
+  without `--all-features`), fmt, examples and sandbox are all green.
 - CI on `main` only builds examples + sandbox; tests/clippy/fmt workflows exist only on `v0.7`.
 - trybuild `.stderr` output depends on the rustc version — a toolchain bump can break these
   tests without any code change.
@@ -193,6 +190,12 @@ Fix these when touching the area; each is a good small PR.
   `std::fs` are not tracked by cargo, so editing a `.efx` file does not trigger a rebuild
   (needs an `include_str!`/`include_bytes!` trick); recursive file components have no cycle
   detection; README links point to `google.com/search?q=…` and GIFs are placeholders.
+- **Generated code must be lint-clean in the user's crate.** Clippy/rustc lints fire on macro
+  output in the caller's code (e.g. a trailing `()` → `unused_unit`, deprecated egui APIs,
+  unused `#[must_use]` `Response`). After codegen changes, run clippy on the sandbox/examples,
+  not only on `efx` itself.
+- `<Hyperlink>` returns `Response` only in "advanced" mode (styles/tooltip); the simple mode
+  evaluates to `()`. Root-level return type is therefore attribute-dependent.
 - Untracked `wip/` and `*.dump.txt` (`make dump`) are git-ignored scratch — don't commit them.
 
 ## 8. Roadmap (GitHub milestones)

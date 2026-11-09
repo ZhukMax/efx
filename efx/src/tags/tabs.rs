@@ -10,7 +10,6 @@ use quote::{quote, ToTokens};
 pub struct Tabs {
     attributes: Attributes,
     tabs: Vec<TabItem>,
-    element: Element,
 }
 
 impl Tag for Tabs {
@@ -58,11 +57,7 @@ impl Tag for Tabs {
             }
         }
 
-        Ok(Self {
-            attributes,
-            tabs,
-            element: el.clone(),
-        })
+        Ok(Self { attributes, tabs })
     }
 
     fn content<UI: ToTokens>(&self, ui: &UI) -> TokenStream {

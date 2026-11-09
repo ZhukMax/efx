@@ -196,8 +196,6 @@ impl Tag for Window {
             }
 
             #open_writeback
-            // Nothing comes back out
-            ()
         }}
     }
 }

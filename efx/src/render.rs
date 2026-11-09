@@ -74,13 +74,14 @@ pub(crate) fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> TokenS
         "Image" => render_tag::<Image>(ui, el),
         "Label" => render_tag::<Label>(ui, el),
         "Button" => {
+            // Statement position: the Response is intentionally discarded.
             let btn_expr = render_tag::<Button>(ui, el);
-            quote! { #btn_expr; }
+            quote! { let _ = #btn_expr; }
         }
         "Separator" => render_tag::<Separator>(ui, el),
         "Hyperlink" => {
             let ts = render_tag::<Hyperlink>(ui, el);
-            quote! { #ts; }
+            quote! { let _ = #ts; }
         }
         "TextField" => render_tag::<TextField>(ui, el),
         other => {

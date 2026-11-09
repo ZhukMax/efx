@@ -33,8 +33,9 @@ impl Tag for Button {
         }
 
         if let Some(r) = self.attributes.rounding {
-            btn_build
-                .extend(quote!( __efx_btn = __efx_btn.rounding(egui::Rounding::same(#r as _)); ));
+            btn_build.extend(
+                quote!( __efx_btn = __efx_btn.corner_radius(egui::CornerRadius::same(#r as _)); ),
+            );
         }
 
         if self.attributes.min_width.is_some() || self.attributes.min_height.is_some() {

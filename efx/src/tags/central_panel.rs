@@ -35,7 +35,6 @@ impl Tag for CentralPanel {
                     .show(&__efx_ctx, |ui| { #children });
                 let _ = __efx_tmp;
             }
-            ()
         }}
     }
 }

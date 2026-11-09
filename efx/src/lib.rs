@@ -191,7 +191,6 @@ pub fn efx_ctx(input: TokenStream) -> TokenStream {
         let __efx_ctx_local = (#ctx_expr).clone();
         let __efx_ui_ctx = __EfxUiCtxShim(&__efx_ctx_local);
         #body
-        ()
     }}
     .into()
 }

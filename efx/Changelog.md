@@ -4,6 +4,10 @@
 - CI: GitHub Actions matrix builds — eframe (native+wasm), bevy (native), winit+wgpu (native)
 - Events: `onClick`, `onHover` sugar
 - `#[efx_component]` + `#[efx_slot]`
+- Fix: `efx_ctx!(ctx, "...")` failed to parse its arguments ("expected `,`")
+- Fix: generated code no longer triggers warnings in user crates — clippy `unused_unit`
+  (panels/windows/`efx_ctx!`), deprecated `egui::Rounding` (now `CornerRadius` for
+  `Button`/`Image` `rounding`), unused `Response` of non-root `<Button>`/`<Hyperlink>`
 
 #### 0.6
 - New Tags: Heading, Image, Grid, Table, Tabs, DataTable

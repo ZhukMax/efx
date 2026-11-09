@@ -37,3 +37,19 @@ fn efx_ctx_accepts_expression_ctx() {
         );
     });
 }
+
+#[test]
+fn efx_ctx_evaluates_to_unit_for_every_context_root() {
+    let ctx = egui::Context::default();
+
+    let _ = ctx.run(Default::default(), |ctx| {
+        let () = efx_ctx!(ctx, r#"<Window title="W"><Label>w</Label></Window>"#);
+        let () = efx_ctx!(ctx, r#"<TopPanel id="t"><Label>t</Label></TopPanel>"#);
+        let () = efx_ctx!(ctx, r#"<BottomPanel id="b"><Label>b</Label></BottomPanel>"#);
+        let () = efx_ctx!(
+            ctx,
+            r#"<SidePanel side="left" id="s"><Label>s</Label></SidePanel>"#
+        );
+        let () = efx_ctx!(ctx, r#"<CentralPanel><Label>c</Label></CentralPanel>"#);
+    });
+}
