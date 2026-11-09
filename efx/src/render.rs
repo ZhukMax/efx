@@ -98,7 +98,10 @@ pub(crate) fn render_element_stmt<UI: ToTokens>(ui: &UI, el: &Element) -> TokenS
                     }
                 }
                 Err(_) => {
-                    let msg = format!("efx: unknown tag or component <{}>", other);
+                    let msg = format!(
+                        "efx: unknown tag <{}>: not a built-in tag, and no component file `{}.efx` found in `$EFX_UI_PATH` or `src/ui/`",
+                        other, other
+                    );
                     quote! { compile_error!(#msg); }
                 }
             }

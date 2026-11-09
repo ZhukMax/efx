@@ -1,4 +1,4 @@
-error: efx: unknown tag <WAT>
+error: efx: unknown tag <WAT>: not a built-in tag, and no component file `WAT.efx` found in `$EFX_UI_PATH` or `src/ui/`
   --> tests/ui/unknown_tag.rs:18:13
    |
 18 |     let _ = efx!(ui, "<WAT>oops</WAT>");

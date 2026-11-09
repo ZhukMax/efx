@@ -16,7 +16,6 @@ impl syn::parse::Parse for EfxInput {
 
 pub(crate) struct EfxCtxInput {
     pub(crate) ctx: Expr,
-    _comma: Token![,],
     pub(crate) template: LitStr,
 }
 
@@ -25,6 +24,6 @@ impl syn::parse::Parse for EfxCtxInput {
         let ctx = input.parse::<Expr>()?;
         input.parse::<Token![,]>()?;
         let template = input.parse::<LitStr>()?;
-        Ok(EfxCtxInput { ctx, _comma: input.parse()?, template })
+        Ok(EfxCtxInput { ctx, template })
     }
 }
